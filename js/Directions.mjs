@@ -50,7 +50,7 @@ export class Directions {
             } else if (diffY < 0) {
                 return { x, y: y - 1 };
             }
-        }        
+        }
     }
 
     getDirectionToTargetAway(target) {

@@ -105,6 +105,11 @@ export class Objects {
         const territory = this.getSight(this.territoryRange).filter((tile) => tile?.content?.type === this.type); // 활동영역
         const predator = this.sight.filter((tile) => tile?.content?.eatTarget === this.type); // 주변의 포식자
 
+        if(foodTile.length <= 0){
+            this.move(this.directions.getDirectionRandom(this.nearbyTiles).x, this.directions.getDirectionRandom(this.nearbyTiles).y);
+            return;
+        }
+
         if(this.energy <= this.needFood){
             foodTile.sort((a, b) => {
                 const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
@@ -132,33 +137,9 @@ export class Objects {
             return;
         }
 
-        if(foodTile.length <= 0){
-            this.move(this.directions.getDirectionRandom(this.nearbyTiles).x, this.directions.getDirectionRandom(this.nearbyTiles).y);
-            return;
-        }
-
         if (this.energy > this.procreationEnergy && this.postpartumcCare <= 0) {
             this.giveBirth();
             return;
-        }
-
-        const { x, y } = this.position;
-        let direction;
-
-        direction = this.directions.getDirectionRandom();
-        switch (direction) {
-            case 'up':
-                this.move(x, y - 1);
-                break;
-            case 'down':
-                this.move(x, y + 1);
-                break;
-            case 'left':
-                this.move(x - 1, y);
-                break;
-            case 'right':
-                this.move(x + 1, y);
-                break;
         }
     }
 
