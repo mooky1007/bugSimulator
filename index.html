@@ -3,8 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>Bug Simulator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://cdn.jsdelivr.net/gh/toss/tossface/dist/tossface.css');
 
@@ -23,8 +24,9 @@
 
         html {
             width: 100%;
-            min-height: 100%;
+            min-height: 100vh;
             height: 100%;
+            overflow: hidden;
         }
 
         body {
@@ -37,6 +39,8 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
+
+            overflow: hidden;
         }
 
         .board {
@@ -116,11 +120,23 @@
         .tree-area {
             background: rgb(29, 52, 29);
         }
+
+        .chart_wrap {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+
+        .chart_wrap canvas {
+            width: 100%;
+            height: 100%;
+        }
     </style>
 </head>
 
 <body>
-    <i style="position: relative; top: 20px; font-size: 42px !important; font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🍎🌲🐛🕷</i>
+    <i
+        style="position: relative; top: 20px; font-size: 42px !important; font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🍎🌲🐛🕷</i>
 
     <div class="board"></div>
 
@@ -138,6 +154,10 @@
                 style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🕷</i>
             거미: <span class="hunter-count"></span></div>
     </div>
+    <div class="chart_wrap">
+        <canvas id="myChart"></canvas>
+    </div>
+
     <script type="module">
         import Board from './js/Board.mjs';
 
@@ -147,18 +167,18 @@
             wrapperClassNams: '.board'
         });
 
-        board.generateObject('bug', 10);
+        board.generateObject('bug', 20);
         // board.generateObject('ant', 10);
         board.generateObject('hunter', 2);
         // board.generateObject('scolpion', 1);
-        board.generateObject('tree', 4);
+        board.generateObject('tree', 3);
 
         // board.generateObject('rock', 21);
 
-        setInterval(() => {
-            if (board.getObjCount('bug') < 3) board.generateObject('bug', Math.floor(Math.random() * 2) + 1);
-            if (board.getObjCount('hunter') < 2) board.generateObject('hunter', 1);
-        }, 1000);
+        // setInterval(() => {
+        //     if (board.getObjCount('bug') < 3) board.generateObject('bug', Math.floor(Math.random() * 2) + 1);
+        //     if (board.getObjCount('hunter') < 2) board.generateObject('hunter', 1);
+        // }, 1000);
     </script>
 </body>
 

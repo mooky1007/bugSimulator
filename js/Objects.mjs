@@ -45,7 +45,7 @@ export class Food extends Objects {
         if(this?.foodLife) clearTimeout(this.foodLife);
         this.foodLife = setTimeout(() => {
             this.die();
-        }, 15000);
+        }, 6000);
     }
 
     die() {
@@ -60,18 +60,29 @@ export class Bug extends Objects {
         this.name = config.name;
         this.type = 'bug';
         this.eatTarget = 'food';
-        this.power = 10;
+        this.power = 8;
         this.speed = 300;
-        this.energy = 100;
-        this.sightRange = 6;
-        this.needFood = 120;
+        this.energy = 80;
+        this.maxEnergy = 100;
+        this.sightRange = 12;
+        this.needFood = 40;
         this.procreationEnergy = 40;
         this.reproductiveCycle = 60;
         this.postpartumcCare = this.reproductiveCycle;
-        this.newBornEnergy = this.energy / 2;
+        this.newBornEnergy = this.energy / 4;
         this.gen = 0;
 
         this.init();
+    }
+
+    get energy() {
+        return this._energy;
+    }
+
+    set energy(value) {
+        this._energy = value;
+        if (this._energy > this.maxEnergy) this._energy = this.maxEnergy;
+        if (this._energy < 0) this._energy = 0;
     }
 
     init() {
@@ -259,12 +270,9 @@ export class Bug extends Objects {
 
     eat(target) {
         target.die();
-        this.energy += target.type === 'food' ? target.energy : target.energy / 2;
+        this.energy += target.type === 'food' ? target.energy : target.energy;
         this.power += 1;
         this.size += 0.2;
-        this.sightRange += 1;
-        this.needFood += 10;
-        this.postpartumcCare -= 10;
     }
 }
 
@@ -274,14 +282,15 @@ export class HunterBug extends Bug {
         this.type = 'hunter';
         this.eatTarget = 'bug';
         this.power = 16;
-        this.speed = 150;
-        this.energy = 240;
-        this.sightRange = 12;
-        this.needFood = 120;
-        this.reproductiveCycle = 300;
-        this.procreationEnergy = 300;
+        this.speed = 220;
+        this.energy = 180;
+        this.maxEnergy = 240;
+        this.sightRange = 32;
+        this.needFood = 100;
+        this.reproductiveCycle = 90;
+        this.procreationEnergy = 40;
         this.postpartumcCare = this.reproductiveCycle;
-        this.newBornEnergy = this.energy / 2;
+        this.newBornEnergy = this.energy / 4;
         this.gen = 0;
 
         this.init();
@@ -292,8 +301,12 @@ export class HunterBug extends Bug {
             target.power -= 1;
             return;
         }
-        this.postpartumcCare -= target.energy / 10;
         super.eat(target);
+    }
+
+    move(x, y){
+        super.move(x, y);
+        this.energy -= 1;
     }
 }
 
@@ -333,7 +346,7 @@ export class Tree extends Objects {
         const emptyTiles = this.sight().filter((tile) => !tile?.content);
 
         this.aliveTime += this.createDuration;
-        for (let i = 0; i < Math.floor(Math.random() * this.createLength); i++) {
+        for (let i = 0; i < Math.floor(Math.random() * this.createLength) + this.createLength - 3; i++) {
             if (emptyTiles.length > 0) {
                 const randomIndex = Math.floor(Math.random() * emptyTiles.length);
                 if (!emptyTiles[randomIndex]) continue;
@@ -342,12 +355,15 @@ export class Tree extends Objects {
             }
         }
 
-        this.size += this.level;
-        this.sightRange += Math.floor(this.level / 4);
-        this.createLength += this.level;
-        this.drawArea();
-
-        this.level += 1;
+        if(this.level < 10){
+            this.level += 1;
+            this.size += this.level;
+            this.sightRange += Math.floor(this.level / 4);
+            this.createLength += this.level;
+            this.drawArea();
+            this.life = setTimeout(this.growAndCreate.bind(this), this.createDuration * (this.level / 2));
+            return;
+        }
 
         if (this.level > 10) {
             this.removeArea();

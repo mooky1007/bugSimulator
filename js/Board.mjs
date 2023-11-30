@@ -28,9 +28,63 @@ class Board {
             }
         }
 
+        const ctx = document.getElementById('myChart');
+        this.chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: '🐛',
+                        data: [],
+                        borderColor: '#23b169',
+                        tension: 0.5,
+                    },
+                    {
+                        label: '🍎',
+                        data: [],
+                        borderColor: 'tomato',
+                        tension: 0.5,
+                    },
+                    {
+                        label: '🕷',
+                        data: [],
+                        borderColor: '#999',
+                        tension: 0.5,
+                    },
+                ],
+            },
+            options: {
+                pointStyle: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            font: {
+                                family: 'Tossface',
+                            },
+                        },
+                    },
+                },
+            },
+        });
+
         setInterval(() => {
             this.render();
         }, 100);
+
+        this.chart.data.labels.push(this.chart.data.labels.length);
+        this.chart.data.datasets[0].data.push(this.getObjCount('bug'));
+        this.chart.data.datasets[1].data.push(this.getObjCount('food'));
+        this.chart.data.datasets[2].data.push(this.getObjCount('hunter'));
+        this.chart.update();
+
+        setInterval(() => {
+            this.chart.data.labels.push(this.chart.data.labels.length);
+            this.chart.data.datasets[0].data.push(this.getObjCount('bug'));
+            this.chart.data.datasets[1].data.push(this.getObjCount('food'));
+            this.chart.data.datasets[2].data.push(this.getObjCount('hunter'));
+            this.chart.update();
+        }, 5000);
     }
 
     create() {
