@@ -110,7 +110,7 @@ export class Objects {
             return;
         }
 
-        if(this.energy <= this.needFood){
+        if(this.energy <= this.needFood && foodTile.length > 0){
             foodTile.sort((a, b) => {
                 const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
                 const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
