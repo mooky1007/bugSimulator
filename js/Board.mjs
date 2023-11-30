@@ -73,7 +73,7 @@ class Board {
 
         setInterval(() => {
             this.render();
-        }, 100);
+        }, 500);
 
         this.chart.data.labels.push(this.chart.data.labels.length);
         this.chart.data.datasets[0].data.push(this.getObjCount('bug'));
