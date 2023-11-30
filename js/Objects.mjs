@@ -169,8 +169,7 @@ export class Objects {
     }
 
     move(x, y) {
-        // 움직임에 대한 처리
-
+        if(!x || !y) return;
         if (x < 0 || y < 0 || x >= this.map.boardX || y >= this.map.boardY) {
             // random move
             const emptyTiles = this.getSight(1).filter((tile) => tile?.content === null);
