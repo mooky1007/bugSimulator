@@ -14,7 +14,7 @@ export class Tree extends Objects {
         this.aliveTime = 0;
         this.createDuration = 2000 + Math.floor(Math.random() * 1000);
         this.createLength = 6;
-        this.area = this.sight();
+        this.area = this.getSight(this.sightRange);
         this.init();
     }
 
@@ -33,7 +33,7 @@ export class Tree extends Objects {
         this.icon = '🌲';
         this.size = 24;
 
-        const emptyTiles = this.sight().filter((tile) => !tile?.content);
+        const emptyTiles = this.area.filter((tile) => !tile?.content);
 
         this.aliveTime += this.createDuration;
         for (let i = 0; i < Math.floor(Math.random() * (this.createLength - 3)) + 3; i++) {
@@ -73,7 +73,7 @@ export class Tree extends Objects {
     }
 
     drawArea() {
-        this.area = this.sight();
+        this.area = this.getSight(this.sightRange);
         this.area
             .filter((tile) => tile)
             .forEach((tile) => {
@@ -84,7 +84,7 @@ export class Tree extends Objects {
     }
 
     removeArea() {
-        this.area = this.sight();
+        this.area = this.getSight(this.sightRange);
         this.area
             .filter((tile) => tile)
             .forEach((tile) => {
@@ -106,7 +106,7 @@ export class Tree extends Objects {
         }
 
         while (count > 0) {
-            const emptyTiles = this.sight().filter((tile) => !tile?.content);
+            const emptyTiles = this.getSight().filter((tile) => !tile?.contentthis.sightRange);
             const randomIndex = Math.floor(Math.random() * emptyTiles.length);
             if (!emptyTiles[randomIndex]?.x && !emptyTiles[randomIndex]?.y && !emptyTiles[randomIndex]?.content) continue;
             this.map.createTree(emptyTiles[randomIndex].x, emptyTiles[randomIndex].y);

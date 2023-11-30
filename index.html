@@ -36,7 +36,7 @@
             min-height: 100%;
 
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             flex-direction: column;
 
@@ -144,9 +144,9 @@
         <div><i
                 style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🍎</i>
             사과: <span class="food-count"></span></div>
-        <div><i
+        <!-- <div><i
                 style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🌲</i>
-            나무: <span class="tree-count"></span></div>
+            나무: <span class="tree-count"></span></div> -->
         <div><i
                 style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🐛</i>
             벌레: <span class="bug-count"></span></div>
@@ -163,17 +163,13 @@
 
         const board = new Board({
             boardX: 40,
-            boardY: 40,
+            boardY: 50,
             wrapperClassNams: '.board'
         });
 
         board.generateObject('bug', 20);
-        // board.generateObject('ant', 10);
         board.generateObject('hunter', 2);
-        // board.generateObject('scolpion', 1);
-        board.generateObject('tree', 3);
-
-        // board.generateObject('rock', 21);
+        board.generateObject('tree', 4);
 
         // setInterval(() => {
         //     if (board.getObjCount('bug') < 3) board.generateObject('bug', Math.floor(Math.random() * 2) + 1);

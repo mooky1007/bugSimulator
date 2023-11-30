@@ -4,73 +4,9 @@ export class Objects {
         this.position = config.position;
         this.name = config.name || 'object';
         this.size = config.size || 9;
-        this.icon = config.icon || '⭕';
+        this.icon = config.icon || '';
+        this.energy = config.energy || 0;
         this.directions = ['up', 'down', 'left', 'right'];
-    }
-
-    getSight(sight){
-        const { x, y } = this.position;
-        let sightTiles = [];
-
-        const transform = (i, j) => this.map.getTile(x + i, y + j);
-
-        for (let i = -sight; i <= sight; i++) {
-            for (let j = -sight; j <= sight; j++) {
-                const distance = Math.sqrt(i * i + j * j);
-
-                if (distance <= sight) {
-                    sightTiles.push(transform(i, j));
-                }
-            }
-        }
-        sightTiles = sightTiles.filter((tile) => tile?.content !== this);
-        return sightTiles;
-    }
-
-    sight() {
-        const { x, y } = this.position;
-        let sightTiles = [];
-
-        const transform = (i, j) => this.map.getTile(x + i, y + j);
-
-        for (let i = -this.sightRange; i <= this.sightRange; i++) {
-            for (let j = -this.sightRange; j <= this.sightRange; j++) {
-                const distance = Math.sqrt(i * i + j * j);
-
-                if (distance <= this.sightRange) {
-                    sightTiles.push(transform(i, j));
-                }
-            }
-        }
-        sightTiles = sightTiles.filter((tile) => tile?.content !== this);
-        return sightTiles;
-    }
-
-    die() {
-        this.map.getTile(this.position.x, this.position.y).content = null;
-    }
-}
-
-export class Bug extends Objects {
-    constructor(config) {
-        super(config);
-        this.name = config.name;
-        this.type = 'bug';
-        this.eatTarget = 'food';
-        this.power = 8;
-        this.speed = 300;
-        this.energy = 80;
-        this.maxEnergy = 100;
-        this.sightRange = 9;
-        this.needFood = 50;
-        this.procreationEnergy = 30;
-        this.reproductiveCycle = 30;
-        this.postpartumcCare = this.reproductiveCycle;
-        this.newBornEnergy = this.energy / 4;
-        this.allowSameSpecies = 32;
-        this.gen = 0;
-
-        this.init();
     }
 
     get energy() {
@@ -94,35 +30,91 @@ export class Bug extends Objects {
             }
         }, 200);
 
-        this.moveCycleAction()
+        this.moveCycleAction();
     }
 
-    moveCycleAction(){
+    moveCycleAction() {
         this.moveCycle = setTimeout(() => {
             this.moveAction();
             this.moveCycleAction();
         }, this.speed);
     }
 
+    getSight(sight) {
+        const { x, y } = this.position;
+        let sightTiles = [];
+
+        const transform = (i, j) => this.map.getTile(x + i, y + j);
+
+        for (let i = -sight; i <= sight; i++) {
+            for (let j = -sight; j <= sight; j++) {
+                const distance = Math.sqrt(i * i + j * j);
+
+                if (distance <= sight) {
+                    sightTiles.push(transform(i, j));
+                }
+            }
+        }
+        sightTiles = sightTiles.filter((tile) => tile?.content !== this);
+        return sightTiles;
+    }
+
+    collisionEvent(event, target) {
+        switch (event) {
+            case 'eat':
+                this.eat(target);
+                break;
+        }
+    }
+
+    eat(target) {
+        target.die();
+        this.energy += target.energy;
+        this.power += 1;
+        this.size += 0.2;
+    }
+
     die() {
         clearInterval(this.life);
-        clearInterval(this.moveCycle);
-        super.die();
+        clearTimeout(this.moveCycle);
+        this.map.getTile(this.position.x, this.position.y).content = null;
+    }
+}
+
+export class Bug extends Objects {
+    constructor(config) {
+        super(config);
+        this.name = config.name;
+        this.type = 'bug';
+        this.eatTarget = 'food';
+        this.power = 8;
+
+        this.speed = 300;
+        this.energy = 80;
+        this.maxEnergy = 100;
+        this.sightRange = 9;
+        this.needFood = 50;
+        this.procreationEnergy = 30;
+        this.reproductiveCycle = 30;
+        this.postpartumcCare = this.reproductiveCycle;
+        this.newBornEnergy = this.energy / 4;
+        this.allowSameSpecies = 64;
+        this.gen = 0;
+
+        this.init();
     }
 
     bear() {
-        const nearlyTiles = this.getNealarTiles();
+        const nearlyTiles = this.getSight(1);
 
-        const sameSpecies = this.sight().filter((tile) => tile?.content?.type === this.type);
+        const sameSpecies = this.getSight(this.sightRange).filter((tile) => tile?.content?.type === this.type);
         if (sameSpecies.length > this.allowSameSpecies) {
-            console.log(`${this.name}: 주변에 같은종이 너무 많아 번식을 포기했습니다.`)
-            this.postpartumcCare += 10;
+            this.postpartumcCare += 3;
             return;
         }
 
-        if(this.getSight(this.sightRange).filter((tile) => tile?.content?.type === this.eatTarget).length < 3) {
-            this.postpartumcCare += 10;
-            console.log(`${this.name}: 주변에 먹이가 부족해 번식을 포기했습니다.`)
+        if (this.getSight(this.sightRange).filter((tile) => tile?.content?.type === this.eatTarget).length < 3) {
+            this.postpartumcCare += 3;
             return;
         }
 
@@ -132,14 +124,12 @@ export class Bug extends Objects {
             const { x, y } = emptyTiles[randomIndex];
             let newBug;
 
-            console.log(`${this.name}: 새끼를 낳았습니다.`)
-
             switch (this.type) {
                 case 'bug':
-                    if(this.name.includes('ant')) {
+                    if (this.name.includes('ant')) {
                         newBug = this.map.createAnt(x, y);
                         break;
-                    }else{
+                    } else {
                         newBug = this.map.createBug(x, y);
                         break;
                     }
@@ -148,7 +138,7 @@ export class Bug extends Objects {
                     break;
                 default:
                     newBug = this.map.createBug(x, y);
-                    break;    
+                    break;
             }
 
             this.postpartumcCare = this.reproductiveCycle;
@@ -161,16 +151,16 @@ export class Bug extends Objects {
         const { x, y } = this.position;
         let direction;
 
-        const predators = this.getSight(4).filter((tile) => {
-            if(this.type === 'bug'){
+        const predators = this.getSight(this.sightRange).filter((tile) => {
+            if (this.type === 'bug') {
                 return tile?.content?.type === 'hunter';
             }
         });
 
         if (predators.length > 0) {
             direction = this.getDirectionToTileReverse(predators[0]);
-        }else if (this.energy < this.needFood) {
-            if(this.type === 'hunter'){
+        } else if (this.energy < this.needFood) {
+            if (this.type === 'hunter') {
                 this.huntMode = true;
             }
             direction = this.findNearestFood();
@@ -203,7 +193,18 @@ export class Bug extends Objects {
     }
 
     move(x, y) {
-        if (x < 0 || y < 0 || x >= this.map.boardX || y >= this.map.boardY) return;
+        if (x < 0 || y < 0 || x >= this.map.boardX || y >= this.map.boardY) {
+            // random move
+            const emptyTiles = this.getSight(1).filter((tile) => tile?.content === null);
+
+            if (emptyTiles.length > 0) {
+                const randomIndex = Math.floor(Math.random() * emptyTiles.length);
+                const { x, y } = emptyTiles[randomIndex];
+                this.move(x, y);
+            }
+
+            return;
+        }
 
         const tile = this.map.getTile(x, y);
         if (tile.content) {
@@ -211,7 +212,7 @@ export class Bug extends Objects {
                 this.collisionEvent('eat', tile.content);
                 return;
             } else {
-                const emptyTiles = this.getNealarTiles().filter((tile) => tile?.content === null);
+                const emptyTiles = this.getSight(1).filter((tile) => tile?.content === null);
 
                 if (emptyTiles.length > 0) {
                     const randomIndex = Math.floor(Math.random() * emptyTiles.length);
@@ -234,7 +235,6 @@ export class Bug extends Objects {
     }
 
     getDirectionToTileReverse(tile) {
-        console.log(`${this.name}: ${tile.content.name}을 피해 달아납니다.`)
         const { x, y } = this.position;
         const { x: tileX, y: tileY } = tile;
         if (x === tileX) {
@@ -256,7 +256,7 @@ export class Bug extends Objects {
     }
 
     findNearestFood() {
-        const sightTiles = this.sight();
+        const sightTiles = this.getSight(this.sightRange);
         const foodTiles = sightTiles.filter((tile) => tile?.content && tile?.content?.type === this.eatTarget);
 
         if (foodTiles.length === 0) {
@@ -295,37 +295,6 @@ export class Bug extends Objects {
             if (y < tileY) return 'down';
         }
     }
-
-    collisionEvent(event, target) {
-        switch (event) {
-            case 'eat':
-                this.eat(target);
-                break;
-        }
-    }
-
-    getNealarTiles() {
-        const { x, y } = this.position;
-        const nearlyTiles = [];
-
-        this.map.getTile(x, y - 1) && nearlyTiles.push(this.map.getTile(x, y - 1));
-        this.map.getTile(x, y + 1) && nearlyTiles.push(this.map.getTile(x, y + 1));
-        this.map.getTile(x - 1, y) && nearlyTiles.push(this.map.getTile(x - 1, y));
-        this.map.getTile(x + 1, y) && nearlyTiles.push(this.map.getTile(x + 1, y));
-        this.map.getTile(x - 1, y - 1) && nearlyTiles.push(this.map.getTile(x - 1, y - 1));
-        this.map.getTile(x + 1, y - 1) && nearlyTiles.push(this.map.getTile(x + 1, y - 1));
-        this.map.getTile(x - 1, y + 1) && nearlyTiles.push(this.map.getTile(x - 1, y + 1));
-        this.map.getTile(x + 1, y + 1) && nearlyTiles.push(this.map.getTile(x + 1, y + 1));
-
-        return nearlyTiles;
-    }
-
-    eat(target) {
-        target.die();
-        this.energy += target.type === 'food' ? target.energy : target.energy;
-        this.power += 1;
-        this.size += 0.2;
-    }
 }
 
 export class HunterBug extends Bug {
@@ -334,11 +303,12 @@ export class HunterBug extends Bug {
         this.type = 'hunter';
         this.eatTarget = 'bug';
         this.power = 16;
-        this.speed = 140;
+        
+        this.speed = 150;
         this.energy = 120;
         this.maxEnergy = 160;
         this.sightRange = 12;
-        this.needFood = 50;
+        this.needFood = 70;
         this.reproductiveCycle = 160;
         this.procreationEnergy = 80;
         this.postpartumcCare = this.reproductiveCycle;
@@ -346,56 +316,11 @@ export class HunterBug extends Bug {
         this.gen = 0;
 
         this.allowSameSpecies = 3;
-
-        this.huntMode = false;
         this.init();
     }
 
-    get huntMode() {
-        return this._huntMode;
-    }
-
-    set huntMode(value) {
-        this._huntMode = value;
-        if (this._huntMode) {
-            this.speed = 40;
-            this.sightRange = 32;
-        } else {
-            this.speed = 140;
-            this.sightRange = 12;
-        }
-    }
-
-    eat(target) {
-        this.huntMode = false;
-        if (target.power > this.power) {
-            target.power -= 1;
-            return;
-        }
-        super.eat(target);
-    }
-
-    move(x, y){
-        super.move(x, y);
+    move(x, y) {
         this.energy -= 1;
-    }
-}
-
-export class Ant extends Bug {
-    constructor(config) {
-        super(config);
-        this.needFood = 1800;
-
-        this.init();
-    }
-}
-
-export class Scolpion extends HunterBug {
-    constructor(config) {
-        super(config);
-        this.needFood = 1800;
-        this.speed = 500;
-
-        this.init();
+        super.move(x, y);
     }
 }

@@ -1,4 +1,4 @@
-import { Ant, Bug, HunterBug, Scolpion } from './Objects.mjs';
+import { Bug, HunterBug } from './Objects.mjs';
 import { Rock } from './objects/Rock.mjs';
 import { Tree } from './objects/Tree.mjs';
 import { Food } from './objects/Food.mjs';
@@ -149,7 +149,7 @@ class Board {
         document.querySelector('.food-count').innerHTML = this.getObjCount('food');
         document.querySelector('.bug-count').innerHTML = this.getObjCount('bug');
         document.querySelector('.hunter-count').innerHTML = this.getObjCount('hunter');
-        document.querySelector('.tree-count').innerHTML = this.getObjCount('tree');
+        // document.querySelector('.tree-count').innerHTML = this.getObjCount('tree');
     }
 
     getTile(x, y) {
