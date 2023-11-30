@@ -44,13 +44,13 @@ class Board {
                         tension: 0.5,
                     },
                     {
-                        label: '🍎',
+                        label: '🌱',
                         data: [],
                         borderColor: 'tomato',
                         tension: 0.5,
                     },
                     {
-                        label: '🕷',
+                        label: '🦗',
                         data: [],
                         borderColor: '#999',
                         tension: 0.5,
@@ -149,7 +149,6 @@ class Board {
         document.querySelector('.food-count').innerHTML = this.getObjCount('food');
         document.querySelector('.bug-count').innerHTML = this.getObjCount('bug');
         document.querySelector('.hunter-count').innerHTML = this.getObjCount('hunter');
-        // document.querySelector('.tree-count').innerHTML = this.getObjCount('tree');
     }
 
     getTile(x, y) {
@@ -174,8 +173,6 @@ class Board {
             map: this,
             position: { x: x, y: y },
             name: `bug_${this.bug}`,
-            size: 9,
-            icon: '🐛',
         });
 
         this.bug++;
@@ -188,8 +185,6 @@ class Board {
             map: this,
             position: { x: x, y: y },
             name: `hunter_${this.bug}`,
-            size: 12,
-            icon: '🕷',
         });
 
         this.bug++;
@@ -202,8 +197,6 @@ class Board {
             map: this,
             position: { x: x, y: y },
             name: `food_${this.bug}`,
-            size: 8,
-            icon: '🍎',
         });
 
         this.food++;
@@ -214,34 +207,6 @@ class Board {
             map: this,
             position: { x: x, y: y },
             name: `tree_${this.bug}`,
-        });
-    }
-
-    createRock(x, y) {
-        this.getTile(x, y).content = new Rock({
-            map: this,
-            position: { x: x, y: y },
-            name: `rock_${this.bug}`,
-        });
-    }
-
-    createAnt(x, y) {
-        this.getTile(x, y).content = new Ant({
-            map: this,
-            position: { x: x, y: y },
-            name: `ant_${this.bug}`,
-            size: 8,
-            icon: '🐜',
-        });
-    }
-
-    createScolpion(x, y) {
-        this.getTile(x, y).content = new Scolpion({
-            map: this,
-            position: { x: x, y: y },
-            name: `scolpion_${this.bug}`,
-            size: 8,
-            icon: '🦂',
         });
     }
 
@@ -258,9 +223,6 @@ class Board {
             if (object === 'bug') this.createBug(x, y);
             if (object === 'hunter') this.createHunter(x, y);
             if (object === 'tree') this.createTree(x, y);
-            if (object === 'rock') this.createRock(x, y);
-            if (object === 'ant') this.createAnt(x, y);
-            if (object === 'scolpion') this.createScolpion(x, y);
         }
     }
 }
@@ -270,6 +232,9 @@ class Tile {
         this.x = x;
         this.y = y;
         this.content = null;
+        this.el = null;
+        this.className = null;
+        this.property = null;
     }
 }
 

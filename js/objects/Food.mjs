@@ -3,6 +3,7 @@ import { Objects } from "../Objects.mjs";
 export class Food extends Objects {
     constructor(config) {
         super(config);
+        this.icon = '🌱';
         this.energy = 50;
         this.type = 'food';
 
@@ -13,7 +14,7 @@ export class Food extends Objects {
         if(this?.foodLife) clearTimeout(this.foodLife);
         this.foodLife = setTimeout(() => {
             this.die();
-        }, 12000);
+        }, 24000);
     }
 
     die() {

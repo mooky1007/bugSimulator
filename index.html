@@ -136,23 +136,24 @@
 
 <body>
     <i
-        style="position: relative; top: 20px; font-size: 42px !important; font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🍎🌲🐛🕷</i>
+        style="position: relative; top: 20px; font-size: 42px !important; font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;"><span
+            style="font-size:24px;">🌱</span>🌲<span style="font-size:24px;">🐛</span>🦗</i>
 
     <div class="board"></div>
 
     <div class="infor_wrap">
         <div><i
-                style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🍎</i>
-            사과: <span class="food-count"></span></div>
+                style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🌱</i>
+            먹이개체: <span class="food-count"></span></div>
         <!-- <div><i
                 style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🌲</i>
             나무: <span class="tree-count"></span></div> -->
         <div><i
                 style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🐛</i>
-            벌레: <span class="bug-count"></span></div>
+            피식개체: <span class="bug-count"></span></div>
         <div><i
-                style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🕷</i>
-            거미: <span class="hunter-count"></span></div>
+                style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🦗</i>
+            포식개체: <span class="hunter-count"></span></div>
     </div>
     <div class="chart_wrap">
         <canvas id="myChart"></canvas>
@@ -168,13 +169,12 @@
         });
 
         board.generateObject('bug', 20);
-        board.generateObject('hunter', 2);
-        board.generateObject('tree', 4);
-
-        // setInterval(() => {
-        //     if (board.getObjCount('bug') < 3) board.generateObject('bug', Math.floor(Math.random() * 2) + 1);
-        //     if (board.getObjCount('hunter') < 2) board.generateObject('hunter', 1);
-        // }, 1000);
+        board.generateObject('hunter', 3);
+        board.createTree(4,5);
+        board.createTree(34,5);
+        board.createTree(4,25);
+        board.createTree(24,45);
+        board.createTree(14,35);
     </script>
 </body>
 
