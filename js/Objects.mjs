@@ -102,14 +102,24 @@ export class Objects {
         const territory = this.getSight(this.territoryRange).filter((tile) => tile?.content?.type === this.type); // 활동영역
         const predator = this.sight.filter((tile) => tile?.content?.eatTarget === this.type); // 주변의 포식자
 
-        
-        if(foodTile.length <= 0){
-            this.move(this.directions.getDirectionRandom(this.nearbyTiles).x, this.directions.getDirectionRandom(this.nearbyTiles).y);
+        if(this.energy <= this.needFood){
+            foodTile.sort((a, b) => {
+                const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
+                const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
+                return aDistance - bDistance;
+            });
+
+            this.move(this.directions.getDirectionToTarget(foodTile[0]).x, this.directions.getDirectionToTarget(foodTile[0]).y);
             return;
         }
 
-        if(this.energy <= this.needFood){
-            this.move(this.directions.getDirectionToTarget(foodTile[Math.floor(Math.random() * foodTile.length)]).x, this.directions.getDirectionToTarget(foodTile[Math.floor(Math.random() * foodTile.length)]).y);
+        if(predator.length > 0){
+            predator.sort((a, b) => {
+                const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
+                const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
+                return aDistance - bDistance;
+            });
+            this.move(this.directions.getDirectionToTargetAway(predator[0]).x, this.directions.getDirectionToTargetAway(predator[0]).y);
             return;
         }
         
@@ -118,8 +128,8 @@ export class Objects {
             return;
         }
 
-        if(predator.length > 0){
-            this.move(this.directions.getDirectionToTargetAway(predator[Math.floor(Math.random() * predator.length)]).x, this.directions.getDirectionToTargetAway(predator[Math.floor(Math.random() * predator.length)]).y);
+        if(foodTile.length <= 0){
+            this.move(this.directions.getDirectionRandom(this.nearbyTiles).x, this.directions.getDirectionRandom(this.nearbyTiles).y);
             return;
         }
 
@@ -276,6 +286,23 @@ export class Bug extends Objects {
 
         this.init();
     }
+
+    action() {
+        const predator = this.sight.filter((tile) => {
+            return  tile?.content?.eatTarget === this.type && tile?.content?.energy < tile?.content?.needFood;
+        }); // 주변의 포식자
+        if(predator.length > 0){
+            predator.sort((a, b) => {
+                const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
+                const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
+                return aDistance - bDistance;
+            });
+            this.move(this.directions.getDirectionToTargetAway(predator[0]).x, this.directions.getDirectionToTargetAway(predator[0]).y);
+            return;
+        }
+        
+        super.action();
+    }
 }
 
 export class HunterBug extends Objects {
@@ -289,7 +316,7 @@ export class HunterBug extends Objects {
 
         this.lifeSpan = 1200;
 
-        this.actionPeriod = 150;
+        this.actionPeriod = 320;
         this.energy = 120;
         this.maxEnergy = 160;
         this.sightRange = 12;
