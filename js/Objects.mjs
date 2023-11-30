@@ -154,7 +154,7 @@ export class Objects {
     }
 
     move(x, y) {
-        if(!x || !y) return;
+        // if(!x || !y) return;
         if (x < 0 || y < 0 || x >= this.map.boardX || y >= this.map.boardY) {
             // random move
             const emptyTiles = this.getSight(1).filter((tile) => tile?.content === null);
