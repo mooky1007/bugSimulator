@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug Simulator</title>
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/toss/tossface/dist/tossface.css');
+
+        @font-face {
+            font-family: 'Pretendard-Regular';
+            src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: 'TossFace';
+        }
+
+        html {
+            width: 100%;
+            min-height: 100%;
+            height: 100%;
+        }
+
+        body {
+            background: #202020;
+            width: 100%;
+            height: auto;
+            min-height: 100%;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .board {
+            padding: 40px 20px 0;
+            overflow: hidden;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .row:first-child {
+            border-top: 1px solid #2a2a2a;
+        }
+
+        .row .tile:first-child {
+            border-left: 1px solid #2a2a2a;
+        }
+
+        .tile {
+            position: relative;
+            width: 2vw;
+            height: 2vw;
+            max-width: 15px;
+            max-height: 15px;
+            border-right: 1px solid #2a2a2a;
+            border-bottom: 1px solid #2a2a2a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #222;
+        }
+
+        .tile span {
+            font-size: 8px;
+            line-height: 1;
+            position: absolute;
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            z-index: 5;
+            text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;
+        }
+
+        .infor_wrap {
+            color: #fff;
+            display: flex;
+            margin-top: 20px;
+            gap: 30px;
+            font-size: 12px;
+        }
+
+        .infor_wrap * {
+            font-family: 'Pretendard-Regular', sans-serif;
+        }
+
+        .infor_wrap>div {
+            width: 25%;
+            white-space: nowrap;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .rock {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: #222;
+        }
+
+        .tree-area {
+            background: rgb(29, 52, 29);
+        }
+    </style>
+</head>
+
+<body>
+    <i style="position: relative; top: 20px; font-size: 42px !important; font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🍎🌲🐛🕷</i>
+
+    <div class="board"></div>
+
+    <div class="infor_wrap">
+        <div><i
+                style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🍎</i>
+            사과: <span class="food-count"></span></div>
+        <div><i
+                style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🌲</i>
+            나무: <span class="tree-count"></span></div>
+        <div><i
+                style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🐛</i>
+            벌레: <span class="bug-count"></span></div>
+        <div><i
+                style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🕷</i>
+            거미: <span class="hunter-count"></span></div>
+    </div>
+    <script type="module">
+        import Board from './js/Board.mjs';
+
+        const board = new Board({
+            boardX: 40,
+            boardY: 40,
+            wrapperClassNams: '.board'
+        });
+
+        board.generateObject('bug', 10);
+        // board.generateObject('ant', 10);
+        board.generateObject('hunter', 2);
+        // board.generateObject('scolpion', 1);
+        board.generateObject('tree', 4);
+
+        // board.generateObject('rock', 21);
+
+        setInterval(() => {
+            if (board.getObjCount('bug') < 3) board.generateObject('bug', Math.floor(Math.random() * 2) + 1);
+            if (board.getObjCount('hunter') < 2) board.generateObject('hunter', 1);
+        }, 1000);
+    </script>
+</body>
+
+</html>
