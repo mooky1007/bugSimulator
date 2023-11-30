@@ -286,7 +286,7 @@ export class HunterBug extends Bug {
         this.energy = 180;
         this.maxEnergy = 240;
         this.sightRange = 32;
-        this.needFood = 100;
+        this.needFood = 40;
         this.reproductiveCycle = 120;
         this.procreationEnergy = 40;
         this.postpartumcCare = this.reproductiveCycle;
