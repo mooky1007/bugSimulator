@@ -269,8 +269,8 @@ export class Bug extends Objects {
         this.actionPeriod = 300; // 행동 주기
         this.energy = 80; // 초기 에너지
         this.maxEnergy = 100; // 최대 에너지
-        this.sightRange = 12; // 시야 영역
-        this.territoryRange = 6; // 영역
+        this.sightRange = 18; // 시야 영역
+        this.territoryRange = 12; // 영역
         this.needFood = 70; // 허기를 느끼는 수치
         this.procreationEnergy = 70; // 번식에 필요한 에너지
         this.reproductiveCycle = 50; // 번식주기
@@ -298,8 +298,8 @@ export class HunterBug extends Objects {
         this.actionPeriod = 320;
         this.energy = 120;
         this.maxEnergy = 160;
-        this.sightRange = 12;
-        this.territoryRange = 12;
+        this.sightRange = 24;
+        this.territoryRange = 36;
         this.needFood = 90;
         this.reproductiveCycle = 100;
         this.procreationEnergy = 50;
