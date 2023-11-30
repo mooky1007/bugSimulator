@@ -64,7 +64,7 @@ export class Bug extends Objects {
         this.speed = 300;
         this.energy = 80;
         this.maxEnergy = 100;
-        this.sightRange = 12;
+        this.sightRange = 9;
         this.needFood = 50;
         this.procreationEnergy = 30;
         this.reproductiveCycle = 30;
@@ -283,12 +283,12 @@ export class HunterBug extends Bug {
         this.eatTarget = 'bug';
         this.power = 16;
         this.speed = 220;
-        this.energy = 180;
-        this.maxEnergy = 240;
-        this.sightRange = 32;
-        this.needFood = 40;
-        this.reproductiveCycle = 120;
-        this.procreationEnergy = 40;
+        this.energy = 120;
+        this.maxEnergy = 160;
+        this.sightRange = 12;
+        this.needFood = 30;
+        this.reproductiveCycle = 160;
+        this.procreationEnergy = 80;
         this.postpartumcCare = this.reproductiveCycle;
         this.newBornEnergy = this.energy / 4;
         this.gen = 0;
