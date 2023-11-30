@@ -346,7 +346,7 @@ export class Tree extends Objects {
         const emptyTiles = this.sight().filter((tile) => !tile?.content);
 
         this.aliveTime += this.createDuration;
-        for (let i = 0; i < Math.floor(Math.random() * this.createLength) + this.createLength - 3; i++) {
+        for (let i = 0; i < Math.floor(Math.random() * (this.createLength - 3)) + 3; i++) {
             if (emptyTiles.length > 0) {
                 const randomIndex = Math.floor(Math.random() * emptyTiles.length);
                 if (!emptyTiles[randomIndex]) continue;
