@@ -60,7 +60,7 @@ export class Tree extends Objects {
         if (this.level < 10) {
             this.level += 1;
             this.size += this.level;
-            this.sightRange += Math.floor(this.level / 4);
+            this.sightRange += Math.floor(this.level ** 1.5);
             this.area = this.getSight(this.sightRange);
             this.createLength += this.level ** 2;
             const tile = this.map.getTile(x, y);
