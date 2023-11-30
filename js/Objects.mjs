@@ -45,7 +45,7 @@ export class Food extends Objects {
         if(this?.foodLife) clearTimeout(this.foodLife);
         this.foodLife = setTimeout(() => {
             this.die();
-        }, 6000);
+        }, 12000);
     }
 
     die() {
