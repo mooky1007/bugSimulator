@@ -259,7 +259,7 @@ export class Bug extends Objects {
     constructor(config) {
         super(config);
         this.icon = '🐛';
-        this.size = 9;
+        this.size = 7;
         this.name = config.name;
         this.type = 'bug';
         this.eatTarget = 'food';
@@ -288,7 +288,7 @@ export class HunterBug extends Objects {
     constructor(config) {
         super(config);
         this.icon = '🦗';
-        this.size = 18;
+        this.size = 13;
         this.type = 'hunter';
         this.eatTarget = 'bug';
         this.power = 16;
