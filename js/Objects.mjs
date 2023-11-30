@@ -65,9 +65,9 @@ export class Bug extends Objects {
         this.energy = 80;
         this.maxEnergy = 100;
         this.sightRange = 12;
-        this.needFood = 40;
-        this.procreationEnergy = 40;
-        this.reproductiveCycle = 60;
+        this.needFood = 50;
+        this.procreationEnergy = 30;
+        this.reproductiveCycle = 30;
         this.postpartumcCare = this.reproductiveCycle;
         this.newBornEnergy = this.energy / 4;
         this.gen = 0;
