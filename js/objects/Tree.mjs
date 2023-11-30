@@ -37,6 +37,10 @@ export class Tree extends Objects {
 
         this.aliveTime += this.createDuration;
         for (let i = 0; i < Math.floor(Math.random() * (this.createLength - 3)) + 3; i++) {
+            if(this.sight.filter((tile) => tile?.content?.type === 'food').length > this.sight.length / 4) {
+                break;
+            }
+
             if (emptyTiles.length > 0) {
                 const randomIndex = Math.floor(Math.random() * emptyTiles.length);
                 if (!emptyTiles[randomIndex]) continue;

@@ -112,7 +112,7 @@ export class Objects {
             return;
         }
 
-        if(this.energy <= this.needFood && foodTile.length > 2){
+        if(this.energy <= this.needFood && foodTile.length > 1){
             foodTile.sort((a, b) => {
                 const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
                 const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
@@ -210,11 +210,6 @@ export class Objects {
 
         const territory = this.getSight(this.territoryRange).filter((tile) => tile?.content?.type === this.type);
         if (territory.length > this.allowSameSpecies) {
-            this.postpartumcCare += 3;
-            return;
-        }
-
-        if (this.getSight(this.sightRange).filter((tile) => tile?.content?.type === this.eatTarget).length < 3) {
             this.postpartumcCare += 3;
             return;
         }
