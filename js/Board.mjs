@@ -1,4 +1,7 @@
-import { Ant, Bug, Food, HunterBug, Rock, Scolpion, Tree } from './Objects.mjs';
+import { Ant, Bug, HunterBug, Scolpion } from './Objects.mjs';
+import { Rock } from './objects/Rock.mjs';
+import { Tree } from './objects/Tree.mjs';
+import { Food } from './objects/Food.mjs';
 
 class Board {
     constructor(

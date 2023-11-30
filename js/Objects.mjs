@@ -1,4 +1,4 @@
-class Objects {
+export class Objects {
     constructor(config) {
         this.map = config.map;
         this.position = config.position;
@@ -6,6 +6,25 @@ class Objects {
         this.size = config.size || 9;
         this.icon = config.icon || '⭕';
         this.directions = ['up', 'down', 'left', 'right'];
+    }
+
+    getSight(sight){
+        const { x, y } = this.position;
+        let sightTiles = [];
+
+        const transform = (i, j) => this.map.getTile(x + i, y + j);
+
+        for (let i = -sight; i <= sight; i++) {
+            for (let j = -sight; j <= sight; j++) {
+                const distance = Math.sqrt(i * i + j * j);
+
+                if (distance <= sight) {
+                    sightTiles.push(transform(i, j));
+                }
+            }
+        }
+        sightTiles = sightTiles.filter((tile) => tile?.content !== this);
+        return sightTiles;
     }
 
     sight() {
@@ -29,28 +48,6 @@ class Objects {
 
     die() {
         this.map.getTile(this.position.x, this.position.y).content = null;
-    }
-}
-
-export class Food extends Objects {
-    constructor(config) {
-        super(config);
-        this.energy = 50;
-        this.type = 'food';
-
-        this.init();
-    }
-
-    init() {
-        if(this?.foodLife) clearTimeout(this.foodLife);
-        this.foodLife = setTimeout(() => {
-            this.die();
-        }, 12000);
-    }
-
-    die() {
-        clearTimeout(this.foodLife);
-        super.die();
     }
 }
 
@@ -88,7 +85,7 @@ export class Bug extends Objects {
 
     init() {
         if (this?.life) clearInterval(this.life);
-        if (this?.moveCycle) clearInterval(this.moveCycle);
+        if (this?.moveCycle) clearTimeout(this.moveCycle);
 
         this.life = setInterval(() => {
             this.energy--;
@@ -97,8 +94,13 @@ export class Bug extends Objects {
             }
         }, 200);
 
-        this.moveCycle = setInterval(() => {
+        this.moveCycleAction()
+    }
+
+    moveCycleAction(){
+        this.moveCycle = setTimeout(() => {
             this.moveAction();
+            this.moveCycleAction();
         }, this.speed);
     }
 
@@ -113,7 +115,14 @@ export class Bug extends Objects {
 
         const sameSpecies = this.sight().filter((tile) => tile?.content?.type === this.type);
         if (sameSpecies.length > this.allowSameSpecies) {
-            console.log('주변에 같은종이 너무 많아 번식을 포기했습니다.')
+            console.log(`${this.name}: 주변에 같은종이 너무 많아 번식을 포기했습니다.`)
+            this.postpartumcCare += 10;
+            return;
+        }
+
+        if(this.getSight(this.sightRange).filter((tile) => tile?.content?.type === this.eatTarget).length < 3) {
+            this.postpartumcCare += 10;
+            console.log(`${this.name}: 주변에 먹이가 부족해 번식을 포기했습니다.`)
             return;
         }
 
@@ -122,6 +131,8 @@ export class Bug extends Objects {
             const randomIndex = Math.floor(Math.random() * emptyTiles.length);
             const { x, y } = emptyTiles[randomIndex];
             let newBug;
+
+            console.log(`${this.name}: 새끼를 낳았습니다.`)
 
             switch (this.type) {
                 case 'bug':
@@ -149,7 +160,19 @@ export class Bug extends Objects {
     moveAction() {
         const { x, y } = this.position;
         let direction;
-        if (this.energy < this.needFood) {
+
+        const predators = this.getSight(4).filter((tile) => {
+            if(this.type === 'bug'){
+                return tile?.content?.type === 'hunter';
+            }
+        });
+
+        if (predators.length > 0) {
+            direction = this.getDirectionToTileReverse(predators[0]);
+        }else if (this.energy < this.needFood) {
+            if(this.type === 'hunter'){
+                this.huntMode = true;
+            }
             direction = this.findNearestFood();
         } else {
             direction = this.getDirectionRandom();
@@ -208,6 +231,28 @@ export class Bug extends Objects {
     getDirectionRandom() {
         const randomIndex = Math.floor(Math.random() * this.directions.length);
         return this.directions[randomIndex];
+    }
+
+    getDirectionToTileReverse(tile) {
+        console.log(`${this.name}: ${tile.content.name}을 피해 달아납니다.`)
+        const { x, y } = this.position;
+        const { x: tileX, y: tileY } = tile;
+        if (x === tileX) {
+            if (y > tileY) return 'down';
+            if (y < tileY) return 'up';
+        }
+        if (y === tileY) {
+            if (x > tileX) return 'right';
+            if (x < tileX) return 'left';
+        }
+        if (x > tileX) {
+            if (y > tileY) return 'down';
+            if (y < tileY) return 'up';
+        }
+        if (x < tileX) {
+            if (y > tileY) return 'down';
+            if (y < tileY) return 'up';
+        }
     }
 
     findNearestFood() {
@@ -289,7 +334,7 @@ export class HunterBug extends Bug {
         this.type = 'hunter';
         this.eatTarget = 'bug';
         this.power = 16;
-        this.speed = 220;
+        this.speed = 140;
         this.energy = 120;
         this.maxEnergy = 160;
         this.sightRange = 12;
@@ -300,12 +345,29 @@ export class HunterBug extends Bug {
         this.newBornEnergy = this.energy / 4;
         this.gen = 0;
 
-        this.allowSameSpecies = 6;
+        this.allowSameSpecies = 3;
 
+        this.huntMode = false;
         this.init();
     }
 
+    get huntMode() {
+        return this._huntMode;
+    }
+
+    set huntMode(value) {
+        this._huntMode = value;
+        if (this._huntMode) {
+            this.speed = 40;
+            this.sightRange = 32;
+        } else {
+            this.speed = 140;
+            this.sightRange = 12;
+        }
+    }
+
     eat(target) {
+        this.huntMode = false;
         if (target.power > this.power) {
             target.power -= 1;
             return;
@@ -316,134 +378,6 @@ export class HunterBug extends Bug {
     move(x, y){
         super.move(x, y);
         this.energy -= 1;
-    }
-}
-
-export class Tree extends Objects {
-    constructor(config) {
-        super(config);
-        this.name = config.name || 'tree';
-        this.type = 'tree';
-        this.size = 11;
-        this.icon = '🌱';
-        this.sightRange = 4;
-
-        this.level = 0;
-
-        this.aliveTime = 0;
-        this.createDuration = 2000 + Math.floor(Math.random() * 1000);
-        this.createLength = 6;
-        this.area = this.sight();
-        this.init();
-    }
-
-    init() {
-        if (this?.life) clearTimeout(this.life);
-        this.life = setTimeout(this.growAndCreate.bind(this), this.createDuration);
-    }
-
-    growAndCreate() {
-        if (this.level <= 2) {
-            this.size += 2;
-            this.level += 1;
-            this.life = setTimeout(this.growAndCreate.bind(this), this.createDuration * (this.level / 2));
-            return;
-        }
-        this.icon = '🌲';
-        this.size = 24;
-
-        const emptyTiles = this.sight().filter((tile) => !tile?.content);
-
-        this.aliveTime += this.createDuration;
-        for (let i = 0; i < Math.floor(Math.random() * (this.createLength - 3)) + 3; i++) {
-            if (emptyTiles.length > 0) {
-                const randomIndex = Math.floor(Math.random() * emptyTiles.length);
-                if (!emptyTiles[randomIndex]) continue;
-                const { x, y } = emptyTiles[randomIndex];
-                this.map.createFood(x, y);
-            }
-        }
-
-        if(this.level < 10){
-            this.level += 1;
-            this.size += this.level;
-            this.sightRange += Math.floor(this.level / 4);
-            this.createLength += this.level;
-            this.drawArea();
-            this.life = setTimeout(this.growAndCreate.bind(this), this.createDuration * (this.level / 2));
-            return;
-        }
-
-        if (this.level > 10) {
-            this.removeArea();
-            clearTimeout(this.life);
-            this.die();
-            this.map.tiles.forEach((row) => {
-                row.forEach((tile) => {
-                    if (tile?.content?.type === 'tree') {
-                        tile.content.level > 3 && tile.content.drawArea();
-                    }
-                });
-            });
-            return;
-        }
-
-        this.life = setTimeout(this.growAndCreate.bind(this), this.createDuration * (this.level / 2));
-    }
-
-    drawArea() {
-        this.area = this.sight();
-        this.area
-            .filter((tile) => tile)
-            .forEach((tile) => {
-                tile.el.classList.add('tree-area');
-            });
-
-        this.map.getTile(this.position.x, this.position.y).el.classList.add('tree-area');
-    }
-
-    removeArea() {
-        this.area = this.sight();
-        this.area
-            .filter((tile) => tile)
-            .forEach((tile) => {
-                tile.el.classList.remove('tree-area');
-            });
-
-        this.map.getTile(this.position.x, this.position.y).el.classList.remove('tree-area');
-    }
-
-    die() {
-        let count = Math.floor(Math.random() * 2) + 1;
-
-        if(this.map.getObjCount('tree') > 8) {
-            count = 0;
-        }
-
-        if (this.map.getObjCount('tree') < 4) {
-            count = 2;
-        }
-
-        while (count > 0) {
-            const emptyTiles = this.sight().filter((tile) => !tile?.content);
-            const randomIndex = Math.floor(Math.random() * emptyTiles.length);
-            if (!emptyTiles[randomIndex]?.x && !emptyTiles[randomIndex]?.y && !emptyTiles[randomIndex]?.content) continue;
-            this.map.createTree(emptyTiles[randomIndex].x, emptyTiles[randomIndex].y);
-            count--;
-        }
-        super.die();
-    }
-}
-
-export class Rock extends Objects {
-    constructor(config) {
-        super(config);
-        this.name = config.name || 'rock';
-        this.type = 'rock';
-        this.size = 24;
-        this.icon = '';
-        this.className = 'rock';
-        this.sightRange = 2;
     }
 }
 
