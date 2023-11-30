@@ -13,7 +13,7 @@ export class Tree extends Objects {
 
         this.aliveTime = 0;
         this.createDuration = 2000 + Math.floor(Math.random() * 1000);
-        this.createLength = 6;
+        this.createLength = 9;
         this.area = this.getSight(this.sightRange);
         this.init();
     }
@@ -49,9 +49,9 @@ export class Tree extends Objects {
             this.level += 1;
             this.size += this.level;
             this.sightRange += Math.floor(this.level / 4);
-            this.createLength += this.level;
+            this.createLength += (this.level ** 2);
             this.drawArea();
-            this.life = setTimeout(this.growAndCreate.bind(this), this.createDuration * (this.level / 2));
+            this.life = setTimeout(this.growAndCreate.bind(this), this.createDuration * (this.level / 4));
             return;
         }
 

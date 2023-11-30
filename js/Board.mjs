@@ -50,7 +50,7 @@ class Board {
                         tension: 0.5,
                     },
                     {
-                        label: '🦗',
+                        label: '🦗x3',
                         data: [],
                         borderColor: '#999',
                         tension: 0.5,
@@ -78,14 +78,14 @@ class Board {
         this.chart.data.labels.push(this.chart.data.labels.length);
         this.chart.data.datasets[0].data.push(this.getObjCount('bug'));
         this.chart.data.datasets[1].data.push(this.getObjCount('food'));
-        this.chart.data.datasets[2].data.push(this.getObjCount('hunter'));
+        this.chart.data.datasets[2].data.push(this.getObjCount('hunter')*3);
         this.chart.update();
 
         setInterval(() => {
             this.chart.data.labels.push(this.chart.data.labels.length);
             this.chart.data.datasets[0].data.push(this.getObjCount('bug'));
             this.chart.data.datasets[1].data.push(this.getObjCount('food'));
-            this.chart.data.datasets[2].data.push(this.getObjCount('hunter'));
+            this.chart.data.datasets[2].data.push(this.getObjCount('hunter')*3);
             this.chart.update();
         }, 5000);
     }
@@ -100,6 +100,9 @@ class Board {
                 let tile = document.createElement('div');
                 tile.classList.add('tile');
                 this.tiles[x][y].el = tile;
+                // tile.addEventListener('click', () => {
+                //     console.log(this.tiles[x][y]);
+                // });
                 row.appendChild(tile);
             }
 
