@@ -45,7 +45,7 @@ export class Tree extends Objects {
         const emptyTiles = this.area.filter((tile) => !tile?.content);
 
         for (let i = 0; i < Math.floor(Math.random() * (this.createLength - 3)) + 3; i++) {
-            if (this.area.filter((tile) => tile?.content?.type === 'food').length > this.area.length / 8) {
+            if (this.area.filter((tile) => tile?.content?.type === 'food').length > this.area.length / 16) {
                 break;
             }
 
@@ -60,7 +60,7 @@ export class Tree extends Objects {
         if (this.level < 10) {
             this.level += 1;
             this.size += this.level;
-            this.sightRange += Math.floor(this.level ** 1.5);
+            this.sightRange += Math.floor(this.level ** 1.7);
             this.area = this.getSight(this.sightRange);
             this.createLength += this.level ** 2;
             const tile = this.map.getTile(x, y);
