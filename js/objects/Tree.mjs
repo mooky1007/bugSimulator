@@ -11,7 +11,6 @@ export class Tree extends Objects {
 
         this.level = 0;
 
-        this.aliveTime = 0;
         this.createDuration = 2000 + Math.floor(Math.random() * 1000);
         this.createLength = 9;
         this.area = this.getSight(this.sightRange);
@@ -35,9 +34,8 @@ export class Tree extends Objects {
 
         const emptyTiles = this.area.filter((tile) => !tile?.content);
 
-        this.aliveTime += this.createDuration;
         for (let i = 0; i < Math.floor(Math.random() * (this.createLength - 3)) + 3; i++) {
-            if(this.sight.filter((tile) => tile?.content?.type === 'food').length > this.sight.length / 4) {
+            if(this.area.filter((tile) => tile?.content?.type === 'food').length > this.area.length / 8) {
                 break;
             }
 
@@ -53,23 +51,10 @@ export class Tree extends Objects {
             this.level += 1;
             this.size += this.level;
             this.sightRange += Math.floor(this.level / 4);
+            this.area = this.getSight(this.sightRange);
             this.createLength += (this.level ** 2);
             this.drawArea();
             this.life = setTimeout(this.growAndCreate.bind(this), this.createDuration * (this.level / 4));
-            return;
-        }
-
-        if (this.level > 10) {
-            this.removeArea();
-            clearTimeout(this.life);
-            this.die();
-            this.map.tiles.forEach((row) => {
-                row.forEach((tile) => {
-                    if (tile?.content?.type === 'tree') {
-                        tile.content.level > 3 && tile.content.drawArea();
-                    }
-                });
-            });
             return;
         }
 
@@ -85,37 +70,5 @@ export class Tree extends Objects {
             });
 
         this.map.getTile(this.position.x, this.position.y).el.classList.add('tree-area');
-    }
-
-    removeArea() {
-        this.area = this.getSight(this.sightRange);
-        this.area
-            .filter((tile) => tile)
-            .forEach((tile) => {
-                tile.el.classList.remove('tree-area');
-            });
-
-        this.map.getTile(this.position.x, this.position.y).el.classList.remove('tree-area');
-    }
-
-    die() {
-        let count = Math.floor(Math.random() * 2) + 1;
-
-        if(this.map.getObjCount('tree') > 8) {
-            count = 0;
-        }
-
-        if (this.map.getObjCount('tree') < 4) {
-            count = 2;
-        }
-
-        while (count > 0) {
-            const emptyTiles = this.getSight().filter((tile) => !tile?.contentthis.sightRange);
-            const randomIndex = Math.floor(Math.random() * emptyTiles.length);
-            if (!emptyTiles[randomIndex]?.x && !emptyTiles[randomIndex]?.y && !emptyTiles[randomIndex]?.content) continue;
-            this.map.createTree(emptyTiles[randomIndex].x, emptyTiles[randomIndex].y);
-            count--;
-        }
-        super.die();
     }
 }

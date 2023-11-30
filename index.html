@@ -157,30 +157,19 @@
 
         const board = new Board({
             boardX: 100,
-            boardY: 140,
+            boardY: 100,
             wrapperClassNams: '.board'
         });
 
         board.createTree(34,5);
-        board.createTree(4,25);
-        board.createTree(24,45);
         board.createTree(14,35);
-        board.createTree(44,22);
-        board.createTree(64,35);
-        board.createTree(84,45);
-        board.createTree(64,35);
-        board.createTree(74,25);
-
-        board.createTree(40,60);
         board.createTree(40,80);
-        board.createTree(60,60);
-        board.createTree(60,80);
+        board.createTree(90,84);
+        board.createTree(24,71);
 
-        board.createTree(90,126);
-        board.createTree(24,126);
-        
+        board.generateObject('food', 30);
         board.generateObject('bug', 60);
-        board.generateObject('hunter', 20);
+        board.generateObject('hunter', 10);
     </script>
 </body>
 

@@ -50,7 +50,7 @@ class Board {
                         tension: 0.5,
                     },
                     {
-                        label: '🦗x3',
+                        label: '🦗x2',
                         data: [],
                         borderColor: '#999',
                         tension: 0.5,
@@ -73,21 +73,27 @@ class Board {
 
         setInterval(() => {
             this.render();
-        }, 500);
+        }, 400);
 
         this.chart.data.labels.push(this.chart.data.labels.length);
         this.chart.data.datasets[0].data.push(this.getObjCount('bug'));
         this.chart.data.datasets[1].data.push(this.getObjCount('food'));
-        this.chart.data.datasets[2].data.push(this.getObjCount('hunter')*3);
+        this.chart.data.datasets[2].data.push(this.getObjCount('hunter')*2);
+        document.querySelector('.food-count').innerHTML = this.getObjCount('food');
+        document.querySelector('.bug-count').innerHTML = this.getObjCount('bug');
+        document.querySelector('.hunter-count').innerHTML = this.getObjCount('hunter');
         this.chart.update();
 
         setInterval(() => {
             this.chart.data.labels.push(this.chart.data.labels.length);
             this.chart.data.datasets[0].data.push(this.getObjCount('bug'));
             this.chart.data.datasets[1].data.push(this.getObjCount('food'));
-            this.chart.data.datasets[2].data.push(this.getObjCount('hunter')*3);
+            this.chart.data.datasets[2].data.push(this.getObjCount('hunter')*2);
+            document.querySelector('.food-count').innerHTML = this.getObjCount('food');
+            document.querySelector('.bug-count').innerHTML = this.getObjCount('bug');
+            document.querySelector('.hunter-count').innerHTML = this.getObjCount('hunter');
             this.chart.update();
-        }, 5000);
+        }, 3000);
     }
 
     create() {
@@ -100,28 +106,11 @@ class Board {
                 let tile = document.createElement('div');
                 tile.classList.add('tile');
                 this.tiles[x][y].el = tile;
-                // tile.addEventListener('click', () => {
-                //     console.log(this.tiles[x][y]);
-                // });
                 row.appendChild(tile);
             }
 
             this.el.appendChild(row);
         }
-    }
-
-    getPowerfulObject(type) {
-        let powerfulObject = null;
-        this.tiles.forEach((row) => {
-            row.forEach((tile) => {
-                if (tile.content && tile.content.type === type) {
-                    if (!powerfulObject || powerfulObject.power < tile.content.power) {
-                        powerfulObject = tile.content;
-                    }
-                }
-            });
-        });
-        return powerfulObject;
     }
 
     render() {
@@ -148,10 +137,6 @@ class Board {
                 }
             });
         });
-
-        document.querySelector('.food-count').innerHTML = this.getObjCount('food');
-        document.querySelector('.bug-count').innerHTML = this.getObjCount('bug');
-        document.querySelector('.hunter-count').innerHTML = this.getObjCount('hunter');
     }
 
     getTile(x, y) {

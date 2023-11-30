@@ -101,9 +101,10 @@ export class Objects {
     }
 
     action() {
-        const foodTile = this.sight.filter((tile) => tile?.content?.type === this.eatTarget); // 주변의 음식
+        const sightTiles = this.sight;
+        const foodTile = sightTiles.filter((tile) => tile?.content?.type === this.eatTarget); // 주변의 음식
+        const predator = sightTiles.filter((tile) => tile?.content?.eatTarget === this.type && tile?.content?.energy < tile?.content?.needFood); // 주변의 포식자
         const territory = this.getSight(this.territoryRange).filter((tile) => tile?.content?.type === this.type); // 활동영역
-        const predator = this.sight.filter((tile) => tile?.content?.eatTarget === this.type && tile?.content?.energy < tile?.content?.needFood); // 주변의 포식자
 
         this.addActionPeriod = 0;
 
@@ -164,7 +165,7 @@ export class Objects {
         if(x === undefined || y === undefined) return;
         if (x < 0 || y < 0 || x >= this.map.boardX || y >= this.map.boardY) {
             // random move
-            const emptyTiles = this.getSight(1).filter((tile) => tile?.content === null);
+            const emptyTiles = this.nearbyTiles.filter((tile) => tile?.content === null);
 
             if (emptyTiles.length > 0) {
                 const randomIndex = Math.floor(Math.random() * emptyTiles.length);
@@ -181,7 +182,7 @@ export class Objects {
                 this.collisionEvent('eat', tile.content);
                 return;
             } else {
-                const emptyTiles = this.getSight(1).filter((tile) => tile?.content === null);
+                const emptyTiles = this.nearbyTiles.filter((tile) => tile?.content === null);
 
                 if (emptyTiles.length > 0) {
                     const randomIndex = Math.floor(Math.random() * emptyTiles.length);
@@ -206,15 +207,13 @@ export class Objects {
     }
 
     giveBirth() {
-        const nearlyTiles = this.getSight(1);
-
         const territory = this.getSight(this.territoryRange).filter((tile) => tile?.content?.type === this.type);
         if (territory.length > this.allowSameSpecies) {
             this.postpartumcCare += 3;
             return;
         }
 
-        const emptyTiles = nearlyTiles.filter((tile) => tile?.content === null);
+        const emptyTiles = this.nearbyTiles.filter((tile) => tile?.content === null);
         if (emptyTiles.length > 0) {
             const randomIndex = Math.floor(Math.random() * emptyTiles.length);
             const { x, y } = emptyTiles[randomIndex];
@@ -259,8 +258,8 @@ export class Bug extends Objects {
         this.actionPeriod = 300; // 행동 주기
         this.energy = 80; // 초기 에너지
         this.maxEnergy = 100; // 최대 에너지
-        this.sightRange = 16; // 시야 영역
-        this.territoryRange = 3; // 영역
+        this.sightRange = 12; // 시야 영역
+        this.territoryRange = 6; // 영역
         this.needFood = 70; // 허기를 느끼는 수치
         this.procreationEnergy = 70;  // 번식에 필요한 에너지
         this.reproductiveCycle = 50; // 번식주기
@@ -272,23 +271,6 @@ export class Bug extends Objects {
 
         this.init();
     }
-
-    // action() {
-    //     const predator = this.sight.filter((tile) => {
-    //         return  tile?.content?.eatTarget === this.type && tile?.content?.energy < tile?.content?.needFood;
-    //     }); // 주변의 포식자
-    //     if(predator.length > 0){
-    //         predator.sort((a, b) => {
-    //             const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
-    //             const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
-    //             return aDistance - bDistance;
-    //         });
-    //         this.move(this.directions.getDirectionToTargetAway(predator[0]).x, this.directions.getDirectionToTargetAway(predator[0]).y);
-    //         return;
-    //     }
-        
-    //     super.action();
-    // }
 }
 
 export class HunterBug extends Objects {
@@ -305,8 +287,8 @@ export class HunterBug extends Objects {
         this.actionPeriod = 320;
         this.energy = 120;
         this.maxEnergy = 160;
-        this.sightRange = 32;
-        this.territoryRange = 24;
+        this.sightRange = 12;
+        this.territoryRange = 12;
         this.needFood = 90;
         this.reproductiveCycle = 100;
         this.procreationEnergy = 50;
