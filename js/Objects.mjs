@@ -70,6 +70,7 @@ export class Bug extends Objects {
         this.reproductiveCycle = 30;
         this.postpartumcCare = this.reproductiveCycle;
         this.newBornEnergy = this.energy / 4;
+        this.allowSameSpecies = 32;
         this.gen = 0;
 
         this.init();
@@ -109,6 +110,12 @@ export class Bug extends Objects {
 
     bear() {
         const nearlyTiles = this.getNealarTiles();
+
+        const sameSpecies = this.sight().filter((tile) => tile?.content?.type === this.type);
+        if (sameSpecies.length > this.allowSameSpecies) {
+            console.log('주변에 같은종이 너무 많아 번식을 포기했습니다.')
+            return;
+        }
 
         const emptyTiles = nearlyTiles.filter((tile) => tile?.content === null);
         if (emptyTiles.length > 0) {
@@ -177,7 +184,7 @@ export class Bug extends Objects {
 
         const tile = this.map.getTile(x, y);
         if (tile.content) {
-            if (tile.content.type === this.eatTarget) {
+            if (tile.content.type === this.eatTarget && this.energy <= this.needFood) {
                 this.collisionEvent('eat', tile.content);
                 return;
             } else {
@@ -286,12 +293,14 @@ export class HunterBug extends Bug {
         this.energy = 120;
         this.maxEnergy = 160;
         this.sightRange = 12;
-        this.needFood = 30;
+        this.needFood = 50;
         this.reproductiveCycle = 160;
         this.procreationEnergy = 80;
         this.postpartumcCare = this.reproductiveCycle;
         this.newBornEnergy = this.energy / 4;
         this.gen = 0;
+
+        this.allowSameSpecies = 6;
 
         this.init();
     }
