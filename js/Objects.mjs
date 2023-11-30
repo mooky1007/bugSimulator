@@ -73,7 +73,7 @@ export class Objects {
             this.map.getTile(this.position.x + 1, this.position.y - 1),
             this.map.getTile(this.position.x - 1, this.position.y + 1),
             this.map.getTile(this.position.x + 1, this.position.y + 1),
-        ]
+        ];
     }
 
     get sight() {
@@ -108,12 +108,12 @@ export class Objects {
 
         this.addActionPeriod = 0;
 
-        if(foodTile.length <= 0){
+        if (foodTile.length <= 0) {
             this.move(this.directions.getDirectionRandom(this.nearbyTiles).x, this.directions.getDirectionRandom(this.nearbyTiles).y);
             return;
         }
 
-        if(this.energy <= this.needFood && foodTile.length > 1){
+        if (this.energy <= this.needFood && foodTile.length > 1) {
             foodTile.sort((a, b) => {
                 const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
                 const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
@@ -125,7 +125,7 @@ export class Objects {
             return;
         }
 
-        if(predator.length > 0){
+        if (predator.length > 0) {
             predator.sort((a, b) => {
                 const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
                 const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
@@ -134,8 +134,8 @@ export class Objects {
             this.move(this.directions.getDirectionToTargetAway(predator[0]).x, this.directions.getDirectionToTargetAway(predator[0]).y);
             return;
         }
-        
-        if(territory.length > this.allowSameSpecies){
+
+        if (territory.length > this.allowSameSpecies) {
             territory.sort((a, b) => {
                 const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
                 const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
@@ -162,7 +162,7 @@ export class Objects {
     }
 
     move(x, y) {
-        if(x === undefined || y === undefined) return;
+        if (x === undefined || y === undefined) return;
         if (x < 0 || y < 0 || x >= this.map.boardX || y >= this.map.boardY) {
             // random move
             const emptyTiles = this.nearbyTiles.filter((tile) => tile?.content === null);
@@ -195,8 +195,17 @@ export class Objects {
 
         const { x: oldX, y: oldY } = this.position;
         this.position = { x, y };
-        this.map.getTile(oldX, oldY).content = null;
+        this.oldTile = this.map.getTile(oldX, oldY);
+        this.oldTile.content = null;
+        this.oldTile.el.innerHTML = '';
         tile.content = this;
+        tile.el.innerHTML = `<span
+                            class="${this.className || ''}"
+                            style="
+                            font-size: ${this.size}px;
+                        " id="${this.name || ''}">
+                            ${this.icon}
+                        </span>`;
     }
 
     eat(target) {
@@ -222,7 +231,7 @@ export class Objects {
             switch (this.type) {
                 case 'bug':
                     newBug = this.map.createBug(x, y);
-                        break;
+                    break;
                 case 'hunter':
                     newBug = this.map.createHunter(x, y);
                     break;
@@ -240,7 +249,9 @@ export class Objects {
     die() {
         clearInterval(this.life);
         clearTimeout(this.moveCycle);
-        this.map.getTile(this.position.x, this.position.y).content = null;
+        const targetTile = this.map.getTile(this.position.x, this.position.y);
+        targetTile.content = null;
+        targetTile.el.innerHTML = '';
     }
 }
 
@@ -261,7 +272,7 @@ export class Bug extends Objects {
         this.sightRange = 12; // 시야 영역
         this.territoryRange = 6; // 영역
         this.needFood = 70; // 허기를 느끼는 수치
-        this.procreationEnergy = 70;  // 번식에 필요한 에너지
+        this.procreationEnergy = 70; // 번식에 필요한 에너지
         this.reproductiveCycle = 50; // 번식주기
         this.postpartumcCare = this.reproductiveCycle; // 새끼를 낳고 다시 낳을 수 있을때 까지의 시간
         this.newBornEnergy = this.energy / 4; // 새로 태어나는 개체의 초기 에너지
@@ -277,7 +288,7 @@ export class HunterBug extends Objects {
     constructor(config) {
         super(config);
         this.icon = '🦗';
-        this.size= 18;
+        this.size = 18;
         this.type = 'hunter';
         this.eatTarget = 'bug';
         this.power = 16;

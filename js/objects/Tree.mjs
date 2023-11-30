@@ -1,4 +1,4 @@
-import { Objects } from "../Objects.mjs";
+import { Objects } from '../Objects.mjs';
 
 export class Tree extends Objects {
     constructor(config) {
@@ -23,9 +23,19 @@ export class Tree extends Objects {
     }
 
     growAndCreate() {
+        const { x, y } = this.position;
+
         if (this.level <= 2) {
             this.size += 2;
             this.level += 1;
+            const tile = this.map.getTile(x, y);
+            tile.el.innerHTML = `<span
+                            class="${this.className || ''}"
+                            style="
+                            font-size: ${this.size}px;
+                        " id="${this.name || ''}">
+                            ${this.icon}
+                        </span>`;
             this.life = setTimeout(this.growAndCreate.bind(this), this.createDuration * (this.level / 2));
             return;
         }
@@ -35,7 +45,7 @@ export class Tree extends Objects {
         const emptyTiles = this.area.filter((tile) => !tile?.content);
 
         for (let i = 0; i < Math.floor(Math.random() * (this.createLength - 3)) + 3; i++) {
-            if(this.area.filter((tile) => tile?.content?.type === 'food').length > this.area.length / 8) {
+            if (this.area.filter((tile) => tile?.content?.type === 'food').length > this.area.length / 8) {
                 break;
             }
 
@@ -47,12 +57,20 @@ export class Tree extends Objects {
             }
         }
 
-        if(this.level < 10){
+        if (this.level < 10) {
             this.level += 1;
             this.size += this.level;
             this.sightRange += Math.floor(this.level / 4);
             this.area = this.getSight(this.sightRange);
-            this.createLength += (this.level ** 2);
+            this.createLength += this.level ** 2;
+            const tile = this.map.getTile(x, y);
+            tile.el.innerHTML = `<span
+                            class="${this.className || ''}"
+                            style="
+                            font-size: ${this.size}px;
+                        " id="${this.name || ''}">
+                            ${this.icon}
+                        </span>`;
             this.drawArea();
             this.life = setTimeout(this.growAndCreate.bind(this), this.createDuration * (this.level / 4));
             return;

@@ -78,7 +78,7 @@ class Board {
         this.chart.data.labels.push(this.chart.data.labels.length);
         this.chart.data.datasets[0].data.push(this.getObjCount('bug'));
         this.chart.data.datasets[1].data.push(this.getObjCount('food'));
-        this.chart.data.datasets[2].data.push(this.getObjCount('hunter')*2);
+        this.chart.data.datasets[2].data.push(this.getObjCount('hunter') * 2);
         document.querySelector('.food-count').innerHTML = this.getObjCount('food');
         document.querySelector('.bug-count').innerHTML = this.getObjCount('bug');
         document.querySelector('.hunter-count').innerHTML = this.getObjCount('hunter');
@@ -88,7 +88,7 @@ class Board {
             this.chart.data.labels.push(this.chart.data.labels.length);
             this.chart.data.datasets[0].data.push(this.getObjCount('bug'));
             this.chart.data.datasets[1].data.push(this.getObjCount('food'));
-            this.chart.data.datasets[2].data.push(this.getObjCount('hunter')*2);
+            this.chart.data.datasets[2].data.push(this.getObjCount('hunter') * 2);
             document.querySelector('.food-count').innerHTML = this.getObjCount('food');
             document.querySelector('.bug-count').innerHTML = this.getObjCount('bug');
             document.querySelector('.hunter-count').innerHTML = this.getObjCount('hunter');
@@ -114,29 +114,23 @@ class Board {
     }
 
     render() {
-        this.tiles.forEach((row) => {
-            row.forEach((tile) => {
-                tile.el.innerHTML = '';
-                if (tile.content) {
-                    tile.el.innerHTML = `
-                        <span
-                            class="${tile.content.className || ''}"
-                            style="
-                            font-size: ${tile.content.size}px;
-                        " id="${tile.content.name || ''}">
-                            ${tile.content.icon}
-                            ${
-                                tile.content.type !== 'food'
-                                    ? `<span
-                                style="color: ${tile.content.color || '#fff'}; display: none;"
-                            >${tile.content.energy}${tile.content.gen ? '/' + tile.content.gen : ''}</span>`
-                                    : ''
-                            }
-                        </span>
-                    `;
-                }
-            });
-        });
+        // this.tiles.forEach((row) => {
+        //     row.forEach((tile) => {
+        //         if (tile.content) {
+        //             tile.el.innerHTML = `
+        //                 <span
+        //                     class="${tile.content.className || ''}"
+        //                     style="
+        //                     font-size: ${tile.content.size}px;
+        //                 " id="${tile.content.name || ''}">
+        //                     ${tile.content.icon}
+        //                 </span>
+        //             `;
+        //         }else{
+        //             if(tile.el.innerHTML !== '') tile.el.innerHTML = '';
+        //         }
+        //     });
+        // });
     }
 
     getTile(x, y) {
@@ -181,21 +175,40 @@ class Board {
     }
 
     createFood(x, y) {
-        this.getTile(x, y).content = new Food({
+        const targetTile = this.getTile(x, y);
+        targetTile.content = new Food({
             map: this,
             position: { x: x, y: y },
             name: `food_${this.bug}`,
         });
 
+        targetTile.el.innerHTML = `<span
+        class="${targetTile.content.className || ''}"
+        style="
+        font-size: ${targetTile.content.size}px;
+    " id="${targetTile.content.name || ''}">
+        ${targetTile.content.icon}
+    </span>`;
+
         this.food++;
     }
 
     createTree(x, y) {
-        this.getTile(x, y).content = new Tree({
+        const targetTile = this.getTile(x, y);
+
+        targetTile.content = new Tree({
             map: this,
             position: { x: x, y: y },
             name: `tree_${this.bug}`,
         });
+
+        targetTile.el.innerHTML = `<span
+        class="${targetTile.content.className || ''}"
+        style="
+        font-size: ${targetTile.content.size}px;
+    " id="${targetTile.content.name || ''}">
+        ${targetTile.content.icon}
+    </span>`;
     }
 
     generateObject(object, count = 1) {
