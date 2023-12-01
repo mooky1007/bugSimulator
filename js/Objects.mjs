@@ -103,54 +103,11 @@ export class Objects {
     }
 
     action() {
-        const sightTiles = this.sight;
-        const foodTile = sightTiles.filter((tile) => tile?.content?.type === this.eatTarget); // 주변의 음식
-        const predator = sightTiles.filter((tile) => tile?.content?.eatTarget === this.type && tile?.content?.energy < tile?.content?.needFood); // 주변의 포식자
-        const territory = this.getSight(this.territoryRange).filter((tile) => tile?.content?.type === this.type); // 활동영역
-
         this.addActionPeriod = 0;
-
-        if (foodTile.length <= 0) {
-            this.move(this.directions.getDirectionRandom(this.nearbyTiles).x, this.directions.getDirectionRandom(this.nearbyTiles).y);
-            return;
-        }
-
-        if (this.energy <= this.needFood && foodTile.length > 1) {
-            foodTile.sort((a, b) => {
-                const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
-                const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
-                return aDistance - bDistance;
-            });
-
-            this.move(this.directions.getDirectionToTarget(foodTile[0]).x, this.directions.getDirectionToTarget(foodTile[0]).y);
-            this.addActionPeriod -= this.hungryMoveSpeed;
-            return;
-        }
-
-        if (predator.length > 0) {
-            predator.sort((a, b) => {
-                const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
-                const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
-                return aDistance - bDistance;
-            });
-            this.move(this.directions.getDirectionToTargetAway(predator[0]).x, this.directions.getDirectionToTargetAway(predator[0]).y);
-            return;
-        }
-
-        if (territory.length > this.allowSameSpecies) {
-            territory.sort((a, b) => {
-                const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
-                const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
-                return aDistance - bDistance;
-            });
-            this.move(this.directions.getDirectionToTargetAway(territory[0]).x, this.directions.getDirectionToTargetAway(territory[0]).y);
-            return;
-        }
-
-        if (this.energy > this.procreationEnergy && this.postpartumcCare <= 0) {
-            this.giveBirth();
-            return;
-        }
+        this.sightTiles = this.sight;
+        this.foodTile = this.sightTiles.filter((tile) => tile?.content?.type === this.eatTarget); // 주변의 음식
+        this.predator = this.sightTiles.filter((tile) => tile?.content?.eatTarget === this.type && tile?.content?.energy < tile?.content?.needFood); // 주변의 포식자
+        this.territory = this.getSight(this.territoryRange).filter((tile) => tile?.content?.type === this.type); // 활동영역
     }
 
     collisionEvent(event, target) {
@@ -290,6 +247,52 @@ export class Bug extends Objects {
 
         this.init();
     }
+
+    action() {
+        super.action();
+
+        if (this.foodTile.length <= 0) {
+            this.move(this.directions.getDirectionRandom(this.nearbyTiles).x, this.directions.getDirectionRandom(this.nearbyTiles).y);
+            return;
+        }
+
+        if (this.energy <= this.needFood && this.foodTile.length > 1) {
+            this.foodTile.sort((a, b) => {
+                const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
+                const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
+                return aDistance - bDistance;
+            });
+
+            this.move(this.directions.getDirectionToTarget(this.foodTile[0]).x, this.directions.getDirectionToTarget(this.foodTile[0]).y);
+            this.addActionPeriod -= this.hungryMoveSpeed;
+            return;
+        }
+
+        if (this.predator.length > 0) {
+            this.predator.sort((a, b) => {
+                const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
+                const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
+                return aDistance - bDistance;
+            });
+            this.move(this.directions.getDirectionToTargetAway(this.predator[0]).x, this.directions.getDirectionToTargetAway(this.predator[0]).y);
+            return;
+        }
+
+        if (this.territory.length > this.allowSameSpecies) {
+            this.territory.sort((a, b) => {
+                const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
+                const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
+                return aDistance - bDistance;
+            });
+            this.move(this.directions.getDirectionToTargetAway(this.territory[0]).x, this.directions.getDirectionToTargetAway(this.territory[0]).y);
+            return;
+        }
+
+        if (this.energy > this.procreationEnergy && this.postpartumcCare <= 0) {
+            this.giveBirth();
+            return;
+        }
+    }
 }
 
 export class HunterBug extends Objects {
@@ -324,32 +327,40 @@ export class HunterBug extends Objects {
         this.energy -= 1;
         super.move(x, y);
     }
-}
 
-export class HunterBug2 extends HunterBug {
-    constructor(config) {
-        super(config);
-        this.icon = '🦂';
-        this.size = 13;
-        this.type = 'hunter2';
-        this.eatTarget = 'bug';
-        this.power = 24;
+    action() {
+        super.action();
 
-        this.lifeSpan = 7200;
+        if (this.foodTile.length <= 0) {
+            this.move(this.directions.getDirectionRandom(this.nearbyTiles).x, this.directions.getDirectionRandom(this.nearbyTiles).y);
+            return;
+        }
 
-        this.actionPeriod = 240;
-        this.energy = 600;
-        this.maxEnergy = 680;
-        this.sightRange = 60;
-        this.territoryRange = 32;
-        this.needFood = 580;
-        this.reproductiveCycle = 600;
-        this.procreationEnergy = 300;
-        this.postpartumcCare = this.reproductiveCycle;
-        this.newBornEnergy = this.energy / 2;
-        this.gen = 0;
+        if (this.energy <= this.needFood && this.foodTile.length > 1) {
+            this.foodTile.sort((a, b) => {
+                const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
+                const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
+                return aDistance - bDistance;
+            });
 
-        this.allowSameSpecies = 1;
-        this.init();
+            this.move(this.directions.getDirectionToTarget(this.foodTile[0]).x, this.directions.getDirectionToTarget(this.foodTile[0]).y);
+            this.addActionPeriod -= this.hungryMoveSpeed;
+            return;
+        }
+
+        if (this.energy > this.procreationEnergy && this.postpartumcCare <= 0) {
+            this.giveBirth();
+            return;
+        }
+
+        if (this.territory.length > this.allowSameSpecies) {
+            this.territory.sort((a, b) => {
+                const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
+                const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
+                return aDistance - bDistance;
+            });
+            this.move(this.directions.getDirectionToTargetAway(this.territory[0]).x, this.directions.getDirectionToTargetAway(this.territory[0]).y);
+            return;
+        }
     }
 }
