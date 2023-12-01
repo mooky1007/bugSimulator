@@ -89,6 +89,10 @@ class Board {
                         suggestedMin: 0, // Y축 최소값
                     },
                 },
+                interaction: {
+                    // 툴팁을 완전히 비활성화하는 설정
+                    mode: 'none',
+                },
             },
         });
 
@@ -145,6 +149,10 @@ class Board {
                         suggestedMin: 0, // Y축 최소값
                         suggestedMax: 25, // Y축 최대값
                     },
+                },
+                interaction: {
+                    // 툴팁을 완전히 비활성화하는 설정
+                    mode: 'none',
                 },
             },
         });

@@ -29,10 +29,12 @@ body {
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
+
+    padding-bottom: 20px;
 }
 
 .board {
-    padding: 40px 20px 0;
+    padding: 20px 20px 0;
     overflow: hidden;
 }
 
@@ -118,7 +120,7 @@ body {
 
     display: flex;
     flex-direction: column;
-    gap: 220px;
+    gap: 20px;
 }
 
 .chart_wrap canvas {
