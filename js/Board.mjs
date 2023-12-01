@@ -69,8 +69,11 @@ class Board {
                 plugins: {
                     legend: {
                         labels: {
+                            boxWidth: 10,
+                            boxHeight: 10,
+                            padding: 30,
                             font: {
-                                family: 'Tossface',
+                                family: 'Pretendard-Regular, Tossface',
                             },
                         },
                     },
@@ -97,6 +100,7 @@ class Board {
                         label: '🐛',
                         data: [],
                         borderColor: '#23b169',
+                        backgroundColor: '#23b169',
                         borderWidth: 1,
                         tension: 0.5,
                     },
@@ -104,6 +108,7 @@ class Board {
                         label: '🦗',
                         data: [],
                         borderColor: 'tomato',
+                        backgroundColor: 'tomato',
                         borderWidth: 1,
                         tension: 0.5,
                     },
@@ -117,6 +122,9 @@ class Board {
                 plugins: {
                     legend: {
                         labels: {
+                            boxWidth: 10,
+                            boxHeight: 10,
+                            padding: 30,
                             font: {
                                 family: 'Tossface',
                             },
