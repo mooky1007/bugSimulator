@@ -121,7 +121,7 @@ export class Objects {
             });
 
             this.move(this.directions.getDirectionToTarget(foodTile[0]).x, this.directions.getDirectionToTarget(foodTile[0]).y);
-            this.addActionPeriod -= 100;
+            this.addActionPeriod -= 150;
             return;
         }
 
@@ -266,10 +266,10 @@ export class Bug extends Objects {
         this.power = 8;
         this.lifeSpan = 1800; // 수명
 
-        this.actionPeriod = 300; // 행동 주기
+        this.actionPeriod = 310; // 행동 주기
         this.energy = 80; // 초기 에너지
         this.maxEnergy = 100; // 최대 에너지
-        this.sightRange = 18; // 시야 영역
+        this.sightRange = 20; // 시야 영역
         this.territoryRange = 12; // 영역
         this.needFood = 70; // 허기를 느끼는 수치
         this.procreationEnergy = 70; // 번식에 필요한 에너지
@@ -277,7 +277,7 @@ export class Bug extends Objects {
         this.postpartumcCare = this.reproductiveCycle; // 새끼를 낳고 다시 낳을 수 있을때 까지의 시간
         this.newBornEnergy = this.energy / 4; // 새로 태어나는 개체의 초기 에너지
 
-        this.allowSameSpecies = 16; // 시야 영역 내에 허용되는 동족 개체수, 초과되면 번식하지 않음
+        this.allowSameSpecies = 12; // 시야 영역 내에 허용되는 동족 개체수, 초과되면 번식하지 않음
         this.gen = 0;
 
         this.init();
@@ -299,7 +299,7 @@ export class HunterBug extends Objects {
         this.energy = 120;
         this.maxEnergy = 160;
         this.sightRange = 24;
-        this.territoryRange = 36;
+        this.territoryRange = 12;
         this.needFood = 90;
         this.reproductiveCycle = 100;
         this.procreationEnergy = 50;
@@ -307,7 +307,7 @@ export class HunterBug extends Objects {
         this.newBornEnergy = this.energy / 4;
         this.gen = 0;
 
-        this.allowSameSpecies = 3;
+        this.allowSameSpecies = 2;
         this.init();
     }
 
