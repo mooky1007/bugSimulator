@@ -1,4 +1,4 @@
-import { Bug, HunterBug } from './Objects.mjs';
+import { Bug, HunterBug, HunterBug2 } from './Objects.mjs';
 import { Rock } from './objects/Rock.mjs';
 import { Tree } from './objects/Tree.mjs';
 import { Food } from './objects/Food.mjs';
@@ -282,6 +282,18 @@ class Board {
 
     createHunter(x, y) {
         this.getTile(x, y).content = new HunterBug({
+            map: this,
+            position: { x: x, y: y },
+            name: `hunter_${this.bug}`,
+        });
+
+        this.bug++;
+
+        return this.getTile(x, y).content;
+    }
+
+    createHunter2(x, y) {
+        this.getTile(x, y).content = new HunterBug2({
             map: this,
             position: { x: x, y: y },
             name: `hunter_${this.bug}`,
