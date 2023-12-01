@@ -307,7 +307,7 @@ export class HunterBug extends Objects {
         this.newBornEnergy = this.energy / 4;
         this.gen = 0;
 
-        this.allowSameSpecies = 2;
+        this.allowSameSpecies = 3;
         this.init();
     }
 
