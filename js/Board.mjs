@@ -68,6 +68,8 @@ class Board {
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
+                        position: 'top',
+                        align: 'start',
                         labels: {
                             boxWidth: 10,
                             boxHeight: 10,
@@ -121,6 +123,8 @@ class Board {
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
+                        position: 'top',
+                        align: 'start',
                         labels: {
                             boxWidth: 10,
                             boxHeight: 10,
