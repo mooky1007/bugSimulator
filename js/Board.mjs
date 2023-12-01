@@ -38,27 +38,34 @@ class Board {
                 labels: [],
                 datasets: [
                     {
+                        label: '🌱',
+                        data: [],
+                        borderColor: '#add4ad',
+                        borderWidth: 1,
+                        tension: 0.5,
+                    },
+                    {
                         label: '🐛',
                         data: [],
                         borderColor: '#23b169',
+                        borderWidth: 1,
                         tension: 0.5,
                     },
                     {
-                        label: '🌱',
+                        label: '🦗**1.5',
                         data: [],
-                        borderColor: 'tomato',
-                        tension: 0.5,
-                    },
-                    {
-                        label: '🦗x2',
-                        data: [],
-                        borderColor: '#999',
+                        borderColor: '#016130',
+                        borderWidth: 1,
                         tension: 0.5,
                     },
                 ],
             },
             options: {
+                animation: {
+                    duration: 0,
+                },
                 pointStyle: false,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         labels: {
@@ -68,32 +75,131 @@ class Board {
                         },
                     },
                 },
+                scales: {
+                    x: {
+                        suggestedMin: 0, // X축 최소값
+                        suggestedMax: 1000, // X축 최대값
+                    },
+                    y: {
+                        suggestedMin: 0, // Y축 최소값
+                    },
+                },
             },
         });
 
-        setInterval(() => {
-            this.render();
-        }, 400);
+        const ctx2 = document.getElementById('myChart2');
+        this.chart2 = new Chart(ctx2, {
+            type: 'bubble',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: '🐛',
+                        data: [],
+                        borderColor: '#23b169',
+                        borderWidth: 1,
+                        tension: 0.5,
+                    },
+                    {
+                        label: '🦗',
+                        data: [],
+                        borderColor: 'tomato',
+                        borderWidth: 1,
+                        tension: 0.5,
+                    },
+                ],
+            },
+            options: {
+                animation: {
+                    duration: 0,
+                },
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            font: {
+                                family: 'Tossface',
+                            },
+                        },
+                    },
+                },
+                scales: {
+                    x: {
+                        suggestedMin: 0, // X축 최소값
+                        suggestedMax: 25, // X축 최대값
+                    },
+                    y: {
+                        reverse: true,
+                        suggestedMin: 0, // Y축 최소값
+                        suggestedMax: 25, // Y축 최대값
+                    },
+                },
+            },
+        });
 
-        this.chart.data.labels.push(this.chart.data.labels.length);
-        this.chart.data.datasets[0].data.push(this.getObjCount('bug'));
-        this.chart.data.datasets[1].data.push(this.getObjCount('food'));
-        this.chart.data.datasets[2].data.push(this.getObjCount('hunter') * 2);
+        this.chartLength = 0;
+        this.chart.data.labels.push(this.chartLength);
+        this.chart.data.datasets[0].data.push(this.getObjCount('food'));
+        this.chart.data.datasets[1].data.push(this.getObjCount('bug'));
+        this.chart.data.datasets[2].data.push(this.getObjCount('hunter') ** 1.5);
         document.querySelector('.food-count').innerHTML = this.getObjCount('food');
         document.querySelector('.bug-count').innerHTML = this.getObjCount('bug');
         document.querySelector('.hunter-count').innerHTML = this.getObjCount('hunter');
         this.chart.update();
+        this.chartLength += 1;
 
         setInterval(() => {
-            this.chart.data.labels.push(this.chart.data.labels.length);
-            this.chart.data.datasets[0].data.push(this.getObjCount('bug'));
-            this.chart.data.datasets[1].data.push(this.getObjCount('food'));
-            this.chart.data.datasets[2].data.push(this.getObjCount('hunter') * 2);
+            if (this.chart.data.labels.length > 1000) {
+                this.chart.data.labels.shift();
+                this.chart.data.datasets[0].data.shift();
+                this.chart.data.datasets[1].data.shift();
+                this.chart.data.datasets[2].data.shift();
+            }
+
+            this.chart.data.labels.push(this.chartLength);
+            this.chart.data.datasets[0].data.push(this.getObjCount('food'));
+            this.chart.data.datasets[1].data.push(this.getObjCount('bug'));
+            this.chart.data.datasets[2].data.push(this.getObjCount('hunter') ** 1.5);
             document.querySelector('.food-count').innerHTML = this.getObjCount('food');
             document.querySelector('.bug-count').innerHTML = this.getObjCount('bug');
             document.querySelector('.hunter-count').innerHTML = this.getObjCount('hunter');
             this.chart.update();
-        }, 3000);
+            this.chartLength += 1;
+        }, 1000);
+
+        setInterval(() => {
+            const fields = [];
+
+            for (let x = 0; x < 25; x++) {
+                fields[x] = [];
+                for (let y = 0; y < 25; y++) {
+                    fields[x][y] = {
+                        bug: 0,
+                        hunter: 0,
+                    };
+                }
+            }
+
+            for (let x = 0; x < 100; x++) {
+                for (let y = 0; y < 100; y++) {
+                    fields[Math.floor(x / 4)][Math.floor(y / 4)].bug += this.tiles[x][y].content?.type === 'bug' ? 1 : 0;
+                    fields[Math.floor(x / 4)][Math.floor(y / 4)].hunter += this.tiles[x][y].content?.type === 'hunter' ? 1 : 0;
+                }
+            }
+
+            this.chart2.data.labels = [];
+            this.chart2.data.datasets[0].data = [];
+            this.chart2.data.datasets[1].data = [];
+
+            for (let x = 0; x < 25; x++) {
+                for (let y = 0; y < 25; y++) {
+                    this.chart2.data.datasets[0].data.push({ x: x, y: y, r: fields[x][y].bug * 1.5 });
+                    this.chart2.data.datasets[1].data.push({ x: x, y: y, r: fields[x][y].hunter * 1.5 });
+                }
+            }
+
+            this.chart2.update();
+        }, 1000);
     }
 
     create() {
@@ -114,23 +220,23 @@ class Board {
     }
 
     render() {
-        // this.tiles.forEach((row) => {
-        //     row.forEach((tile) => {
-        //         if (tile.content) {
-        //             tile.el.innerHTML = `
-        //                 <span
-        //                     class="${tile.content.className || ''}"
-        //                     style="
-        //                     font-size: ${tile.content.size}px;
-        //                 " id="${tile.content.name || ''}">
-        //                     ${tile.content.icon}
-        //                 </span>
-        //             `;
-        //         }else{
-        //             if(tile.el.innerHTML !== '') tile.el.innerHTML = '';
-        //         }
-        //     });
-        // });
+        this.tiles.forEach((row) => {
+            row.forEach((tile) => {
+                if (tile.content) {
+                    tile.el.innerHTML = `
+                        <span
+                            class="${tile.content.className || ''}"
+                            style="
+                            font-size: ${tile.content.size}px;
+                        " id="${tile.content.name || ''}">
+                            ${tile.content.icon}
+                        </span>
+                    `;
+                } else {
+                    if (tile.el.innerHTML !== '') tile.el.innerHTML = '';
+                }
+            });
+        });
     }
 
     getTile(x, y) {
