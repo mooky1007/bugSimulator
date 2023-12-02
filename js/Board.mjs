@@ -54,7 +54,7 @@ class Board {
                         tension: 0.5,
                     },
                     {
-                        label: '🦗*2',
+                        label: '🦗**1.4',
                         data: [],
                         borderColor: '#016130',
                         borderWidth: 1,
@@ -227,7 +227,7 @@ class Board {
             this.chart.data.labels.push(this.chartLength);
             this.chart.data.datasets[0].data.push(this.getObjCount('food') / 2);
             this.chart.data.datasets[1].data.push(this.getObjCount('bug'));
-            this.chart.data.datasets[2].data.push(this.getObjCount('hunter') * 2);
+            this.chart.data.datasets[2].data.push(this.getObjCount('hunter') ** 1.4);
             document.querySelector('.food-count').innerHTML = this.getObjCount('food');
             document.querySelector('.bug-count').innerHTML = this.getObjCount('bug');
             document.querySelector('.hunter-count').innerHTML = this.getObjCount('hunter');
