@@ -239,7 +239,7 @@ export class Objects {
 
             newBug.gen = this.gen + 1;
 
-            if (Math.random() < 0.9) {
+            if (Math.random() < 0.01) {
                 const originSize = newBug.defaultSize;
 
                 newBug.defaultSize = (newBug.defaultSize * (Math.random() * 0.4 + 0.8)).toFixed(1);
@@ -381,7 +381,7 @@ export class HunterBug extends Objects {
         this.growLevel1 = 95;
         this.growLevel2 = 90;
 
-        this.allowSameSpecies = 2;
+        this.allowSameSpecies = 3;
         this.init();
     }
 
