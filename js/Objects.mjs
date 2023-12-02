@@ -381,7 +381,7 @@ export class HunterBug extends Objects {
         this.growLevel1 = 95;
         this.growLevel2 = 90;
 
-        this.allowSameSpecies = 3;
+        this.allowSameSpecies = 2;
         this.init();
     }
 
