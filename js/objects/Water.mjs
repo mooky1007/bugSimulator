@@ -1,13 +1,13 @@
 import { Objects } from "../Objects.mjs";
 
-export class Rock extends Objects {
+export class Water extends Objects {
     constructor(config) {
         super(config);
-        this.name = config.name || 'rock';
-        this.type = 'rock';
+        this.name = config.name || 'water';
+        this.type = 'water';
         this.size = 24;
         this.icon = '';
-        this.className = 'rock';
+        this.className = 'water';
         this.sightRange = 2;
     }
 }
