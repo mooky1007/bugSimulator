@@ -242,10 +242,12 @@ export class Objects {
             if (Math.random() < 0.01) {
                 const originSize = newBug.defaultSize;
 
-                newBug.defaultSize = (newBug.defaultSize * (Math.random() * 0.4 + 0.8)).toFixed(1);
+                newBug.defaultSize = (newBug.defaultSize * (Math.random() * 0.2 + 0.9)).toFixed(1);
                 newBug.size = newBug.defaultSize * 0.6;
 
                 const sizeRatio = newBug.defaultSize / originSize;
+
+                newBug.actionPeriod *= sizeRatio;
 
                 newBug.energy *= sizeRatio;
                 newBug.originEnergy *= sizeRatio;
