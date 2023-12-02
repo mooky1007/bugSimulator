@@ -1,7 +1,7 @@
 import { Bug, HunterBug } from './Objects.mjs';
-import { Rock } from './objects/Rock.mjs';
 import { Tree } from './objects/Tree.mjs';
 import { Food } from './objects/Food.mjs';
+import { Water } from './objects/Water.mjs';
 
 class Board {
     constructor(
@@ -17,6 +17,8 @@ class Board {
         this.tiles = [];
         this.bug = 0;
         this.food = 0;
+
+        this.speed = 1;
 
         this.init();
         this.create();
@@ -38,7 +40,7 @@ class Board {
                 labels: [],
                 datasets: [
                     {
-                        label: '🌱',
+                        label: '🌱/2',
                         data: [],
                         borderColor: '#617f65',
                         borderWidth: 1,
@@ -52,7 +54,7 @@ class Board {
                         tension: 0.5,
                     },
                     {
-                        label: '🦗**1.5',
+                        label: '🦗*2',
                         data: [],
                         borderColor: '#016130',
                         borderWidth: 1,
@@ -157,16 +159,62 @@ class Board {
             },
         });
 
+        const ctx3 = document.getElementById('myChart3');
+        this.chart3 = new Chart(ctx3, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: '🐛 average size',
+                        data: [],
+                        borderColor: '#23b169',
+                        borderWidth: 1,
+                        tension: 0.5,
+                    },
+                    {
+                        label: '🦗 average size',
+                        data: [],
+                        borderColor: '#016130',
+                        borderWidth: 1,
+                        tension: 0.5,
+                    },
+                ],
+            },
+            options: {
+                scales: {
+                    y: {
+                        suggestedMin: 0, // Y축 최소값
+                        suggestedMax: 24, // Y축 최대값
+                    },
+                },
+                animation: {
+                    duration: 0,
+                },
+                pointStyle: false,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        align: 'start',
+                        labels: {
+                            boxWidth: 10,
+                            boxHeight: 10,
+                            padding: 30,
+                            font: {
+                                family: 'Pretendard-Regular, Tossface',
+                            },
+                        },
+                    },
+                },
+                interaction: {
+                    // 툴팁을 완전히 비활성화하는 설정
+                    mode: 'none',
+                },
+            },
+        });
+
         this.chartLength = 0;
-        this.chart.data.labels.push(this.chartLength);
-        this.chart.data.datasets[0].data.push(this.getObjCount('food'));
-        this.chart.data.datasets[1].data.push(this.getObjCount('bug'));
-        this.chart.data.datasets[2].data.push(this.getObjCount('hunter') ** 1.5);
-        document.querySelector('.food-count').innerHTML = this.getObjCount('food');
-        document.querySelector('.bug-count').innerHTML = this.getObjCount('bug');
-        document.querySelector('.hunter-count').innerHTML = this.getObjCount('hunter');
-        this.chart.update();
-        this.chartLength += 1;
 
         setInterval(() => {
             if (this.chart.data.labels.length > 1000) {
@@ -177,15 +225,15 @@ class Board {
             }
 
             this.chart.data.labels.push(this.chartLength);
-            this.chart.data.datasets[0].data.push(this.getObjCount('food'));
+            this.chart.data.datasets[0].data.push(this.getObjCount('food') / 2);
             this.chart.data.datasets[1].data.push(this.getObjCount('bug'));
-            this.chart.data.datasets[2].data.push(this.getObjCount('hunter') ** 1.5);
+            this.chart.data.datasets[2].data.push(this.getObjCount('hunter') * 2);
             document.querySelector('.food-count').innerHTML = this.getObjCount('food');
             document.querySelector('.bug-count').innerHTML = this.getObjCount('bug');
             document.querySelector('.hunter-count').innerHTML = this.getObjCount('hunter');
             this.chart.update();
             this.chartLength += 1;
-        }, 1000);
+        }, 1000/this.speed);
 
         setInterval(() => {
             const fields = [];
@@ -219,7 +267,30 @@ class Board {
             }
 
             this.chart2.update();
-        }, 1000);
+        }, 1000/this.speed);
+
+        setInterval(() => {
+            let bugSize = 0;
+            let hunterSize = 0;
+            
+            for (let x = 0; x < 100; x++) {
+                for (let y = 0; y < 100; y++) {
+                    if (this.tiles[x][y].content?.type === 'bug') {
+                        bugSize += +this.tiles[x][y].content.defaultSize;
+                    }
+                    if (this.tiles[x][y].content?.type === 'hunter') {
+                        hunterSize += +this.tiles[x][y].content.defaultSize;
+                    }
+                }
+            }
+
+
+            this.chart3.data.labels.push(this.chartLength);
+            this.chart3.data.datasets[0].data.push(bugSize / this.getObjCount('bug'));
+            this.chart3.data.datasets[1].data.push(hunterSize / this.getObjCount('hunter'));
+
+            this.chart3.update();
+        }, 15000/this.speed);
     }
 
     create() {
@@ -334,6 +405,22 @@ class Board {
         font-size: ${targetTile.content.size}px;
     " id="${targetTile.content.name || ''}">
         ${targetTile.content.icon}
+    </span>`;
+    }
+
+    createWater(x, y) {
+        const targetTile = this.getTile(x, y);
+
+        targetTile.content = new Water({
+            map: this,
+            position: { x: x, y: y },
+        });
+
+        targetTile.el.innerHTML = `<span
+        class="${targetTile.content.className || ''}"
+        style="
+        font-size: ${targetTile.content.size}px;
+    " id="${targetTile.content.name || ''}">   
     </span>`;
     }
 

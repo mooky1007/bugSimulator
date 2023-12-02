@@ -19,7 +19,7 @@ export class Tree extends Objects {
 
     init() {
         if (this?.life) clearTimeout(this.life);
-        this.life = setTimeout(this.growAndCreate.bind(this), this.createDuration);
+        this.life = setTimeout(this.growAndCreate.bind(this), this.createDuration/this.map.speed);
     }
 
     growAndCreate() {
@@ -36,7 +36,7 @@ export class Tree extends Objects {
                         " id="${this.name || ''}">
                             ${this.icon}
                         </span>`;
-            this.life = setTimeout(this.growAndCreate.bind(this), this.createDuration * (this.level / 2));
+            this.life = setTimeout(this.growAndCreate.bind(this), (this.createDuration * (this.level / 2))/this.map.speed);
             return;
         }
         this.icon = '🌲';
@@ -45,7 +45,7 @@ export class Tree extends Objects {
         const emptyTiles = this.area.filter((tile) => !tile?.content);
 
         for (let i = 0; i < Math.floor(Math.random() * (this.createLength - 6)) + 6; i++) {
-            if (this.area.filter((tile) => tile?.content?.type === 'food').length > this.area.length / 8) {
+            if (this.area.filter((tile) => tile?.content?.type === 'food').length > this.area.length / 16) {
                 break;
             }
 
@@ -72,11 +72,11 @@ export class Tree extends Objects {
                             ${this.icon}
                         </span>`;
             this.drawArea();
-            this.life = setTimeout(this.growAndCreate.bind(this), this.createDuration * (this.level / 4));
+            this.life = setTimeout(this.growAndCreate.bind(this), (this.createDuration * (this.level / 4))/this.map.speed);
             return;
         }
 
-        this.life = setTimeout(this.growAndCreate.bind(this), this.createDuration * (this.level / 2));
+        this.life = setTimeout(this.growAndCreate.bind(this), (this.createDuration * (this.level / 2))/this.map.speed);
     }
 
     drawArea() {

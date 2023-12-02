@@ -8,10 +8,12 @@ export class Objects {
         this.icon = config.icon || '';
         this.name = config.name || 'object';
         this.size = config.size || 9;
-        this.maxSize = this.size * 2;
+        this.defaultSize = config.defaultSize || config.size || 9;
+        this.maxSize = config.size || 13.5;
 
         this.energy = config.energy || 0;
         this.lifeSpan = config.lifeSpan || 500;
+        this.defaultLifeSpan = config.lifeSpan || 500;
 
         this.hungryMoveSpeed = config.hungryMoveSpeed || 100;
 
@@ -19,6 +21,9 @@ export class Objects {
 
         this.actionPeriod = config.actionPeriod || 100;
         this.addActionPeriod = config.addActionPeriod || 0;
+
+        this.growLevel1 = config.growLevel1 || 90;
+        this.growLevel2 = config.growLevel2 || 80;
 
         this.sightRange = config.sightRange || 0;
         this.eatCount = 0;
@@ -51,18 +56,31 @@ export class Objects {
         this.life = setInterval(() => {
             this.energy -= 1;
             this.lifeSpan -= 1;
+
+            if (this.growLevel === 0) this.size = this.defaultSize * 0.6;
+            if (this.growLevel === 1) this.size = this.defaultSize * 0.8;
+            if (this.growLevel === 2) this.size = this.defaultSize;
+
             if (this.postpartumcCare > 0) this.postpartumcCare -= 1;
             if (this.energy <= 0) this.die();
-        }, 200);
+        }, 200/this.map.speed);
 
         this.moveCycleAction();
+    }
+
+    get growLevel() {
+        const { lifeSpan, defaultLifeSpan } = this;
+        const percent = (lifeSpan / defaultLifeSpan ) * 100;
+        if (percent <= this.growLevel1) return 0;
+        if (percent <= this.growLevel2) return 1;
+        return 2;
     }
 
     moveCycleAction() {
         this.moveCycle = setTimeout(() => {
             this.action();
             this.moveCycleAction();
-        }, this.actionPeriod + this.addActionPeriod);
+        }, (this.actionPeriod + this.addActionPeriod)/this.map.speed);
     }
 
     get nearbyTiles() {
@@ -171,7 +189,6 @@ export class Objects {
         target.die();
         this.energy += target.energy;
         this.eatCount += 1;
-        this.size += 0.2;
     }
 
     giveBirth() {
@@ -194,16 +211,51 @@ export class Objects {
                 case 'hunter':
                     newBug = this.map.createHunter(x, y);
                     break;
-                case 'hunter2':
-                    newBug = this.map.createHunter2(x, y);
-                    break;
                 default:
                     newBug = this.map.createBug(x, y);
                     break;
             }
 
-            newBug.gen = this.gen + 1;
+            newBug.power = this.power;
+            newBug.icon = this.icon;
+            newBug.type = this.type;
+            newBug.eatTarget = this.eatTarget;
+            newBug.power = this.power;
+
+            newBug.actionPeriod = this.actionPeriod;
+            newBug.hungryMoveSpeed = this.hungryMoveSpeed;
             newBug.energy = this.newBornEnergy;
+            newBug.originEnergy = this.originEnergy;
+            newBug.maxEnergy = this.maxEnergy;
+            newBug.needFood = this.needFood;
+            newBug.sightRange = this.sightRange;
+            newBug.territoryRange = this.territoryRange;
+            newBug.procreationEnergy = this.procreationEnergy;
+            newBug.reproductiveCycle = this.reproductiveCycle;
+            newBug.newBornEnergy = this.newBornEnergy;
+            newBug.allowSameSpecies = this.allowSameSpecies;
+            newBug.defaultSize = this.defaultSize;
+            newBug.size = newBug.defaultSize * 0.6;
+
+            newBug.gen = this.gen + 1;
+
+            if (Math.random() < 0.9) {
+                const originSize = newBug.defaultSize;
+
+                newBug.defaultSize = (newBug.defaultSize * (Math.random() * 0.4 + 0.8)).toFixed(1);
+                newBug.size = newBug.defaultSize * 0.6;
+
+                const sizeRatio = newBug.defaultSize / originSize;
+
+                newBug.energy *= sizeRatio;
+                newBug.originEnergy *= sizeRatio;
+                newBug.maxEnergy *= sizeRatio;
+                newBug.needFood *= sizeRatio;
+                newBug.newBornEnergy *= sizeRatio;
+
+                newBug.sightRange = Math.round(newBug.sightRange * sizeRatio);
+            }
+
             this.postpartumcCare = this.reproductiveCycle;
             this.energy -= this.procreationEnergy;
             this.map.bug++;
@@ -223,7 +275,8 @@ export class Bug extends Objects {
     constructor(config) {
         super(config);
         this.icon = '🐛';
-        this.size = 7;
+        this.size = 8;
+        this.defaultSize = 8;
         this.name = config.name;
         this.type = 'bug';
         this.eatTarget = 'food';
@@ -233,6 +286,7 @@ export class Bug extends Objects {
         this.actionPeriod = 310; // 행동 주기
         this.hungryMoveSpeed = 10; // 배고플때 움직이는 추가 속도
         this.energy = 80; // 초기 에너지
+        this.originEnergy = 80; // 초기 에너지 고정값
         this.maxEnergy = 100; // 최대 에너지
         this.needFood = 70; // 허기를 느끼는 수치
         this.sightRange = 12; // 시야 영역
@@ -244,6 +298,9 @@ export class Bug extends Objects {
 
         this.allowSameSpecies = 36; // 시야 영역 내에 허용되는 동족 개체수, 초과되면 번식하지 않음
         this.gen = 0;
+
+        this.growLevel1 = 90;
+        this.growLevel2 = 80;
 
         this.init();
     }
@@ -299,7 +356,8 @@ export class HunterBug extends Objects {
     constructor(config) {
         super(config);
         this.icon = '🦗';
-        this.size = 13;
+        this.size = 15;
+        this.defaultSize = 15;
         this.type = 'hunter';
         this.eatTarget = 'bug';
         this.power = 16;
@@ -308,8 +366,9 @@ export class HunterBug extends Objects {
 
         this.actionPeriod = 380;
         this.hungryMoveSpeed = 200; // 배고플때 움직이는 추가 속도
-        this.needFood = 90;
+        this.needFood = 100;
         this.energy = 120;
+        this.originEnergy = 120;
         this.maxEnergy = 160;
         this.sightRange = 16;
         this.territoryRange = 32;
@@ -318,6 +377,9 @@ export class HunterBug extends Objects {
         this.postpartumcCare = this.reproductiveCycle;
         this.newBornEnergy = 100;
         this.gen = 0;
+
+        this.growLevel1 = 95;
+        this.growLevel2 = 90;
 
         this.allowSameSpecies = 2;
         this.init();
@@ -330,6 +392,9 @@ export class HunterBug extends Objects {
 
     action() {
         super.action();
+        this.foodTile = this.sightTiles.filter((tile) => {
+            return tile?.content?.type === this.eatTarget && tile?.content?.size <= this.size * 1.6;
+        }); // 주변의 음식
 
         if (this.foodTile.length <= 0) {
             this.move(this.directions.getDirectionRandom(this.nearbyTiles).x, this.directions.getDirectionRandom(this.nearbyTiles).y);
@@ -340,7 +405,9 @@ export class HunterBug extends Objects {
             this.foodTile.sort((a, b) => {
                 const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
                 const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
-                return aDistance - bDistance;
+                const aSize = a.content.size;
+                const bSize = b.content.size;
+                return aDistance - bDistance || bSize - aSize;
             });
 
             this.move(this.directions.getDirectionToTarget(this.foodTile[0]).x, this.directions.getDirectionToTarget(this.foodTile[0]).y);
