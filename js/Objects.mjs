@@ -54,7 +54,7 @@ export class Objects {
         if (this?.moveCycle) clearTimeout(this.moveCycle);
 
         this.life = setInterval(() => {
-            this.energy -= 1;
+            this.energy -= 0.5;
             this.lifeSpan -= 1;
 
             if (this.growLevel === 0) this.size = this.defaultSize * 0.6;
@@ -368,7 +368,7 @@ export class HunterBug extends Objects {
 
         this.actionPeriod = 320;
         this.hungryMoveSpeed = 200; // 배고플때 움직이는 추가 속도
-        this.needFood = 80;
+        this.needFood = 110;
         this.energy = 120;
         this.originEnergy = 120;
         this.maxEnergy = 200;
