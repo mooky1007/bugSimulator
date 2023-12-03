@@ -26,6 +26,7 @@ export class Objects {
         this.growLevel2 = config.growLevel2 || 80;
 
         this.energyEfficiency = config.energyEfficiency || 1;
+        this.preylimit = config.preylimit || 1;
         this.sightRange = config.sightRange || 0;
         this.eatCount = 0;
         this.directions = new Directions(this);
@@ -316,7 +317,7 @@ export class Bug extends Objects {
             return;
         }
 
-        if (this.energy <= this.needFood && this.foodTile.length > 1) {
+        if (this.energy <= this.needFood && this.foodTile.length > this.preylimit) {
             this.foodTile.sort((a, b) => {
                 const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
                 const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
@@ -367,12 +368,12 @@ export class HunterBug extends Objects {
 
         this.lifeSpan = 2400;
 
-        this.actionPeriod = 320;
+        this.actionPeriod = 220;
         this.hungryMoveSpeed = 200; // 배고플때 움직이는 추가 속도
         this.needFood = 110;
-        this.energy = 120;
-        this.originEnergy = 120;
-        this.maxEnergy = 200;
+        this.energy = 240;
+        this.originEnergy = 240;
+        this.maxEnergy = 300;
         this.sightRange = 16;
         this.territoryRange = 24;
         this.reproductiveCycle = 120;
@@ -384,8 +385,8 @@ export class HunterBug extends Objects {
         this.growLevel1 = 95;
         this.growLevel2 = 90;
 
-        this.energyEfficiency = 2;
-
+        this.energyEfficiency = 1.5;
+        this.preylimit = 3;
         this.allowSameSpecies = 2;
         this.init();
     }
@@ -411,7 +412,7 @@ export class HunterBug extends Objects {
             return;
         }
 
-        if (this.energy <= this.needFood && this.foodTile.length > 1) {
+        if (this.energy <= this.needFood && this.foodTile.length > this.preylimit) {
             this.foodTile.sort((a, b) => {
                 const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
                 const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
