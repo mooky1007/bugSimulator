@@ -40,7 +40,7 @@ class Board {
                 labels: [],
                 datasets: [
                     {
-                        label: '🌱/2',
+                        label: '🌱',
                         data: [],
                         borderColor: '#617f65',
                         borderWidth: 1,
@@ -54,7 +54,7 @@ class Board {
                         tension: 0.5,
                     },
                     {
-                        label: '🦗**1.4',
+                        label: '🦗**3',
                         data: [],
                         borderColor: '#016130',
                         borderWidth: 1,
@@ -247,9 +247,9 @@ class Board {
             }
 
             this.chart.data.labels.push(this.chartLength);
-            this.chart.data.datasets[0].data.push(this.getObjCount('food') / 2);
+            this.chart.data.datasets[0].data.push(this.getObjCount('food'));
             this.chart.data.datasets[1].data.push(this.getObjCount('bug'));
-            this.chart.data.datasets[2].data.push(this.getObjCount('hunter') ** 1.4);
+            this.chart.data.datasets[2].data.push(this.getObjCount('hunter')*3);
             document.querySelector('.food-count').innerHTML = this.getObjCount('food');
             document.querySelector('.bug-count').innerHTML = this.getObjCount('bug');
             document.querySelector('.hunter-count').innerHTML = this.getObjCount('hunter');
