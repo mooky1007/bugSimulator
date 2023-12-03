@@ -18,7 +18,7 @@ class Board {
         this.bug = 0;
         this.food = 0;
 
-        this.speed = 100;
+        this.speed = 1;
 
         this.init();
         this.create();
