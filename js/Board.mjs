@@ -83,13 +83,6 @@ class Board {
                     },
                 },
                 scales: {
-                    x: {
-                        suggestedMin: 0, // X축 최소값
-                        suggestedMax: 1000, // X축 최대값
-                    },
-                    y: {
-                        suggestedMin: 0, // Y축 최소값
-                    },
                 },
                 interaction: {
                     // 툴팁을 완전히 비활성화하는 설정
@@ -180,28 +173,28 @@ class Board {
                         tension: 0.6,
                     },
                     {
-                        label: '🐛 minimum size',
+                        label: '🐛 min',
                         data: [],
                         borderColor: '#999',
                         borderWidth: 1,
                         tension: 0.6,
                     },
                     {
-                        label: '🦗 minimum size',
+                        label: '🦗 min',
                         data: [],
                         borderColor: '#999',
                         borderWidth: 1,
                         tension: 0.6,
                     },
                     {
-                        label: '🐛 maxsimum size',
+                        label: '🐛 max',
                         data: [],
                         borderColor: '#aaa',
                         borderWidth: 1,
                         tension: 0.6,
                     },
                     {
-                        label: '🦗 maxsimum size',
+                        label: '🦗 max',
                         data: [],
                         borderColor: '#aaa',
                         borderWidth: 1,
