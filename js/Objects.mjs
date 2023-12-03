@@ -239,10 +239,10 @@ export class Objects {
 
             newBug.gen = this.gen + 1;
 
-            if (Math.random() < 0.01) {
+            if (Math.random() < 0.1) {
                 const originSize = newBug.defaultSize;
 
-                newBug.defaultSize = (newBug.defaultSize * (Math.random() * 0.2 + 0.9)).toFixed(1);
+                newBug.defaultSize = (newBug.defaultSize * ((Math.random() * 0.2) + 0.9)).toFixed(1);
                 newBug.size = newBug.defaultSize * 0.6;
 
                 const sizeRatio = newBug.defaultSize / originSize;
@@ -373,8 +373,8 @@ export class HunterBug extends Objects {
         this.originEnergy = 120;
         this.maxEnergy = 160;
         this.sightRange = 16;
-        this.territoryRange = 32;
-        this.reproductiveCycle = 120;
+        this.territoryRange = 24;
+        this.reproductiveCycle = 90;
         this.procreationEnergy = 40;
         this.postpartumcCare = this.reproductiveCycle;
         this.newBornEnergy = 100;
