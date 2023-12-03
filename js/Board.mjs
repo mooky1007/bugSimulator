@@ -173,7 +173,7 @@ class Board {
                         tension: 0.6,
                     },
                     {
-                        label: '🦗(15) average size',
+                        label: '🦗(13) average size',
                         data: [],
                         borderColor: '#016130',
                         borderWidth: 1,
@@ -212,8 +212,8 @@ class Board {
             options: {
                 scales: {
                     y: {
-                        suggestedMin: 4, // Y축 최소값
-                        suggestedMax: 20, // Y축 최대값
+                        suggestedMin: 6, // Y축 최소값
+                        suggestedMax: 16, // Y축 최대값
                     },
                 },
                 animation: {
