@@ -45,7 +45,7 @@ export class Tree extends Objects {
         const emptyTiles = this.area.filter((tile) => !tile?.content);
 
         for (let i = 0; i < Math.floor(Math.random() * (this.createLength - 6)) + 6; i++) {
-            if (this.area.filter((tile) => tile?.content?.type === 'food').length > this.area.length / 32) {
+            if (this.area.filter((tile) => tile?.content?.type === 'food').length > this.area.length / 24) {
                 break;
             }
 
