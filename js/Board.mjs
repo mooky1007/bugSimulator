@@ -338,7 +338,7 @@ class Board {
             this.chart3.data.datasets[5].data.push(maxHunterSize);
 
             this.chart3.update();
-        }, 60000/this.speed);
+        }, 15000/this.speed);
     }
 
     create() {
