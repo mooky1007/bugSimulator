@@ -316,8 +316,8 @@ class Board {
         this.chart3.update();
 
         setInterval(() => {
-            bugSize = 8;
-            hunterSize = 13;
+            bugSize = 0;
+            hunterSize = 0;
             minBugSize = 8;
             minHunterSize = 13;
             maxBugSize = 8;

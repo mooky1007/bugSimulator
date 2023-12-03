@@ -392,6 +392,11 @@ export class HunterBug extends Objects {
         super.move(x, y);
     }
 
+    eat(target) {
+        super.eat(target);
+        this.energy += 25;
+    }
+
     action() {
         super.action();
         this.foodTile = this.sightTiles.filter((tile) => {
