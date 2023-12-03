@@ -18,7 +18,7 @@ class Board {
         this.bug = 0;
         this.food = 0;
 
-        this.speed = 1;
+        this.speed = 100;
 
         this.init();
         this.create();
@@ -166,26 +166,54 @@ class Board {
                 labels: [],
                 datasets: [
                     {
-                        label: '🐛 average size',
+                        label: '🐛(8) average size',
                         data: [],
                         borderColor: '#23b169',
                         borderWidth: 1,
-                        tension: 0.5,
+                        tension: 0.6,
                     },
                     {
-                        label: '🦗 average size',
+                        label: '🦗(15) average size',
                         data: [],
                         borderColor: '#016130',
                         borderWidth: 1,
-                        tension: 0.5,
+                        tension: 0.6,
+                    },
+                    {
+                        label: '🐛 minimum size',
+                        data: [],
+                        borderColor: '#999',
+                        borderWidth: 1,
+                        tension: 0.6,
+                    },
+                    {
+                        label: '🦗 minimum size',
+                        data: [],
+                        borderColor: '#999',
+                        borderWidth: 1,
+                        tension: 0.6,
+                    },
+                    {
+                        label: '🐛 maxsimum size',
+                        data: [],
+                        borderColor: '#aaa',
+                        borderWidth: 1,
+                        tension: 0.6,
+                    },
+                    {
+                        label: '🦗 maxsimum size',
+                        data: [],
+                        borderColor: '#aaa',
+                        borderWidth: 1,
+                        tension: 0.6,
                     },
                 ],
             },
             options: {
                 scales: {
                     y: {
-                        suggestedMin: 0, // Y축 최소값
-                        suggestedMax: 24, // Y축 최대값
+                        suggestedMin: 4, // Y축 최소값
+                        suggestedMax: 20, // Y축 최대값
                     },
                 },
                 animation: {
@@ -272,14 +300,30 @@ class Board {
         setInterval(() => {
             let bugSize = 0;
             let hunterSize = 0;
+            let minBugSize = 8;
+            let minHunterSize = 15;
+            let maxBugSize = 8;
+            let maxHunterSize = 15;
             
             for (let x = 0; x < 100; x++) {
                 for (let y = 0; y < 100; y++) {
                     if (this.tiles[x][y].content?.type === 'bug') {
                         bugSize += +this.tiles[x][y].content.defaultSize;
+                        if (minBugSize > +this.tiles[x][y].content.defaultSize) {
+                            minBugSize = +this.tiles[x][y].content.defaultSize;
+                        }
+                        if (maxBugSize < +this.tiles[x][y].content.defaultSize) {
+                            maxBugSize = +this.tiles[x][y].content.defaultSize;
+                        }
                     }
                     if (this.tiles[x][y].content?.type === 'hunter') {
                         hunterSize += +this.tiles[x][y].content.defaultSize;
+                        if (minHunterSize > +this.tiles[x][y].content.defaultSize) {
+                            minHunterSize = +this.tiles[x][y].content.defaultSize;
+                        }
+                        if (maxHunterSize < +this.tiles[x][y].content.defaultSize) {
+                            maxHunterSize = +this.tiles[x][y].content.defaultSize;
+                        }
                     }
                 }
             }
@@ -288,9 +332,13 @@ class Board {
             this.chart3.data.labels.push(this.chartLength);
             this.chart3.data.datasets[0].data.push(bugSize / this.getObjCount('bug'));
             this.chart3.data.datasets[1].data.push(hunterSize / this.getObjCount('hunter'));
+            this.chart3.data.datasets[2].data.push(minBugSize);
+            this.chart3.data.datasets[3].data.push(minHunterSize);
+            this.chart3.data.datasets[4].data.push(maxBugSize);
+            this.chart3.data.datasets[5].data.push(maxHunterSize);
 
             this.chart3.update();
-        }, 15000/this.speed);
+        }, 60000/this.speed);
     }
 
     create() {

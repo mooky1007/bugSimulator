@@ -239,7 +239,7 @@ export class Objects {
 
             newBug.gen = this.gen + 1;
 
-            if (Math.random() < 0.1) {
+            if (Math.random() < 0.2) {
                 const originSize = newBug.defaultSize;
 
                 newBug.defaultSize = (newBug.defaultSize * ((Math.random() * 0.2) + 0.9)).toFixed(1);
@@ -395,7 +395,7 @@ export class HunterBug extends Objects {
     action() {
         super.action();
         this.foodTile = this.sightTiles.filter((tile) => {
-            return tile?.content?.type === this.eatTarget && tile?.content?.size <= this.size * 1.6;
+            return tile?.content?.type === this.eatTarget && tile?.content?.size <= this.size ;
         }); // 주변의 음식
 
         if (this.foodTile.length <= 0) {
