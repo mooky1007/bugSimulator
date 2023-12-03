@@ -243,6 +243,7 @@ class Board {
         });
 
         this.chartLength = 0;
+        this.chartLength3 = 0;
 
         setInterval(() => {
             if (this.chart.data.labels.length > 1000) {
@@ -297,53 +298,33 @@ class Board {
             this.chart2.update();
         }, 1000/this.speed);
 
-        let bugSize = 0;
-        let hunterSize = 0;
+        let bugSize = 8;
+        let hunterSize = 13;
         let minBugSize = 8;
-        let minHunterSize = 15;
+        let minHunterSize = 13;
         let maxBugSize = 8;
-        let maxHunterSize = 15;
-        
-        for (let x = 0; x < 100; x++) {
-            for (let y = 0; y < 100; y++) {
-                if (this.tiles[x][y].content?.type === 'bug') {
-                    bugSize += +this.tiles[x][y].content.defaultSize;
-                    if (minBugSize > +this.tiles[x][y].content.defaultSize) {
-                        minBugSize = +this.tiles[x][y].content.defaultSize;
-                    }
-                    if (maxBugSize < +this.tiles[x][y].content.defaultSize) {
-                        maxBugSize = +this.tiles[x][y].content.defaultSize;
-                    }
-                }
-                if (this.tiles[x][y].content?.type === 'hunter') {
-                    hunterSize += +this.tiles[x][y].content.defaultSize;
-                    if (minHunterSize > +this.tiles[x][y].content.defaultSize) {
-                        minHunterSize = +this.tiles[x][y].content.defaultSize;
-                    }
-                    if (maxHunterSize < +this.tiles[x][y].content.defaultSize) {
-                        maxHunterSize = +this.tiles[x][y].content.defaultSize;
-                    }
-                }
-            }
-        }
+        let maxHunterSize = 13;
 
-
-        this.chart3.data.labels.push(this.chartLength);
-        this.chart3.data.datasets[0].data.push(bugSize / this.getObjCount('bug'));
-        this.chart3.data.datasets[1].data.push(hunterSize / this.getObjCount('hunter'));
+        this.chart3.data.labels.push(this.chartLength3);
+        this.chart3.data.datasets[0].data.push(bugSize);
+        this.chart3.data.datasets[1].data.push(hunterSize);
         this.chart3.data.datasets[2].data.push(minBugSize);
         this.chart3.data.datasets[3].data.push(minHunterSize);
         this.chart3.data.datasets[4].data.push(maxBugSize);
         this.chart3.data.datasets[5].data.push(maxHunterSize);
 
+        this.chart3.update();
+
         setInterval(() => {
-            bugSize = 0;
-            hunterSize = 0;
+            bugSize = 8;
+            hunterSize = 13;
             minBugSize = 8;
-            minHunterSize = 15;
+            minHunterSize = 13;
             maxBugSize = 8;
-            maxHunterSize = 15;
+            maxHunterSize = 13;
             
+            this.chartLength3 += 1;
+
             for (let x = 0; x < 100; x++) {
                 for (let y = 0; y < 100; y++) {
                     if (this.tiles[x][y].content?.type === 'bug') {
@@ -368,7 +349,7 @@ class Board {
             }
 
 
-            this.chart3.data.labels.push(this.chartLength);
+            this.chart3.data.labels.push(this.chartLength3);
             this.chart3.data.datasets[0].data.push(bugSize / this.getObjCount('bug'));
             this.chart3.data.datasets[1].data.push(hunterSize / this.getObjCount('hunter'));
             this.chart3.data.datasets[2].data.push(minBugSize);

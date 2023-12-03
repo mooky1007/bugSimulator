@@ -358,8 +358,8 @@ export class HunterBug extends Objects {
     constructor(config) {
         super(config);
         this.icon = '🦗';
-        this.size = 15;
-        this.defaultSize = 15;
+        this.size = 13;
+        this.defaultSize = 13;
         this.type = 'hunter';
         this.eatTarget = 'bug';
         this.power = 16;
@@ -368,7 +368,7 @@ export class HunterBug extends Objects {
 
         this.actionPeriod = 320;
         this.hungryMoveSpeed = 200; // 배고플때 움직이는 추가 속도
-        this.needFood = 100;
+        this.needFood = 80;
         this.energy = 120;
         this.originEnergy = 120;
         this.maxEnergy = 200;
