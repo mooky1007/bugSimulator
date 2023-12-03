@@ -25,6 +25,7 @@ export class Objects {
         this.growLevel1 = config.growLevel1 || 90;
         this.growLevel2 = config.growLevel2 || 80;
 
+        this.energyEfficiency = config.energyEfficiency || 1;
         this.sightRange = config.sightRange || 0;
         this.eatCount = 0;
         this.directions = new Directions(this);
@@ -54,7 +55,7 @@ export class Objects {
         if (this?.moveCycle) clearTimeout(this.moveCycle);
 
         this.life = setInterval(() => {
-            this.energy -= 0.5;
+            this.energy -= this.energyEfficiency;
             this.lifeSpan -= 1;
 
             if (this.growLevel === 0) this.size = this.defaultSize * 0.6;
@@ -382,6 +383,8 @@ export class HunterBug extends Objects {
 
         this.growLevel1 = 95;
         this.growLevel2 = 90;
+
+        this.energyEfficiency = 2;
 
         this.allowSameSpecies = 2;
         this.init();
