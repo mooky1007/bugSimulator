@@ -255,7 +255,9 @@ export class Objects {
                 newBug.originEnergy *= sizeRatio;
                 newBug.maxEnergy *= sizeRatio;
                 newBug.needFood *= sizeRatio;
+                newBug.procreationEnergy *= sizeRatio;
                 newBug.newBornEnergy *= sizeRatio;
+                newBug.energyEfficiency *= sizeRatio;
 
                 newBug.sightRange = Math.round(newBug.sightRange * sizeRatio);
             }
@@ -377,7 +379,7 @@ export class HunterBug extends Objects {
         this.sightRange = 16;
         this.territoryRange = 24;
         this.reproductiveCycle = 120;
-        this.procreationEnergy = 40;
+        this.procreationEnergy = 80;
         this.postpartumcCare = this.reproductiveCycle;
         this.newBornEnergy = 100;
         this.gen = 0;
