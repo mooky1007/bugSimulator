@@ -159,14 +159,14 @@ class Board {
                 labels: [],
                 datasets: [
                     {
-                        label: '🐛(8) average size',
+                        label: '🐛 Avg size',
                         data: [],
                         borderColor: '#23b169',
                         borderWidth: 1,
                         tension: 0.6,
                     },
                     {
-                        label: '🦗(13) average size',
+                        label: '🦗 Avg size',
                         data: [],
                         borderColor: '#016130',
                         borderWidth: 1,
@@ -180,21 +180,21 @@ class Board {
                         tension: 0.6,
                     },
                     {
-                        label: '🦗 min',
+                        label: '🦗 Min',
                         data: [],
                         borderColor: '#999',
                         borderWidth: 1,
                         tension: 0.6,
                     },
                     {
-                        label: '🐛 max',
+                        label: '🐛 Max',
                         data: [],
                         borderColor: '#aaa',
                         borderWidth: 1,
                         tension: 0.6,
                     },
                     {
-                        label: '🦗 max',
+                        label: '🦗 Max',
                         data: [],
                         borderColor: '#aaa',
                         borderWidth: 1,
