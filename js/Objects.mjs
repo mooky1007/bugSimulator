@@ -416,14 +416,14 @@ export class HunterBug extends Objects {
 
         this.actionPeriod = 220;
         this.hungryMoveSpeed = 60; // 배고플때 움직이는 추가 속도
-        this.needFood = 120;
+        this.needFood = 180;
         this.energy = 240;
         this.originEnergy = 240;
         this.maxEnergy = 260;
         this.sightRange = 20;
         this.territoryRange = 24;
-        this.reproductiveCycle = 120;
-        this.procreationEnergy = 120;
+        this.reproductiveCycle = 100;
+        this.procreationEnergy = 180;
         this.postpartumcCare = this.reproductiveCycle;
         this.newBornEnergy = 100;
         this.gen = 0;
