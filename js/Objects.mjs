@@ -26,6 +26,7 @@ export class Objects {
         this.growLevel2 = config.growLevel2 || 80;
 
         this.energyEfficiency = config.energyEfficiency || 1;
+        this.moveSpendEnergy = config.moveSpendEnergy || 0;
         this.preylimit = config.preylimit || 1;
         this.sightRange = config.sightRange || 0;
         this.eatCount = 0;
@@ -141,6 +142,7 @@ export class Objects {
     }
 
     move(x, y) {
+        this.energy -= this.moveSpendEnergy;
         if (x === undefined || y === undefined) return;
         if (x < 0 || y < 0 || x >= this.map.boardX || y >= this.map.boardY) {
             // random move
@@ -308,16 +310,18 @@ export class Bug extends Objects {
         this.reproductiveCycle = 50; // 번식주기
         this.postpartumcCare = this.reproductiveCycle; // 새끼를 낳고 다시 낳을 수 있을때 까지의 시간
         this.newBornEnergy = 70; // 새로 태어나는 개체의 초기 에너지
-
-        this.allowSameSpecies = 36; // 시야 영역 내에 허용되는 동족 개체수, 초과되면 번식하지 않음
+        
         this.gen = 0;
-
+        
         this.growLevel1 = 90;
         this.growLevel2 = 80;
-
+        
+        this.energyEfficiency = 1.5;
+        this.moveSpendEnergy = 0.5;
+        this.allowSameSpecies = 36; // 시야 영역 내에 허용되는 동족 개체수, 초과되면 번식하지 않음
         this.init();
     }
-
+    
     action() {
         super.action();
 
@@ -411,15 +415,15 @@ export class HunterBug extends Objects {
         this.lifeSpan = 2400;
 
         this.actionPeriod = 220;
-        this.hungryMoveSpeed = 200; // 배고플때 움직이는 추가 속도
+        this.hungryMoveSpeed = 60; // 배고플때 움직이는 추가 속도
         this.needFood = 110;
         this.energy = 240;
         this.originEnergy = 240;
         this.maxEnergy = 300;
-        this.sightRange = 16;
+        this.sightRange = 20;
         this.territoryRange = 24;
         this.reproductiveCycle = 120;
-        this.procreationEnergy = 80;
+        this.procreationEnergy = 120;
         this.postpartumcCare = this.reproductiveCycle;
         this.newBornEnergy = 100;
         this.gen = 0;
@@ -427,15 +431,11 @@ export class HunterBug extends Objects {
         this.growLevel1 = 95;
         this.growLevel2 = 90;
 
-        this.energyEfficiency = 1.5;
+        this.energyEfficiency = 1;
+        this.moveSpendEnergy = 2;
         this.preylimit = 3;
         this.allowSameSpecies = 2;
         this.init();
-    }
-
-    move(x, y) {
-        this.energy -= 1;
-        super.move(x, y);
     }
 
     eat(target) {
