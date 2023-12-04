@@ -48,7 +48,7 @@ export class Objects {
 
     set lifeSpan(value) {
         this._lifeSpan = value;
-        if (this._lifeSpan < 0) this.die();
+        if (this._lifeSpan < 0) this.die('no lifeSpan');
     }
 
     init() {
@@ -64,15 +64,15 @@ export class Objects {
             if (this.growLevel === 2) this.size = this.defaultSize;
 
             if (this.postpartumcCare > 0) this.postpartumcCare -= 1;
-            if (this.energy <= 0) this.die();
-        }, 200/this.map.speed);
+            if (this.energy <= 0) this.die('no energy');
+        }, 200 / this.map.speed);
 
         this.moveCycleAction();
     }
 
     get growLevel() {
         const { lifeSpan, defaultLifeSpan } = this;
-        const percent = (lifeSpan / defaultLifeSpan ) * 100;
+        const percent = (lifeSpan / defaultLifeSpan) * 100;
         if (percent <= this.growLevel1) return 0;
         if (percent <= this.growLevel2) return 1;
         return 2;
@@ -82,7 +82,7 @@ export class Objects {
         this.moveCycle = setTimeout(() => {
             this.action();
             this.moveCycleAction();
-        }, (this.actionPeriod + this.addActionPeriod)/this.map.speed);
+        }, (this.actionPeriod + this.addActionPeriod) / this.map.speed);
     }
 
     get nearbyTiles() {
@@ -160,6 +160,10 @@ export class Objects {
             if (tile.content.type === this.eatTarget && this.energy <= this.needFood) {
                 this.collisionEvent('eat', tile.content);
                 return;
+            } else if (tile.content.type === 'water') {
+                console.log('water');
+                this.die('water');
+                return;
             } else {
                 const emptyTiles = this.nearbyTiles.filter((tile) => tile?.content === null);
 
@@ -188,9 +192,9 @@ export class Objects {
     }
 
     eat(target) {
-        target.die();
         this.energy += target.energy;
         this.eatCount += 1;
+        target.die('eaten');
     }
 
     giveBirth() {
@@ -244,7 +248,7 @@ export class Objects {
             if (Math.random() < 0.2) {
                 const originSize = newBug.defaultSize;
 
-                newBug.defaultSize = (newBug.defaultSize * ((Math.random() * 0.2) + 0.9)).toFixed(1);
+                newBug.defaultSize = (newBug.defaultSize * (Math.random() * 0.2 + 0.9)).toFixed(1);
                 newBug.size = newBug.defaultSize * 0.6;
 
                 const sizeRatio = newBug.defaultSize / originSize;
@@ -268,10 +272,14 @@ export class Objects {
         }
     }
 
-    die() {
+    die(reason) {
+        if(this.type !== 'food') console.log(this.name, reason);
+
         clearInterval(this.life);
         clearTimeout(this.moveCycle);
         const targetTile = this.map.getTile(this.position.x, this.position.y);
+        this.energy = 0;
+        this.lifeSpan = 0;
         targetTile.content = null;
         targetTile.el.innerHTML = '';
     }
@@ -315,7 +323,8 @@ export class Bug extends Objects {
         super.action();
 
         if (this.foodTile.length <= 0) {
-            this.move(this.directions.getDirectionRandom(this.nearbyTiles).x, this.directions.getDirectionRandom(this.nearbyTiles).y);
+            const randomPosition = this.directions.getDirectionRandom(this.nearbyTiles);
+            this.move(randomPosition?.x, randomPosition?.y);
             return;
         }
 
@@ -326,48 +335,60 @@ export class Bug extends Objects {
                 return aDistance - bDistance;
             });
 
-            this.move(this.directions.getDirectionToTarget(this.foodTile[0]).x, this.directions.getDirectionToTarget(this.foodTile[0]).y);
+            const toPosition = this.directions.getDirectionToTarget(this.foodTile[0]);
+
+            this.move(toPosition?.x, toPosition.y);
             this.addActionPeriod -= this.hungryMoveSpeed;
             return;
         }
 
         if (this.predator.length > 0) {
             this.predator
-            .filter((tile) => tile?.content?.size >= this.size)
-            .sort((a, b) => {
-                const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
-                const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
-                return aDistance - bDistance;
-            });
+                .filter((tile) => tile?.content?.size >= this.size)
+                .sort((a, b) => {
+                    const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
+                    const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
+                    return aDistance - bDistance;
+                });
 
-            const awayPosition = this.directions.getDirectionToTargetAway(this.predator[0]);
+            const awayPosition = this.directions.getDirectionToTargetAway(this.predator[0]);                
 
-            if (awayPosition.x < 0 || awayPosition.y < 0 || awayPosition.x >= this.map.boardX || awayPosition.y >= this.map.boardY) {
-                this.die();
+            if (
+                this.position.x === 0 ||
+                this.position.y === 0 ||
+                this.position.x === this.map.boardX - 1 ||
+                this.position.y === this.map.boardY - 1
+            ) {
+                this.die('out of map');
                 return;
             }
 
-            this.move(awayPosition.x, awayPosition.y);
+            this.move(awayPosition?.x, awayPosition?.y);
             return;
         }
 
         if (this.territory.length > this.allowSameSpecies) {
             this.territory
-            .filter((tile) => tile?.content?.size >= this.size)
-            .sort((a, b) => {
-                const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
-                const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
-                return aDistance - bDistance;
-            });
-            
+                .filter((tile) => tile?.content?.size >= this.size)
+                .sort((a, b) => {
+                    const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
+                    const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
+                    return aDistance - bDistance;
+                });
+
             const awayPosition = this.directions.getDirectionToTargetAway(this.territory[0]);
 
-            if (awayPosition.x < 0 || awayPosition.y < 0 || awayPosition.x >= this.map.boardX || awayPosition.y >= this.map.boardY) {
-                this.die();
+            if (
+                this.position.x === 0 ||
+                this.position.y === 0 ||
+                this.position.x === this.map.boardX - 1 ||
+                this.position.y === this.map.boardY - 1
+            ) {
+                this.die('out of map');
                 return;
             }
 
-            this.move(awayPosition.x, awayPosition.y);
+            this.move(awayPosition?.x, awayPosition?.y);
             return;
         }
 
@@ -426,11 +447,12 @@ export class HunterBug extends Objects {
     action() {
         super.action();
         this.foodTile = this.sightTiles.filter((tile) => {
-            return tile?.content?.type === this.eatTarget && tile?.content?.size <= this.size ;
+            return tile?.content?.type === this.eatTarget && tile?.content?.size <= this.size;
         }); // 주변의 음식
 
         if (this.foodTile.length <= 0) {
-            this.move(this.directions.getDirectionRandom(this.nearbyTiles).x, this.directions.getDirectionRandom(this.nearbyTiles).y);
+            const randomPosition = this.directions.getDirectionRandom(this.nearbyTiles);
+            this.move(randomPosition?.x, randomPosition?.y);
             return;
         }
 
@@ -443,7 +465,9 @@ export class HunterBug extends Objects {
                 return aDistance - bDistance || bSize - aSize;
             });
 
-            this.move(this.directions.getDirectionToTarget(this.foodTile[0]).x, this.directions.getDirectionToTarget(this.foodTile[0]).y);
+            const toPosition = this.directions.getDirectionToTarget(this.foodTile[0]);
+
+            this.move(toPosition?.x, toPosition?.y);
             this.addActionPeriod -= this.hungryMoveSpeed;
             return;
         }
@@ -455,21 +479,26 @@ export class HunterBug extends Objects {
 
         if (this.territory.length > this.allowSameSpecies) {
             this.territory
-            .filter((tile) => tile?.content?.size >= this.size)
-            .sort((a, b) => {
-                const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
-                const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
-                return aDistance - bDistance;
-            });
+                .filter((tile) => tile?.content?.size >= this.size)
+                .sort((a, b) => {
+                    const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
+                    const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
+                    return aDistance - bDistance;
+                });
 
             const awayPosition = this.directions.getDirectionToTargetAway(this.territory[0]);
 
-            if (awayPosition.x < 0 || awayPosition.y < 0 || awayPosition.x >= this.map.boardX || awayPosition.y >= this.map.boardY) {
-                this.die();
+            if (
+                this.position.x === 0 ||
+                this.position.y === 0 ||
+                this.position.x === this.map.boardX - 1 ||
+                this.position.y === this.map.boardY - 1
+            ) {
+                this.die('out of map');
                 return;
             }
 
-            this.move(awayPosition.x, awayPosition.y);
+            this.move(awayPosition?.x, awayPosition?.y);
             return;
         }
     }
