@@ -4,7 +4,7 @@ export class Food extends Objects {
     constructor(config) {
         super(config);
         this.icon = '🌱';
-        this.energy = 20;
+        this.energy = 30;
         this.size = 7;
         this.type = 'food';
     }

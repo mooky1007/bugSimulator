@@ -306,10 +306,10 @@ export class Bug extends Objects {
         this.needFood = 70; // 허기를 느끼는 수치
         this.sightRange = 12; // 시야 영역
         this.territoryRange = 18; // 영역
-        this.procreationEnergy = 35; // 번식에 필요한 에너지
+        this.procreationEnergy = 50; // 번식에 필요한 에너지
         this.reproductiveCycle = 50; // 번식주기
         this.postpartumcCare = this.reproductiveCycle; // 새끼를 낳고 다시 낳을 수 있을때 까지의 시간
-        this.newBornEnergy = 70; // 새로 태어나는 개체의 초기 에너지
+        this.newBornEnergy = 50; // 새로 태어나는 개체의 초기 에너지
         
         this.gen = 0;
         
@@ -425,7 +425,7 @@ export class HunterBug extends Objects {
         this.reproductiveCycle = 100;
         this.procreationEnergy = 180;
         this.postpartumcCare = this.reproductiveCycle;
-        this.newBornEnergy = 100;
+        this.newBornEnergy = 180;
         this.gen = 0;
 
         this.growLevel1 = 95;
