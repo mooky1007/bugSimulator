@@ -18,7 +18,7 @@ class Board {
         this.bug = 0;
         this.food = 0;
 
-        this.speed = 1;
+        this.speed = 10;
 
         this.init();
         this.create();
@@ -40,7 +40,7 @@ class Board {
                 labels: [],
                 datasets: [
                     {
-                        label: '🌱',
+                        label: '🌱/5',
                         data: [],
                         borderColor: '#617f65',
                         borderWidth: 1,
@@ -247,7 +247,7 @@ class Board {
             }
 
             this.chart.data.labels.push(this.chartLength);
-            this.chart.data.datasets[0].data.push(this.getObjCount('food'));
+            this.chart.data.datasets[0].data.push(this.getObjCount('food')/5);
             this.chart.data.datasets[1].data.push(this.getObjCount('bug'));
             this.chart.data.datasets[2].data.push(this.getObjCount('hunter')*5);
             // document.querySelector('.food-count').innerHTML = this.getObjCount('food');
@@ -255,7 +255,7 @@ class Board {
             // document.querySelector('.hunter-count').innerHTML = this.getObjCount('hunter');
             this.chart.update();
             this.chartLength += 1;
-        }, 1000/this.speed);
+        }, 6000/this.speed);
 
         setInterval(() => {
             const fields = [];
@@ -321,7 +321,7 @@ class Board {
             document.querySelector('.hunter-importance').innerHTML = Math.round(hunterCount / total * 100) + Math.round(hunterFrequency / totalFrequency * 100);
 
             this.chart2.update();
-        }, 1000/this.speed);
+        }, 3000/this.speed);
 
         let bugSize = 8;
         let hunterSize = 13;
