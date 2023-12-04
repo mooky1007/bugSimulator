@@ -336,7 +336,7 @@ export class Bug extends Objects {
 
             const toPosition = this.directions.getDirectionToTarget(this.foodTile[0]);
 
-            this.move(toPosition?.x, toPosition.y);
+            this.move(toPosition?.x, toPosition?.y);
             this.addActionPeriod -= this.hungryMoveSpeed;
             return;
         }
