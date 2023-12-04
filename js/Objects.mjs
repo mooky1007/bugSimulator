@@ -428,7 +428,7 @@ export class HunterBug extends Objects {
         this.newBornEnergy = 180;
         this.gen = 0;
 
-        this.growLevel1 = 95;
+        this.growLevel1 = 98;
         this.growLevel2 = 90;
 
         this.energyEfficiency = 1;
