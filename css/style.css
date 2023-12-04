@@ -87,6 +87,33 @@ body {
     justify-content: center;
 }
 
+.infor_wrap table {
+    width: 95vw;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-size: 11px;
+}
+
+.infor_wrap table caption {
+    display: none;
+}
+
+.infor_wrap table tr {
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.infor_wrap table tr td,
+.infor_wrap table tr th {
+    padding: 10px 0;
+    text-align: center;
+    border-right: 1px solid #2a2a2a;
+}
+
+.infor_wrap table tr td:last-child,
+.infor_wrap table tr th:last-child {
+    border-right: none;
+}
+
 .infor_wrap * {
     font-family: 'Pretendard-Regular', sans-serif;
 }
@@ -154,6 +181,10 @@ body {
         padding: 20px;
         box-sizing: border-box;
         gap: 40px;
+    }
+
+    .infor_wrap table {
+        width: 100%;
     }
 
     .board {

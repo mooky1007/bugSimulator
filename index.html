@@ -13,18 +13,68 @@
     <div class="screen">
         <div class="board"></div>
         <div class="infor_wrap">
-            <div><i
+            <table>
+                <caption>개체정보</caption>
+                <colgroup>
+                    <col style="width: 10%;">
+                    <col style="width: 18%;">
+                    <col style="width: 18%;">
+                    <col style="width: 18%;">
+                    <col style="width: 18%;">
+                    <col style="width: 18%;">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>개체</th>
+                        <th>밀도(개/100*100)</th>
+                        <th>상대밀도</th>
+                        <th>빈도(개)</th>
+                        <th>상대빈도</th>
+                        <th>중요도</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><i
+                                style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🌱</i>
+                        </td>
+                        <td class="food-density"></td>
+                        <td class="food-relative-density"></td>
+                        <td class="food-frequency"></td>
+                        <td class="food-relative-frequency"></td>
+                        <td class="food-importance"></td>
+                    </tr>
+                    <tr>
+                        <td><i
+                            style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🐛</i>
+                        </td>
+                        <td class="bug-density"></td>
+                        <td class="bug-relative-density"></td>
+                        <td class="bug-frequency"></td>
+                        <td class="bug-relative-frequency"></td>
+                        <td class="bug-importance"></td>
+                    </tr>
+                    <tr>
+                        <td><i
+                            style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🦗</i>
+                        </td>
+                        <td class="hunter-density"></td>
+                        <td class="hunter-relative-density"></td>
+                        <td class="hunter-frequency"></td>
+                        <td class="hunter-relative-frequency"></td>
+                        <td class="hunter-importance"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- <div><i
                     style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🌱</i>
                 먹이개체: <span class="food-count"></span></div>
-            <!-- <div><i
-                style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🌲</i>
-            나무: <span class="tree-count"></span></div> -->
             <div><i
                     style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🐛</i>
                 피식개체: <span class="bug-count"></span></div>
             <div><i
                     style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🦗</i>
-                포식개체: <span class="hunter-count"></span></div>
+                포식개체: <span class="hunter-count"></span></div> -->
         </div>
     </div>
     <div class="chart_wrap">

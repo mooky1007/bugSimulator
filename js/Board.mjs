@@ -54,7 +54,7 @@ class Board {
                         tension: 0.5,
                     },
                     {
-                        label: '🦗**3',
+                        label: '🦗*4',
                         data: [],
                         borderColor: '#016130',
                         borderWidth: 1,
@@ -249,7 +249,7 @@ class Board {
             this.chart.data.labels.push(this.chartLength);
             this.chart.data.datasets[0].data.push(this.getObjCount('food'));
             this.chart.data.datasets[1].data.push(this.getObjCount('bug'));
-            this.chart.data.datasets[2].data.push(this.getObjCount('hunter')*3);
+            this.chart.data.datasets[2].data.push(this.getObjCount('hunter')*4);
             document.querySelector('.food-count').innerHTML = this.getObjCount('food');
             document.querySelector('.bug-count').innerHTML = this.getObjCount('bug');
             document.querySelector('.hunter-count').innerHTML = this.getObjCount('hunter');
@@ -287,6 +287,38 @@ class Board {
                     this.chart2.data.datasets[1].data.push({ x: x, y: y, r: fields[x][y].hunter * 1.5 });
                 }
             }
+
+            const foodCount = this.getObjCount('food');
+            const bugCount = this.getObjCount('bug');
+            const hunterCount = this.getObjCount('hunter');
+
+            const total = foodCount + bugCount + hunterCount;
+
+            const foodFrequency = foodCount / (100 * 100);
+            const bugFrequency = bugCount / (100 * 100);
+            const hunterFrequency = hunterCount / (100 * 100);
+
+            const totalFrequency = foodFrequency + bugFrequency + hunterFrequency;
+
+            document.querySelector('.food-density').innerHTML = foodCount;
+            document.querySelector('.bug-density').innerHTML = bugCount;
+            document.querySelector('.hunter-density').innerHTML = hunterCount;
+
+            document.querySelector('.food-relative-density').innerHTML = `${Math.round(foodCount / total * 100)}%`;
+            document.querySelector('.bug-relative-density').innerHTML = `${Math.round(bugCount / total * 100)}%`;
+            document.querySelector('.hunter-relative-density').innerHTML = `${Math.round(hunterCount / total * 100)}%`;
+
+            document.querySelector('.food-frequency').innerHTML = foodFrequency;
+            document.querySelector('.bug-frequency').innerHTML = bugFrequency;
+            document.querySelector('.hunter-frequency').innerHTML = hunterFrequency;
+
+            document.querySelector('.food-relative-frequency').innerHTML = `${Math.round(foodFrequency / totalFrequency * 100)}%`;
+            document.querySelector('.bug-relative-frequency').innerHTML = `${Math.round(bugFrequency / totalFrequency * 100)}%`;
+            document.querySelector('.hunter-relative-frequency').innerHTML = `${Math.round(hunterFrequency / totalFrequency * 100)}%`;
+
+            document.querySelector('.food-importance').innerHTML = Math.round(foodCount / total * 100) + Math.round(foodFrequency / totalFrequency * 100);
+            document.querySelector('.bug-importance').innerHTML = Math.round(bugCount / total * 100) + Math.round(bugFrequency / totalFrequency * 100);
+            document.querySelector('.hunter-importance').innerHTML = Math.round(hunterCount / total * 100) + Math.round(hunterFrequency / totalFrequency * 100);
 
             this.chart2.update();
         }, 1000/this.speed);
