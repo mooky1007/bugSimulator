@@ -343,7 +343,7 @@ export class Bug extends Objects {
 
         if (this.territory.length > this.allowSameSpecies) {
             this.territory
-            .filter((tile) => tile?.content?.size > this.size)
+            .filter((tile) => tile?.content?.size >= this.size)
             .sort((a, b) => {
                 const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
                 const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
@@ -437,7 +437,7 @@ export class HunterBug extends Objects {
 
         if (this.territory.length > this.allowSameSpecies) {
             this.territory
-            .filter((tile) => tile?.content?.size > this.size)
+            .filter((tile) => tile?.content?.size >= this.size)
             .sort((a, b) => {
                 const aDistance = Math.sqrt(Math.pow(a.x - this.position.x, 2) + Math.pow(a.y - this.position.y, 2));
                 const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
