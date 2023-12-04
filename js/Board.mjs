@@ -159,21 +159,21 @@ class Board {
                 labels: [],
                 datasets: [
                     {
-                        label: '🐛 Avg size',
+                        label: '🐛 Avg',
                         data: [],
                         borderColor: '#23b169',
                         borderWidth: 1,
                         tension: 0.6,
                     },
                     {
-                        label: '🦗 Avg size',
+                        label: '🦗 Avg',
                         data: [],
                         borderColor: '#016130',
                         borderWidth: 1,
                         tension: 0.6,
                     },
                     {
-                        label: '🐛 min',
+                        label: '🐛 Min',
                         data: [],
                         borderColor: '#999',
                         borderWidth: 1,
@@ -221,7 +221,7 @@ class Board {
                         labels: {
                             boxWidth: 10,
                             boxHeight: 10,
-                            padding: 30,
+                            padding: 20,
                             font: {
                                 family: 'Pretendard-Regular, Tossface',
                             },
