@@ -434,7 +434,7 @@ export class HunterBug extends Objects {
         this.energyEfficiency = 1;
         this.moveSpendEnergy = 2;
         this.preylimit = 3;
-        this.allowSameSpecies = 2;
+        this.allowSameSpecies = 3;
         this.init();
     }
 
