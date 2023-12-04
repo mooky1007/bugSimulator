@@ -296,7 +296,7 @@ export class Bug extends Objects {
         this.maxEnergy = 100; // 최대 에너지
         this.needFood = 70; // 허기를 느끼는 수치
         this.sightRange = 12; // 시야 영역
-        this.territoryRange = 24; // 영역
+        this.territoryRange = 18; // 영역
         this.procreationEnergy = 70; // 번식에 필요한 에너지
         this.reproductiveCycle = 50; // 번식주기
         this.postpartumcCare = this.reproductiveCycle; // 새끼를 낳고 다시 낳을 수 있을때 까지의 시간
@@ -339,7 +339,15 @@ export class Bug extends Objects {
                 const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
                 return aDistance - bDistance;
             });
-            this.move(this.directions.getDirectionToTargetAway(this.predator[0]).x, this.directions.getDirectionToTargetAway(this.predator[0]).y);
+
+            const awayPosition = this.directions.getDirectionToTargetAway(this.predator[0]);
+
+            if (awayPosition.x < 0 || awayPosition.y < 0 || awayPosition.x >= this.map.boardX || awayPosition.y >= this.map.boardY) {
+                this.die();
+                return;
+            }
+
+            this.move(awayPosition.x, awayPosition.y);
             return;
         }
 
@@ -351,7 +359,15 @@ export class Bug extends Objects {
                 const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
                 return aDistance - bDistance;
             });
-            this.move(this.directions.getDirectionToTargetAway(this.territory[0]).x, this.directions.getDirectionToTargetAway(this.territory[0]).y);
+            
+            const awayPosition = this.directions.getDirectionToTargetAway(this.territory[0]);
+
+            if (awayPosition.x < 0 || awayPosition.y < 0 || awayPosition.x >= this.map.boardX || awayPosition.y >= this.map.boardY) {
+                this.die();
+                return;
+            }
+
+            this.move(awayPosition.x, awayPosition.y);
             return;
         }
 
@@ -445,7 +461,15 @@ export class HunterBug extends Objects {
                 const bDistance = Math.sqrt(Math.pow(b.x - this.position.x, 2) + Math.pow(b.y - this.position.y, 2));
                 return aDistance - bDistance;
             });
-            this.move(this.directions.getDirectionToTargetAway(this.territory[0]).x, this.directions.getDirectionToTargetAway(this.territory[0]).y);
+
+            const awayPosition = this.directions.getDirectionToTargetAway(this.territory[0]);
+
+            if (awayPosition.x < 0 || awayPosition.y < 0 || awayPosition.x >= this.map.boardX || awayPosition.y >= this.map.boardY) {
+                this.die();
+                return;
+            }
+
+            this.move(awayPosition.x, awayPosition.y);
             return;
         }
     }
