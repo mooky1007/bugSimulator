@@ -273,7 +273,7 @@ export class Objects {
     }
 
     die(reason) {
-        if(this.type !== 'food') console.log(this.name, reason);
+        // if(this.type !== 'food') console.log(this.name, reason);
 
         clearInterval(this.life);
         clearTimeout(this.moveCycle);
