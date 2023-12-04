@@ -250,9 +250,9 @@ class Board {
             this.chart.data.datasets[0].data.push(this.getObjCount('food'));
             this.chart.data.datasets[1].data.push(this.getObjCount('bug'));
             this.chart.data.datasets[2].data.push(this.getObjCount('hunter')*4);
-            document.querySelector('.food-count').innerHTML = this.getObjCount('food');
-            document.querySelector('.bug-count').innerHTML = this.getObjCount('bug');
-            document.querySelector('.hunter-count').innerHTML = this.getObjCount('hunter');
+            // document.querySelector('.food-count').innerHTML = this.getObjCount('food');
+            // document.querySelector('.bug-count').innerHTML = this.getObjCount('bug');
+            // document.querySelector('.hunter-count').innerHTML = this.getObjCount('hunter');
             this.chart.update();
             this.chartLength += 1;
         }, 1000/this.speed);
