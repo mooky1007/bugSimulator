@@ -84,11 +84,26 @@ body {
 .infor_wrap {
     color: #fff;
     display: flex;
-    margin-top: 20px;
-    gap: 30px;
+    gap: 15px;
     font-size: 12px;
-    width: 100%;
-    justify-content: center;
+    width: 95vw;
+    justify-content: flex-end;
+    margin: 20px auto 0;
+    flex-wrap: wrap;
+}
+
+.infor_wrap a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.infor_wrap a:hover {
+    color: #23b169;
+    text-decoration: none;
+}
+
+.infor_wrap a:visted {
+    color: #fff;
 }
 
 .infor_wrap table {
@@ -120,15 +135,6 @@ body {
 
 .infor_wrap * {
     font-family: 'Pretendard-Regular', sans-serif;
-}
-
-.infor_wrap>div {
-    width: 25%;
-    white-space: nowrap;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
 }
 
 .water {
@@ -184,7 +190,11 @@ body {
         flex-direction: row;
         padding: 20px;
         box-sizing: border-box;
-        gap: 40px;
+        gap: 20px;
+    }
+
+    .infor_wrap {
+        width: 100%;
     }
 
     .infor_wrap table {
