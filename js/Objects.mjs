@@ -419,7 +419,7 @@ export class HunterBug extends Objects {
         this.needFood = 120;
         this.energy = 240;
         this.originEnergy = 240;
-        this.maxEnergy = 300;
+        this.maxEnergy = 260;
         this.sightRange = 20;
         this.territoryRange = 24;
         this.reproductiveCycle = 120;
