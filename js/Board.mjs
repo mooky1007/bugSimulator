@@ -221,7 +221,7 @@ class Board {
                         labels: {
                             boxWidth: 10,
                             boxHeight: 10,
-                            padding: 20,
+                            padding: 5,
                             font: {
                                 family: 'Pretendard-Regular, Tossface',
                             },
