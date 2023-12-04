@@ -161,7 +161,6 @@ export class Objects {
                 this.collisionEvent('eat', tile.content);
                 return;
             } else if (tile.content.type === 'water') {
-                console.log('water');
                 this.die('water');
                 return;
             } else {
