@@ -5,82 +5,43 @@ export class Tree extends Objects {
         super(config);
         this.name = config.name || 'tree';
         this.type = 'tree';
-        this.size = 11;
-        this.icon = '🌱';
-        this.sightRange = 3;
+        this.size = 24;
+        this.icon = '🌲';
+        this.sightRange = 16;
 
-        this.level = 0;
+        this.level = 10;
 
-        this.createDuration = 2000 + Math.floor(Math.random() * 1000);
-        this.createLength = 9;
+        this.createDuration = 3000;
+        this.createLength = 797;
+        this.density = 24;
         this.area = this.getSight(this.sightRange);
+        console.log(this.area.length)
+        console.log(this.area.length/this.density)
         this.init();
     }
 
     init() {
+        this.drawArea();
         if (this?.life) clearTimeout(this.life);
-        this.life = setTimeout(this.growAndCreate.bind(this), this.createDuration/this.map.speed);
+        this.life = setTimeout(this.createFood.bind(this), this.createDuration/this.map.speed);
     }
 
-    growAndCreate() {
-        const { x, y } = this.position;
-
-        if (this.level <= 2) {
-            this.size += 2;
-            this.level += 1;
-            const tile = this.map.getTile(x, y);
-            tile.el.innerHTML = `<span
-                            class="${this.className || ''}"
-                            style="
-                            font-size: ${this.size}px;
-                        " id="${this.name || ''}">
-                            ${this.icon}
-                        </span>`;
-            this.life = setTimeout(this.growAndCreate.bind(this), (this.createDuration * (this.level / 2))/this.map.speed);
-            return;
-        }
-        this.icon = '🌲';
-        this.size = 24;
-
+    createFood() {
         const emptyTiles = this.area.filter((tile) => !tile?.content);
+        let AreaInfoodCount = this.area.filter((tile) => tile?.content?.type === 'food').length;
 
-        for (let i = 0; i < Math.floor(Math.random() * (this.createLength - 6)) + 6; i++) {
-            if (this.area.filter((tile) => tile?.content?.type === 'food').length > this.area.length / 20) {
-                break;
-            }
-
-            if (emptyTiles.length > 0) {
-                const randomIndex = Math.floor(Math.random() * emptyTiles.length);
-                if (!emptyTiles[randomIndex]) continue;
-                const { x, y } = emptyTiles[randomIndex];
-                this.map.createFood(x, y);
-            }
+        while(AreaInfoodCount < this.area.length/this.density) {
+            const randomIndex = Math.floor(Math.random() * emptyTiles.length);
+            if (!emptyTiles[randomIndex]) continue;
+            const { x, y } = emptyTiles[randomIndex];
+            this.map.createFood(x, y);
+            AreaInfoodCount++;
         }
 
-        if (this.level < 10) {
-            this.level += 1;
-            this.size += this.level;
-            this.sightRange += Math.floor(this.level / 3);
-            this.area = this.getSight(this.sightRange);
-            this.createLength += this.level ** 2;
-            const tile = this.map.getTile(x, y);
-            tile.el.innerHTML = `<span
-                            class="${this.className || ''}"
-                            style="
-                            font-size: ${this.size}px;
-                        " id="${this.name || ''}">
-                            ${this.icon}
-                        </span>`;
-            this.drawArea();
-            this.life = setTimeout(this.growAndCreate.bind(this), (this.createDuration * (this.level / 4))/this.map.speed);
-            return;
-        }
-
-        this.life = setTimeout(this.growAndCreate.bind(this), (this.createDuration * (this.level / 2))/this.map.speed);
+        this.life = setTimeout(this.createFood.bind(this), this.createDuration/this.map.speed);
     }
 
     drawArea() {
-        this.area = this.getSight(this.sightRange);
         this.area
             .filter((tile) => tile)
             .forEach((tile) => {
