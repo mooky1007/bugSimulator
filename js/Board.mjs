@@ -17,9 +17,34 @@ class Board {
         this.el = document.querySelector(config.wrapperClassNams);
         this.tiles = [];
         this.bug = 0;
-        this.food = 0;
+        this.hunter = 0;
 
-        this.speed = 1;
+        this.dev = false;
+        this.speed = this.dev ? 25 : 1;
+
+        if (this.dev) {
+            this.el.classList.add('dev');
+        }
+
+        this.object = {
+            bug: {
+                food: 0,
+                species: 0,
+                evasion: 0,
+            },
+            hunter: {
+                food: 0,
+                species: 0,
+                evasion: 0,
+            },
+        }
+
+        setInterval(()=>{
+            console.log('prey')
+            console.log(this.object.bug)
+            console.log('predator')
+            console.log(this.object.hunter)
+        }, 1000)
 
         this.init();
         this.create();
@@ -255,6 +280,11 @@ class Board {
             // document.querySelector('.hunter-count').innerHTML = this.getObjCount('hunter');
             this.chart.update();
             this.chartLength += 1;
+
+            if(this.getObjCount('bug') === 0 && this.getObjCount('hunter') === 0) {
+                this.generateObject('bug', 64);
+                this.generateObject('hunter', 16);
+            }
         }, 6000 / this.speed);
 
         setInterval(() => {
@@ -458,10 +488,10 @@ class Board {
         this.getTile(x, y).content = new HunterBug({
             map: this,
             position: { x: x, y: y },
-            name: `hunter_${this.bug}`,
+            name: `hunter_${this.hunter}`,
         });
 
-        this.bug++;
+        this.hunter++;
 
         return this.getTile(x, y).content;
     }
@@ -471,18 +501,15 @@ class Board {
         targetTile.content = new Food({
             map: this,
             position: { x: x, y: y },
-            name: `food_${this.bug}`,
         });
 
-        targetTile.el.innerHTML = `<span
-        class="${targetTile.content.className || ''}"
-        style="
-        font-size: ${targetTile.content.size}px;
-    " id="${targetTile.content.name || ''}">
-        ${targetTile.content.icon}
-    </span>`;
-
-        this.food++;
+        targetTile.el.innerHTML = `
+            <span
+                class="${targetTile.content.className || ''}"
+                style="font-size: ${targetTile.content.size}px;">
+                ${targetTile.content.icon}
+            </span>
+        `;
     }
 
     createTree(x, y) {
@@ -491,16 +518,15 @@ class Board {
         targetTile.content = new Tree({
             map: this,
             position: { x: x, y: y },
-            name: `tree_${this.bug}`,
         });
 
-        targetTile.el.innerHTML = `<span
-        class="${targetTile.content.className || ''}"
-        style="
-        font-size: ${targetTile.content.size}px;
-    " id="${targetTile.content.name || ''}">
-        ${targetTile.content.icon}
-    </span>`;
+        targetTile.el.innerHTML = `
+            <span
+                class="${targetTile.content.className || ''}"
+                style="font-size: ${targetTile.content.size}px;">
+                ${targetTile.content.icon}
+            </span>
+        `;
     }
 
     createWater(x, y) {
@@ -511,12 +537,9 @@ class Board {
             position: { x: x, y: y },
         });
 
-        targetTile.el.innerHTML = `<span
-        class="${targetTile.content.className || ''}"
-        style="
-        font-size: ${targetTile.content.size}px;
-    " id="${targetTile.content.name || ''}">   
-    </span>`;
+        targetTile.el.innerHTML = `
+            <span class="${targetTile.content.className || ''}"></span>
+        `;
     }
 
     generateObject(object, count = 1) {

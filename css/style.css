@@ -81,6 +81,89 @@ body {
     text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;
 }
 
+.tile span.find_food::after {
+    content: 'find_food';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 100%);
+    font-size: 9px;
+    color: #fff;
+}
+.tile span.move_to_food::after {
+    content: 'move_to_food';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 100%);
+    font-size: 9px;
+    color: #fff;
+}
+.tile span.run_away_from_predator::after {
+    content: 'run_away_from_predator';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 100%);
+    font-size: 9px;
+    color: #fff;
+}
+.tile span.run_away_from_same_species::after {
+    content: 'run_away_from_same_species';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 100%);
+    font-size: 9px;
+    color: #fff;
+}
+
+.tile span.sight_in_food::after {
+    content: 'sight_in_food';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 100%);
+    font-size: 9px;
+    color: #fff;
+}
+
+.tile span.hungry::after {
+    content: 'hungry';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 100%);
+    font-size: 9px;
+    color: #fff;
+}
+
+.status_wrap {
+    position: absolute;
+    width: 14px;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 100%);
+    transform-origin: center;
+    overflow: hidden;
+}
+
+.status_wrap span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+.status_wrap span:last-child {
+    top: auto;
+    bottom: 0;
+}
+
 .infor_wrap {
     color: #fff;
     display: flex;
@@ -149,6 +232,14 @@ body {
 
 .tree-area {
     background: rgb(29, 52, 29);
+}
+
+.territory-area {
+    background: yellow
+}
+
+.sight-area {
+    background: red;
 }
 
 .chart_wrap {

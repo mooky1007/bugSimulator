@@ -1,55 +1,53 @@
-import { Directions } from './Directions.mjs';
+import { Action } from './actions/Action.mjs';
+import { Directions } from './actions/Directions.mjs';
 
 export class Objects {
     constructor(config) {
         this.map = config.map;
         this.position = config.position;
+        this.areaClass = config.areaClass || 'sight-area';
 
-        this.icon = config.icon || '';
-        this.name = config.name || 'object';
+        this.icon = config.icon || 'undefined icon';
+        this.name = config.name || 'undefined name';
+        this.type = config.type || 'undefined type';
         this.size = config.size || 9;
         this.defaultSize = config.defaultSize || config.size || 9;
         this.maxSize = config.size || 13.5;
 
+        this.gen = config.gen || 0;
+
+        this.isAlive = true;
         this.energy = config.energy || 0;
+        this.defaultEnergy = config.energy || 0;
         this.lifeSpan = config.lifeSpan || 500;
         this.defaultLifeSpan = config.lifeSpan || 500;
+        this.energyEfficiency = config.energyEfficiency || 1;
+        this.moveSpendEnergy = config.moveSpendEnergy || 0;
+        this.hungerFood = config.hungerFood || 0.75;
+        this.needFood = this.defaultEnergy * this.hungerFood;
 
-        this.hungryMoveSpeed = config.hungryMoveSpeed || 100;
+        this.reproductiveCycle = config.reproductiveCycle || 100;
+        this.procreationEnergy = config.procreationEnergy || 100;
+        this.postpartumcCare = config.postpartumcCare || 0;
 
-        this.safePosition = null;
+        this.growLevel_1 = config.growLevel_1 || 90;
+        this.growLevel_2 = config.growLevel_2 || 80;
 
         this.actionPeriod = config.actionPeriod || 100;
         this.addActionPeriod = config.addActionPeriod || 0;
+        this.hungryMoveSpeed = config.hungryMoveSpeed || 100;
 
-        this.growLevel1 = config.growLevel1 || 90;
-        this.growLevel2 = config.growLevel2 || 80;
-
-        this.energyEfficiency = config.energyEfficiency || 1;
-        this.moveSpendEnergy = config.moveSpendEnergy || 0;
-        this.preylimit = config.preylimit || 1;
         this.sightRange = config.sightRange || 0;
-        this.eatCount = 0;
+        this.territoryRange = config.territoryRange || 0;
+        this.allowSameSpecies = config.allowSameSpecies || 4;
+        this.preylimit = config.preylimit || 1;
+
+        this.eatTarget = config.eatTarget || null;
+
         this.directions = new Directions(this);
-    }
+        this.actions = new Action(this);
 
-    get energy() {
-        return this._energy;
-    }
-
-    set energy(value) {
-        this._energy = value;
-        if (this._energy > this.maxEnergy) this._energy = this.maxEnergy;
-        if (this._energy < 0) this._energy = 0;
-    }
-
-    get lifeSpan() {
-        return this._lifeSpan;
-    }
-
-    set lifeSpan(value) {
-        this._lifeSpan = value;
-        if (this._lifeSpan < 0) this.die('no lifeSpan');
+        this.priority = config.priority || [];
     }
 
     init() {
@@ -57,15 +55,28 @@ export class Objects {
         if (this?.moveCycle) clearTimeout(this.moveCycle);
 
         this.life = setInterval(() => {
-            this.energy -= this.energyEfficiency;
+            if(!this.isAlive) return;
             this.lifeSpan -= 1;
+            this.energy -= this.energyEfficiency;
 
             if (this.growLevel === 0) this.size = this.defaultSize * 0.6;
             if (this.growLevel === 1) this.size = this.defaultSize * 0.8;
             if (this.growLevel === 2) this.size = this.defaultSize;
 
             if (this.postpartumcCare > 0) this.postpartumcCare -= 1;
-            if (this.energy <= 0) this.die('no energy');
+
+            // if(this.energy < this.needFood){
+            //     this.className = 'hungry';
+            // }else{
+            //     this.className = '';
+            // }
+
+            if (this.energy <= 0 || this.lifeSpan <= 0) {
+                this.die('no energy and lifeSpan');
+                return;
+            }
+
+            this.render();
         }, 200 / this.map.speed);
 
         this.moveCycleAction();
@@ -73,21 +84,32 @@ export class Objects {
 
     get growLevel() {
         const { lifeSpan, defaultLifeSpan } = this;
-        const percent = (lifeSpan / defaultLifeSpan) * 100;
-        if (percent <= this.growLevel1) return 0;
-        if (percent <= this.growLevel2) return 1;
+        const ratio = lifeSpan / defaultLifeSpan;
+
+        if (ratio > this.growLevel_1 / 100) return 0;
+        if (ratio > this.growLevel_2 / 100) return 1;
         return 2;
     }
 
+    drawArea(area, className = this.areaClass) {
+        area.filter((tile) => tile).forEach((tile) => tile.el.classList.add(className));
+        this.map.getTile(this.position.x, this.position.y).el.classList.add('tree-area');
+    }
+
+    removeArea(area) {
+        area.filter((tile) => tile).forEach((tile) => tile.el.classList.remove(this.areaClass));
+    }
+
     moveCycleAction() {
+        if(!this.isAlive) return;
         this.moveCycle = setTimeout(() => {
             this.action();
             this.moveCycleAction();
         }, (this.actionPeriod + this.addActionPeriod) / this.map.speed);
     }
 
-    get nearbyTiles() {
-        return [
+    get adjacentTiles() {
+        const adjacentTiles = [
             this.map.getTile(this.position.x, this.position.y - 1),
             this.map.getTile(this.position.x, this.position.y + 1),
             this.map.getTile(this.position.x - 1, this.position.y),
@@ -97,10 +119,10 @@ export class Objects {
             this.map.getTile(this.position.x - 1, this.position.y + 1),
             this.map.getTile(this.position.x + 1, this.position.y + 1),
         ];
-    }
 
-    get sight() {
-        return this.getSight(this.sightRange);
+        adjacentTiles.empty = adjacentTiles.filter((tile) => tile?.content === null);
+
+        return adjacentTiles;
     }
 
     getSight(sight) {
@@ -116,19 +138,22 @@ export class Objects {
             }
         }
         sightTiles = sightTiles.filter((tile) => tile?.content !== this);
-        return sightTiles;
-    }
+        sightTiles.empty = sightTiles.filter((tile) => tile?.content === null);
 
-    getEmptyTiles(tileArray) {
-        return tileArray.filter((tile) => tile?.content === null);
+        return sightTiles;
     }
 
     action() {
         this.addActionPeriod = 0;
-        this.sightTiles = this.sight;
-        this.foodTile = this.sightTiles.filter((tile) => tile?.content?.type === this.eatTarget); // 주변의 음식
-        this.predator = this.sightTiles.filter((tile) => tile?.content?.eatTarget === this.type && tile?.content?.energy < tile?.content?.needFood); // 주변의 포식자
-        this.territory = this.getSight(this.territoryRange).filter((tile) => tile?.content?.type === this.type); // 활동영역
+
+        this.sightTiles = this.getSight(this.sightRange);
+        this.territoryTiles = this.getSight(this.territoryRange);
+
+        this.foodTile = this.sightTiles.filter((tile) => tile?.content?.type === this.eatTarget && tile?.content?.size < this.size);
+        this.predator = this.sightTiles.filter((tile) => tile?.content?.eatTarget === this.type && tile?.content?.energy < tile?.content?.needFood);
+        this.territory = this.territoryTiles.filter((tile) => tile?.content?.type === this.type && tile?.content?.size >= this.size);
+
+        this.priority.forEach((action) => this.actions[action]());
     }
 
     collisionEvent(event, target) {
@@ -146,14 +171,13 @@ export class Objects {
         if (x === undefined || y === undefined) return;
         if (x < 0 || y < 0 || x >= this.map.boardX || y >= this.map.boardY) {
             // random move
-            const emptyTiles = this.nearbyTiles.filter((tile) => tile?.content === null);
+            const emptyTiles = this.adjacentTiles.filter((tile) => tile?.content === null);
 
             if (emptyTiles.length > 0) {
                 const randomIndex = Math.floor(Math.random() * emptyTiles.length);
                 const { x, y } = emptyTiles[randomIndex];
                 this.move(x, y);
             }
-
             return;
         }
 
@@ -162,11 +186,8 @@ export class Objects {
             if (tile.content.type === this.eatTarget && this.energy <= this.needFood) {
                 this.collisionEvent('eat', tile.content);
                 return;
-            } else if (tile.content.type === 'water') {
-                this.die('water');
-                return;
             } else {
-                const emptyTiles = this.nearbyTiles.filter((tile) => tile?.content === null);
+                const emptyTiles = this.adjacentTiles.filter((tile) => tile?.content === null);
 
                 if (emptyTiles.length > 0) {
                     const randomIndex = Math.floor(Math.random() * emptyTiles.length);
@@ -177,35 +198,31 @@ export class Objects {
             }
         }
 
+        if (this.map.dev) {
+            this.removeArea(this.getSight(this.territoryRange), 'territory-area');
+            this.removeArea(this.getSight(this.sightRange));
+        }
         const { x: oldX, y: oldY } = this.position;
         this.position = { x, y };
         this.oldTile = this.map.getTile(oldX, oldY);
         this.oldTile.content = null;
         this.oldTile.el.innerHTML = '';
         tile.content = this;
-        tile.el.innerHTML = `<span
-                            class="${this.className || ''}"
-                            style="
-                            font-size: ${this.size}px;
-                        " id="${this.name || ''}">
-                            ${this.icon}
-                        </span>`;
+
+        this.render();
+        if (this.map.dev) {
+            this.drawArea(this.getSight(this.territoryRange), 'territory-area');
+            this.drawArea(this.getSight(this.sightRange));
+        }
     }
 
     eat(target) {
         this.energy += target.energy;
-        this.eatCount += 1;
         target.die('eaten');
     }
 
     giveBirth() {
-        const territory = this.getSight(this.territoryRange).filter((tile) => tile?.content?.type === this.type);
-        if (territory.length > this.allowSameSpecies) {
-            this.postpartumcCare += 3;
-            return;
-        }
-
-        const emptyTiles = this.nearbyTiles.filter((tile) => tile?.content === null);
+        const emptyTiles = this.adjacentTiles.empty;
         if (emptyTiles.length > 0) {
             const randomIndex = Math.floor(Math.random() * emptyTiles.length);
             const { x, y } = emptyTiles[randomIndex];
@@ -223,49 +240,11 @@ export class Objects {
                     break;
             }
 
-            newBug.power = this.power;
-            newBug.icon = this.icon;
-            newBug.type = this.type;
-            newBug.eatTarget = this.eatTarget;
-            newBug.power = this.power;
+            newBug.energy = this.procreationEnergy + 10;
+            newBug.priority = this.priority;
+            if (Math.random() > 0.01) newBug.priority = [...this.priority].sort(() => Math.random() - 0.5);
 
-            newBug.actionPeriod = this.actionPeriod;
-            newBug.hungryMoveSpeed = this.hungryMoveSpeed;
-            newBug.energy = this.newBornEnergy;
-            newBug.originEnergy = this.originEnergy;
-            newBug.maxEnergy = this.maxEnergy;
-            newBug.needFood = this.needFood;
-            newBug.sightRange = this.sightRange;
-            newBug.territoryRange = this.territoryRange;
-            newBug.procreationEnergy = this.procreationEnergy;
-            newBug.reproductiveCycle = this.reproductiveCycle;
-            newBug.newBornEnergy = this.newBornEnergy;
-            newBug.allowSameSpecies = this.allowSameSpecies;
-            newBug.defaultSize = this.defaultSize;
-            newBug.size = newBug.defaultSize * 0.6;
-
-            newBug.gen = this.gen + 1;
-
-            if (Math.random() < 0.2) {
-                const originSize = newBug.defaultSize;
-
-                newBug.defaultSize = (newBug.defaultSize * (Math.random() * 0.2 + 0.9)).toFixed(1);
-                newBug.size = newBug.defaultSize * 0.6;
-
-                const sizeRatio = newBug.defaultSize / originSize;
-
-                newBug.actionPeriod *= sizeRatio;
-
-                newBug.energy *= sizeRatio;
-                newBug.originEnergy *= sizeRatio;
-                newBug.maxEnergy *= sizeRatio;
-                newBug.needFood *= sizeRatio;
-                newBug.procreationEnergy *= sizeRatio;
-                newBug.newBornEnergy *= sizeRatio;
-                newBug.energyEfficiency *= sizeRatio;
-
-                newBug.sightRange = Math.round(newBug.sightRange * sizeRatio);
-            }
+            this.map.object[newBug.type][newBug.priority[0]]++;
 
             this.postpartumcCare = this.reproductiveCycle;
             this.energy -= this.procreationEnergy;
@@ -273,18 +252,36 @@ export class Objects {
         }
     }
 
-    die(reason) {
-        // if(this.type !== 'food') console.log(this.name, reason);
+    render() {
+        const { x, y } = this.position;
+        const tile = this.map.getTile(x, y);
 
+        tile.content = this;
+        tile.el.innerHTML = `
+            <span
+                class="${this.className || ''}"
+                style="
+                font-size: ${this.size}px;
+            " id="${this.name || ''}">
+                ${this.icon}
+            </span>
+        `;
+
+        // <div class="status_wrap">
+        //     <span style="background: red; transform: scaleX(${this.energy / this.defaultEnergy});"></span>
+        //     <span style="background: green; transform: scaleX(${this.lifeSpan / this.defaultLifeSpan});"></span>
+        // </div>
+    }
+
+    die(reason) {
+        const { x, y } = this.position;
+        const tile = this.map.getTile(x, y);
+                
         clearInterval(this.life);
         clearTimeout(this.moveCycle);
-        const targetTile = this.map.getTile(this.position.x, this.position.y);
-        this.energy = 0;
-        this.lifeSpan = 0;
-        targetTile.content = null;
-        targetTile.el.innerHTML = '';
+        this.isAlive = false;
+
+        tile.content = null;
+        tile.el.innerHTML = '';
     }
 }
-
-
-

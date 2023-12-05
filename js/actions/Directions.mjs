@@ -7,10 +7,10 @@ export class Directions {
         return this.parent.position;
     }
 
-    getDirectionRandom(nearbyTiles) {
-        if (!nearbyTiles) return false;
+    getDirectionRandom(adjacentTiles) {
+        if (!adjacentTiles) return false;
 
-        const emptyNearTiles = nearbyTiles.filter((tile) => tile?.content === null);
+        const emptyNearTiles = adjacentTiles.filter((tile) => tile?.content === null);
         if (emptyNearTiles.length > 0) {
             const randomIndex = Math.floor(Math.random() * emptyNearTiles.length);
             const { x, y } = emptyNearTiles[randomIndex];

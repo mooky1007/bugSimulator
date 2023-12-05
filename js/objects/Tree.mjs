@@ -11,17 +11,17 @@ export class Tree extends Objects {
 
         this.level = 10;
 
-        this.createDuration = 3000;
-        this.createLength = 797;
-        this.density = 24;
         this.area = this.getSight(this.sightRange);
-        console.log(this.area.length)
-        console.log(this.area.length/this.density)
+        this.areaClass = 'tree-area';
+
+        this.createDuration = 3000;
+        this.createLength = 120;
+        this.density = 12; // 낮을 수록 밀도가 높아짐
         this.init();
     }
 
     init() {
-        this.drawArea();
+        this.drawArea(this.area);
         if (this?.life) clearTimeout(this.life);
         this.life = setTimeout(this.createFood.bind(this), this.createDuration/this.map.speed);
     }
@@ -39,15 +39,5 @@ export class Tree extends Objects {
         }
 
         this.life = setTimeout(this.createFood.bind(this), this.createDuration/this.map.speed);
-    }
-
-    drawArea() {
-        this.area
-            .filter((tile) => tile)
-            .forEach((tile) => {
-                tile.el.classList.add('tree-area');
-            });
-
-        this.map.getTile(this.position.x, this.position.y).el.classList.add('tree-area');
     }
 }
