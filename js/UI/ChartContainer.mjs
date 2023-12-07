@@ -5,7 +5,7 @@ export class ChartContainer {
         this.chart = null;
         this.datasets = config.datasets;
         this.chartLength = 0;
-        this.renderPeriod = config.renderPeriod || 3000;
+        this.renderPeriod = config.renderPeriod || 1000;
         
         this.title = config.title;
         this.titleEl = document.getElementById(config.id).closest('.chart_container').querySelector('.chart_title_wrap p');

@@ -260,6 +260,11 @@ header {
 }
 
 @media screen and (max-width: 768px) {
+
+    html,body {
+        height: 100%;
+    }
+
     aside {
         position: fixed;
         top: 0;
