@@ -84,7 +84,7 @@ export class ChartContainer {
                     });
                     this.chartLength += 1;
                     this.chart.update();
-                }, this.renderPeriod / this.speed);
+                }, this.renderPeriod / this.map.speed);
                 break;
 
             case 'object-area':
@@ -139,7 +139,7 @@ export class ChartContainer {
                     }
 
                     this.chart.update();
-                }, this.renderPeriod / this.speed);
+                }, this.renderPeriod / this.map.speed);
                 break;
         }
         return this.chart;
