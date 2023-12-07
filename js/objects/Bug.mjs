@@ -32,7 +32,7 @@ export class Bug extends Objects {
 
         this.sightRange = 8;
         this.territoryRange = 12;
-        this.allowSameSpecies = 12;
+        this.allowSameSpecies = 6;
         this.preylimit = 0;
 
         this.eatTarget = 'food';

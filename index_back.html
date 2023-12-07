@@ -29,37 +29,47 @@
     </header>
     <aside>
         <h1>🌱 기초 생태학</h1>
-        <p>누구나 쉽게 기본적인 생태학 이론을 <br>학습 할 수 있는 사이트입니다.</p>
+        <p>누구나 쉽게 생태학의 <br>기본적인 이론을 시각적으로 학습 <br>할 수 있는 사이트입니다.</p>
         <ul>
             <li class="title">
                 <p>
                     집단 <span>Population</span>
                 </p>
             </li>
+            <li>
+                <button type="button" onclick="window.location.href='./populationGrowth.html'">개체군(population) 이란?</button>
+            </li>
+            <li>
+                <button type="button" onclick="window.location.href='./populationGrowth.html'">개체군 성장 모델:
+                    <br><span>Population Growth</span></button>
+            </li>
             <li class="active">
-                <a href="./">개체군 생태학이란?<br><span>What is Population Ecology?</span></a>
+                <button type="button">군집 내 개체군의 상호 작용: <br><span>경쟁</span></button>
+            </li>
+            <li class="disabled">
+                <button type="button">[준비중] 포식과 피식</button>
             </li>
         </ul>
     </aside>
     <main>
         <div class="title_wrap">
-            <h2>개체군(Population)과 개체군 생태학(Population Ecology)</h2>
+            <h2>군집 내 개체군의 상호 작용: 생태학적 상호작용의 이해</h2>
             <p>
-                개체군(population): 특정한 영역에 서식하고 있는 동일
-                한 생물 종 개체들의 무리로서 서로 상호작용하고 교배가능한 집단을 의미합니다.
+                동일한 생태적 지위에 있는 두 종이 공유하는 서식지에서 발생하는 경쟁에 대해 살펴봅시다.
             </p>
             <p>
-                개체군 생태학(Population Ecology): 개체군의 밀도(density), 크기(size), 성장률(growth rate)에 영향을 주는 요인을 이해하는 학문
+                이 시뮬레이션에서는 외형을 제외하고 동일한 두 종이 무작위 위치에 생성됩니다.
             </p>
-            <ul>
-                <li>밀도(population density): 단위면적당 개체 수</li>
-                <li>크기(population size): 개체 수(수도, abundance)</li>
-                <li>나이 구조(age structure): 나이에 따른 상대적 개체수</li>
-                <li>성장률(population growth rate): 개체군 크기의 변화율</li>
-            </ul>
+            <p>
+                두 종이 공유하는 먹이는 특정 위치에서 생성되며, 이로 인해 두 종은 서서히 먹이가 생성되는 위치로 모이게 되고, 경쟁이 발생합니다.<br>
+                경쟁으로 인해 하나의 종이 멸종하면, 해당 서식지는 나머지 종이 점령하게 됩니다.
+            </p>
+            <p>
+                현재 시뮬레이션으로 확인할 수 있는 결과는, 한종이 모두 멸종하거나, 두 종이 서식지를 나눠 공존하는 경우입니다.
+            </p>
             <div class="tag_wrap">
-                <span class="tag">#개체군</span>
-                <span class="tag">#개체군 생태학</span>
+                <span class="tag">#경쟁</span>
+                <span class="tag">#생태적 지위 분화</span>
             </div>
         </div>
         <div class="content_wrap">
@@ -73,7 +83,7 @@
                     <button role="reset">리셋</button>
                 </div>
             </div>
-            <div class="chart_wrap gird-3">
+            <div class="chart_wrap">
                 <div class="chart_container">
                     <div class="chart_title_wrap">
                         <p></p>
@@ -91,16 +101,6 @@
                     <div class="chart_screen_wrap">
                         <div class="chart_screen">
                             <canvas id="myChart2"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <div class="chart_container">
-                    <div class="chart_title_wrap">
-                        <p></p>
-                    </div>
-                    <div class="chart_screen_wrap">
-                        <div class="chart_screen">
-                            <canvas id="myChart3"></canvas>
                         </div>
                     </div>
                 </div>
@@ -122,40 +122,25 @@
         board.generateObject('bug2', 72);
 
         board.chart = new ChartContainer({
-            title: '개체의 크기, 성장률',
-            desc: '시뮬레이터에 존재하는 모든 개체의 수를 <br>시각적으로 표현한 차트입니다.',
+            title: '개체 수',
             id: 'myChart',
             datasets: [
-                ['🌱', '#666666', 'food'],
                 ['🐛', '#6ac569', 'bug'],
-                ['🐞', '#e75656', 'bug2'],
+                ['🐞', '#e75656', 'bug2']
             ],
         })
         board.chart.init(board, 'object-count');
 
         board.chart2 = new ChartContainer({
-            title: '밀도',
-            desc: '시뮬레이터를 4x4사이즈로 나눈 영역별 개체 수를 <br>시각적으로 표현한 차트입니다.',
+            title: '분포도',
             id: 'myChart2',
             type: 'bubble',
             datasets: [
                 ['🐛', '#6ac569', 'bug'],
-                ['🐞', '#e75656', 'bug2'],
+                ['🐞', '#e75656', 'bug2']
             ],
         })
         board.chart2.init(board, 'object-area');
-
-        board.chart3 = new ChartContainer({
-            title: '나이 구조',
-            desc: '시뮬레이터 내의 살아있는 개체들의 나이를 <br>시각적으로 표현한 차트입니다.',
-            id: 'myChart3',
-            type: 'line',
-            datasets: [
-                ['🐛', '#6ac569', 'bug'],
-                ['🐞', '#e75656', 'bug2'],
-            ],
-        })
-        board.chart3.init(board, 'object-age');
 
         document.querySelector('button[role="reset"]').addEventListener('click', () => {
             board.reset();

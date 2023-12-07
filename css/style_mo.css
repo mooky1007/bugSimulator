@@ -1,8 +1,4 @@
 @media screen and (max-width: 1024px) {
-    br {
-        display: none;
-    }
-
     html,
     body {
         height: 100%;

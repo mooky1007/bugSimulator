@@ -6,9 +6,10 @@ export class ChartContainer {
         this.datasets = config.datasets;
         this.chartLength = 0;
         this.renderPeriod = config.renderPeriod || 1000;
-        
-        if(document.getElementById(config.id)){
+
+        if (document.getElementById(config.id)) {
             this.title = config.title;
+            this.desc = config.desc;
             this.titleEl = document.getElementById(config.id).closest('.chart_container').querySelector('.chart_title_wrap p');
         }
 
@@ -44,10 +45,12 @@ export class ChartContainer {
     }
 
     init(map, type) {
-        if(!document.getElementById(this.id)) return;
+        if (!document.getElementById(this.id)) return;
         this.map = map;
 
         this.titleEl.innerText = this.title;
+        if (this.desc) this.titleEl.innerHTML += `<span>${this.desc}</span>`;
+
         const ctx = document.getElementById(this.id);
         this.chart = new Chart(ctx, {
             type: this.type,
@@ -104,8 +107,7 @@ export class ChartContainer {
                 };
 
                 this.chart.options.pointStyle = 'circle';
-
-                this.chart.data.datasets.forEach((dataset) => dataset.backgroundColor = dataset.borderColor);
+                this.chart.data.datasets.forEach((dataset) => (dataset.backgroundColor = dataset.borderColor));
 
                 setInterval(() => {
                     const fields = [];
@@ -144,6 +146,50 @@ export class ChartContainer {
                     this.chart.update();
                 }, this.renderPeriod / this.map.speed);
                 break;
+
+            case 'object-age':
+                this.chart.options.scales = {
+                    x: {
+                        reverse: true,
+                        suggestedMin: 0, // X축 최소값
+                        suggestedMax: 100, // X축 최대값
+                        // title: {
+                        //     display: true,
+                        //     text: '연령',
+                        // },
+                    },
+                    y: {
+                        suggestedMin: 0, // Y축 최소값
+                        // title: {
+                        //     display: true,
+                        //     text: '생존 개체 수',
+                        // },
+                    },
+                };
+
+                for (let i = 0; i < 10; i++) {
+                    this.chart.data.labels.push(10 - i);
+                    this.chart.data.datasets.forEach((dataset) => {
+                        dataset.data.push(0);
+                    });
+                }
+
+                setInterval(() => {
+                    // 초기화
+                    this.chart.data.datasets.forEach((dataset) => dataset.data = dataset.data.map((data) => 0));
+
+                    for (let x = 0; x < 100; x++) {
+                        for (let y = 0; y < 100; y++) {
+                            this.datasets.forEach((dataset, index) => {
+                                if (this.map.tiles[x][y].content?.type === dataset[2]) {
+                                    this.chart.data.datasets[index].data[Math.floor((this.map.tiles[x][y].content.lifeSpan / this.map.tiles[x][y].content.defaultLifeSpan) * 10)] += 1;
+                                }
+                            });
+                        }
+                    }
+                    this.chart.update();
+                }, this.renderPeriod / this.map.speed);
+                break;
         }
         return this.chart;
     }
@@ -155,5 +201,5 @@ export class ChartContainer {
             this.chart.data.datasets[index].data = [];
         });
         this.chart.update();
-    }   
+    }
 }
