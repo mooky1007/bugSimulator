@@ -37,7 +37,7 @@
                 </p>
             </li>
             <li>
-                <a href="./">개체군 생태학이란?<br><span>Population Ecology</span></a>
+                <a href="./">개체군 생태학<br><span>Population Ecology</span></a>
             </li>
             <li>
                 <a href="./populationGrowth.html">개체군 성장 모델 - 지수 개체군 성장모델<br><span>Exponential Population
@@ -49,6 +49,14 @@
             </li>
             <li>
                 <a href="./densityDependentFactor.html">개체군 성장의 조절 - 밀도의존적 인자<br><span>Density Dependent Factor</span></a>
+            </li>
+            <li class="title" style="opacity: 0.2;">
+                <p>
+                    군집 <span>Community</span>
+                </p>
+            </li>
+            <li style="opacity: 0.2;">
+                <a href="#">생태군집<br><span>Ecological Community</span></a>
             </li>
         </ul>
     </aside>
@@ -79,7 +87,7 @@
                         경쟁(competition), 포식(predation): 생물학적 환경
                     </li>
                 </ul>
-                <p>초기에는 지수 개체군 성장모델과 유사한 형태를 지니지만 점차 성장이 느려지며 K에 도달하면 개체군의 성장이 멈춘다.</p>
+                <p>밀도가 높아지는곳은 출생 분포가 적어지는게.. 관찰될지도?</p>
             </div>
             <div class="gui_wrap">
                 <div class="canvas_wrap">
@@ -102,6 +110,16 @@
                         </div>
                     </div>
                 </div>
+                <div class="chart_container">
+                    <div class="chart_title_wrap">
+                        <p></p>
+                    </div>
+                    <div class="chart_screen_wrap">
+                        <div class="chart_screen">
+                            <canvas id="myChart2"></canvas>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -121,20 +139,27 @@
         board.generateObject('bug', 24);
 
         board.chart = new ChartContainer({
-            title: '개체 수',
+            title: '개체 분포',
             id: 'myChart',
+            type: 'bubble',
             datasets: [
-                ['🌱', '#555555', 'food'],
                 ['🐛', '#6ac569', 'bug'],
             ],
             renderPeriod: 1000
         })
         
-        board.chart.init(board, 'object-count');
-        board.chart.chart.options.scales.y = {
-            suggestedMax: 250,
-        };
-        board.chart.chart.update();
+        board.chart.init(board, 'object-area');
+
+        board.chart2 = new ChartContainer({
+            title: '출생 분포 ',
+            id: 'myChart2',
+            type: 'bubble',
+            datasets: [
+                ['🐛', '#77ffad', 'bug'],
+            ],
+            renderPeriod: 1000
+        })
+        board.chart2.init(board, 'birth-rate');
 
         document.querySelector('button[role="reset"]').addEventListener('click', () => {
             board.reset();

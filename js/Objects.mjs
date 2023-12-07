@@ -48,6 +48,7 @@ export class Objects {
         this.actions = new Action(this);
 
         this.priority = config.priority || [];
+        this.birth = true;
     }
 
     init() {
@@ -78,6 +79,10 @@ export class Objects {
 
             this.render();
         }, 200 / this.map.speed);
+
+        setTimeout(() => {
+            this.birth = false;
+        }, 5000);
 
         this.moveCycleAction();
     }
@@ -246,6 +251,7 @@ export class Objects {
 
             this.postpartumcCare = this.reproductiveCycle;
             this.energy -= this.procreationEnergy;
+            this.map.birth[newBug.type] ? this.map.birth[newBug.type] += 1 : this.map.birth[newBug.type] = 1;
             this.map.bug++;
         }
     }

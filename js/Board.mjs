@@ -22,6 +22,7 @@ class Board {
         this.tiles = [];
         this.bug = 0;
         this.hunter = 0;
+        this.birth = {};
 
         this.dev = false;
         this.speed = this.dev ? 25 : 1;
