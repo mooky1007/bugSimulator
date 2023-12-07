@@ -47,8 +47,8 @@ class Board {
         this.generateEnvironment();
 
         this.generateObject('food', 12);
-        this.generateObject('bug', 30);
-        this.generateObject('bug2', 30);
+        this.generateObject('bug', 48);
+        this.generateObject('bug2', 48);
     }
 
     init() {
