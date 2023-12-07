@@ -10,8 +10,8 @@ export class Bug extends Objects {
         this.defaultSize = 8;
         this.maxSize = 16;
 
-        this.energy = 40;
-        this.defaultEnergy = 40;
+        this.energy = 60;
+        this.defaultEnergy = 60;
         this.lifeSpan = 300;
         this.defaultLifeSpan = 300;
         this.energyEfficiency = 1;
