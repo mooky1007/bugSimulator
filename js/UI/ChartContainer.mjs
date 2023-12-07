@@ -152,5 +152,5 @@ export class ChartContainer {
             this.chart.data.datasets[index].data = [];
         });
         this.chart.update();
-    }
+    }   
 }

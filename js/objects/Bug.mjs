@@ -10,13 +10,13 @@ export class Bug extends Objects {
         this.defaultSize = 8;
         this.maxSize = 16;
 
-        this.energy = 25;
-        this.defaultEnergy = 25;
-        this.lifeSpan = 200;
-        this.defaultLifeSpan = 200;
+        this.energy = 40;
+        this.defaultEnergy = 40;
+        this.lifeSpan = 300;
+        this.defaultLifeSpan = 300;
         this.energyEfficiency = 2;
         this.moveSpendEnergy = 0.5;
-        this.hungerFood = 0.9;
+        this.hungerFood = 0.8;
         this.needFood = this.defaultEnergy * this.hungerFood;
 
         this.reproductiveCycle = 10;
