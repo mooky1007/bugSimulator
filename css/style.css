@@ -280,6 +280,7 @@ header {
 
     main .content_wrap {
         flex-direction: column;
+        padding-bottom: 40px;
     }
 
     .gui_wrap {
