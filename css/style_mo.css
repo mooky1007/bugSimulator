@@ -117,7 +117,7 @@
         transform: translateX(0);
     }
 
-    .chart_wrap.gird-3 {
+    .chart_wrap.grid-3 {
         grid-template-columns: repeat(1, 1fr);
     }
 }

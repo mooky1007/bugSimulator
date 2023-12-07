@@ -91,7 +91,7 @@ export class Action {
     }
 
     giveBirth() {
-        if (this.object.lifeSpan <= this.object.defaultLifeSpan * 0.2 && this.object.energy > this.object.procreationEnergy) {
+        if (this.object.lifeSpan <= this.object.defaultLifeSpan * 0.05 && this.object.energy > this.object.procreationEnergy) {
             this.object.giveBirth();
             return true;
         }

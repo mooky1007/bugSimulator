@@ -7,7 +7,7 @@ export class Tree extends Objects {
         this.type = 'tree';
         this.size = 24;
         this.icon = '🌲';
-        this.sightRange = 16;
+        this.sightRange = this.map.exponentialPopulationGrowth ? 36 : 16;
 
         this.level = 10;
 
@@ -15,8 +15,8 @@ export class Tree extends Objects {
         this.areaClass = 'tree-area';
 
         this.createDuration = 500;
-        this.createLength = 4;
-        this.density = 24; // 낮을 수록 밀도가 높아짐
+        this.createLength = this.map.exponentialPopulationGrowth ? 40 : 4;
+        this.density = this.map.exponentialPopulationGrowth ? 12 : 24; // 낮을 수록 밀도가 높아짐
         this.init();
     }
 

@@ -3,7 +3,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'TossFace', 'Pretendard', sans-serif;
+    font-family: 'Pretendard', 'TossFace', sans-serif;
     line-height: 1.2;
 }
 
@@ -67,7 +67,6 @@ aside ul .title {
 }
 
 aside ul .title span {
-    margin-left: 5px;
     font-size: 12px;
     opacity: 0.75;
 }
@@ -79,7 +78,7 @@ aside ul li a {
     justify-content: center;
     width: 100%;
     text-align: left;
-    font-size: 14px;
+    font-size: 13px;
     border: none;
     background: none;
     padding: 0 25px;
@@ -144,7 +143,7 @@ main .title_wrap h2 {
 }
 
 main .title_wrap p {
-    font-size: 14px;
+    font-size: 13px;
     color: #eee;
     font-weight: 300;
     line-height: 1.3;
@@ -161,7 +160,7 @@ main .title_wrap ul {
 }
 
 main .title_wrap li {
-    font-size: 14px;
+    font-size: 13px;
     color: #eee;
     font-weight: 300;
     line-height: 1.3;
@@ -169,15 +168,44 @@ main .title_wrap li {
     list-style: "- ";
 }
 
+main .title_wrap li span {
+    font-size: 12px;
+    opacity: 0.75;
+}
+
 main .content_wrap {
     padding: 20px 0;
     display: flex;
+    flex-wrap: wrap;
     flex: 1;
     gap: 20px;
 }
 
+main .content_wrap .sub_title {
+    width: 100%;
+}
+
+main .content_wrap .sub_title h3 {
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+main .content_wrap .sub_title ul {
+    margin-top: 10px;
+    padding-left: 1ch;
+}
+
+main .content_wrap .sub_title p,
+main .content_wrap .sub_title li {
+    font-size: 13px;
+    word-break: keep-all;
+    color: #ddd;
+    list-style: "- ";
+}
+
 .gui_wrap {
-    flex: 0.4;
+    flex: 0.35;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -271,14 +299,14 @@ main .content_wrap {
 }
 
 .chart_wrap {
-    flex: 0.6;
+    flex: 0.65;
     height: 100%;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
 }
 
-.chart_wrap.gird-3{
+.chart_wrap.grid-3{
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, 1fr);
 }
@@ -291,7 +319,7 @@ main .content_wrap {
 }
 
 .chart_title_wrap p {
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .chart_title_wrap p span {

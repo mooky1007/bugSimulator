@@ -67,24 +67,19 @@
                 </li>
             </ul>
             <div class="tag_wrap">
-                <span class="tag">#개체군</span>
-                <span class="tag">#개체군 생태학</span>
+                <span class="tag">#제한인자</span>
+                <span class="tag">#환경수용력</span>
             </div>
         </div>
         <div class="content_wrap">
             <div class="sub_title">
-                <h3>지수 개체군 성장모델 - 이상적인 무제한 환경</h3>
-                <p>성능상의 이슈로 하단 시뮬레이터는 개체의 수가 1500마리에 도달 할 경우 멈추게됩니다.</p>
+                <h3>로지스틱 개체군 모델 - 실제적인 제한 환경</h3>
                 <ul style="margin-bottom: 10px;">
-                    <li>
-                        지수 개체군 성장(exponential population growth): 이상
-                        적인 무제한 조건에서 개체군의 크기가 증가하는 것 (J곡선을 나타냄)
-                    </li>
-                    <li>
-                        지수성장모델의 예: 호주 토끼전쟁, 빈대(?)
-                    </li>
+                    <li>제한인자(limiting factor): 개체군 성장을 제한하는 환경인자</li>
+                    <li>환경수용력(carrying capacity = K): 특정 환경이 수용 할 수 있는 개체군 최대 크기</li>
+                    <li>로지스틱 개체군 성장(logistic population growth): 개체군 크기가 수용능력에 근접하여 성장률이 감소하며 S-곡선을 나타냄</li>
                 </ul>
-                <p>환경과 조건이 갖춰지면 개체군은 폭발적으로 증가</p>
+                <p>초기에는 지수 개체군 성장모델과 유사한 형태를 지니지만 점차 성장이 느려지며 K에 도달하면 개체군의 성장이 멈춘다.</p>
             </div>
             <div class="gui_wrap">
                 <div class="canvas_wrap">
@@ -119,14 +114,6 @@
             boardY: 100,
             wrapperClassNams: '.canvas_container'
         });
-        board.exponentialPopulationGrowth = true;
-
-        const checkTimer = setInterval(() => {
-            if (board.getObjCount('bug') >= 1500) {
-                board.stop();
-                clearInterval(checkTimer);
-            }
-        }, 1000);
 
         board.generateEnvironment();
 
@@ -137,15 +124,16 @@
             title: '개체 수',
             id: 'myChart',
             datasets: [
-                ['🐛', '#6ac569', 'bug']
+                ['🌱', '#555555', 'food'],
+                ['🐛', '#6ac569', 'bug'],
+                ['K (환경 수용력)', 'red', 'K']
             ],
             renderPeriod: 1000
         })
 
         board.chart.init(board, 'object-count');
         board.chart.chart.options.scales.y = {
-            suggestedMin: 0,
-            suggestedMax: 1600,
+            suggestedMax: 250,
         };
         board.chart.chart.update();
 

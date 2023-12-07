@@ -33,11 +33,22 @@
         <ul>
             <li class="title">
                 <p>
-                    집단 <span>Population</span>
+                    개체군 <span>Population</span>
                 </p>
             </li>
-            <li class="active">
-                <a href="./">개체군 생태학이란?<br><span>What is Population Ecology?</span></a>
+            <li>
+                <a href="./">개체군 생태학이란?<br><span>Population Ecology</span></a>
+            </li>
+            <li>
+                <a href="./populationGrowth.html">개체군 성장 모델 - 지수 개체군 성장모델<br><span>Exponential Population
+                        Growth</span></a>
+            </li>
+            <li>
+                <a href="./populationGrowth2.html">개체군 성장 모델 - 로지스틱 개체군 모델<br><span>Logistic Population
+                        Growth</span></a>
+            </li>
+            <li>
+                <a href="./densityDependentFactor.html">개체군 성장의 조절 - 밀도의존적 인자<br><span>Density Dependent Factor</span></a>
             </li>
         </ul>
     </aside>
@@ -52,10 +63,10 @@
                 개체군 생태학(Population Ecology): 개체군의 밀도(density), 크기(size), 성장률(growth rate)에 영향을 주는 요인을 이해하는 학문
             </p>
             <ul>
-                <li>밀도(population density): 단위면적당 개체 수</li>
-                <li>크기(population size): 개체 수(수도, abundance)</li>
-                <li>나이 구조(age structure): 나이에 따른 상대적 개체수</li>
-                <li>성장률(population growth rate): 개체군 크기의 변화율</li>
+                <li>밀도 <span>population density</span> : 단위면적당 개체 수</li>
+                <li>크기 <span>population size</span> : 개체 수(수도, abundance)</li>
+                <li>나이 구조 <span>age structure</span> : 나이에 따른 상대적 개체수</li>
+                <li>성장률 <span>population growth rate</span> : 개체군 크기의 변화율</li>
             </ul>
             <div class="tag_wrap">
                 <span class="tag">#개체군</span>
@@ -73,7 +84,7 @@
                     <button role="reset">리셋</button>
                 </div>
             </div>
-            <div class="chart_wrap gird-3">
+            <div class="chart_wrap grid-3">
                 <div class="chart_container">
                     <div class="chart_title_wrap">
                         <p></p>
@@ -117,12 +128,14 @@
             wrapperClassNams: '.canvas_container'
         });
 
+        board.generateEnvironment();
+
         board.generateObject('food', 12);
         board.generateObject('bug', 72);
         board.generateObject('bug2', 72);
 
         board.chart = new ChartContainer({
-            title: '개체의 크기, 성장률',
+            title: '개체군의 크기, 성장률',
             desc: '시뮬레이터에 존재하는 모든 개체의 수를 <br>시각적으로 표현한 차트입니다.',
             id: 'myChart',
             datasets: [
@@ -134,7 +147,7 @@
         board.chart.init(board, 'object-count');
 
         board.chart2 = new ChartContainer({
-            title: '밀도',
+            title: '개체군의 밀도',
             desc: '시뮬레이터를 4x4사이즈로 나눈 영역별 개체 수를 <br>시각적으로 표현한 차트입니다.',
             id: 'myChart2',
             type: 'bubble',
@@ -146,7 +159,7 @@
         board.chart2.init(board, 'object-area');
 
         board.chart3 = new ChartContainer({
-            title: '나이 구조',
+            title: '개체군의 나이 구조',
             desc: '시뮬레이터 내의 살아있는 개체들의 나이를 <br>시각적으로 표현한 차트입니다.',
             id: 'myChart3',
             type: 'line',
@@ -168,6 +181,7 @@
             document.body.classList.toggle('open-menu');
         });
     </script>
+    <script src="./js/common/common.js"></script>
 </body>
 
 </html>

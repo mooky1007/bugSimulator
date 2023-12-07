@@ -54,37 +54,32 @@
     </aside>
     <main>
         <div class="title_wrap">
-            <h2>개체군 성장 모델: Population Growth</h2>
+            <h2>개체군 성장의 조절: Density Factor</h2>
             <p>
-                개체군 크기의 변동(개체군 동적: population dynamics)
+                한정된 자원에 대해 같은 종의 개체끼리의 경쟁, 즉 종내경쟁(intraspecific competition)의 결과<br>
+                개체군의 크기가 증가할수록 같은 종 내의 개체들 간의 경쟁이 심해지고, 이에 따라 개체군 성장률이 감소한다.
             </p>
             <ul>
-                <li>
-                    증가 요소 : 출생(Births), 가입(Recruitment), 이입(Immigration)
-                </li>
-                <li>
-                    감소 요소 : 사망(Deaths), 치사(Mortality), 이출(Emigration)
-                </li>
+                <li>밀도의존적 인자(density dependent factor): 개체군의 밀도가 증가와 함께 영향력이 강해지는 개체군 성장 제한인자</li>
+                <li>밀도비의존적 인자(density-independent factor): 개체군 밀도와 무관한 개체군 제한인자</li>
             </ul>
             <div class="tag_wrap">
-                <span class="tag">#개체군</span>
-                <span class="tag">#개체군 생태학</span>
+                <span class="tag">#제한인자</span>
+                <span class="tag">#환경수용력</span>
             </div>
         </div>
         <div class="content_wrap">
             <div class="sub_title">
-                <h3>지수 개체군 성장모델 - 이상적인 무제한 환경</h3>
-                <p>성능상의 이슈로 하단 시뮬레이터는 개체의 수가 1500마리에 도달 할 경우 멈추게됩니다.</p>
+                <h3>개체군 성장의 밀도의존적 조절</h3>
                 <ul style="margin-bottom: 10px;">
                     <li>
-                        지수 개체군 성장(exponential population growth): 이상
-                        적인 무제한 조건에서 개체군의 크기가 증가하는 것 (J곡선을 나타냄)
+                        먹이공급의 제한, 한정된 영역
                     </li>
                     <li>
-                        지수성장모델의 예: 호주 토끼전쟁, 빈대(?)
+                        경쟁(competition), 포식(predation): 생물학적 환경
                     </li>
                 </ul>
-                <p>환경과 조건이 갖춰지면 개체군은 폭발적으로 증가</p>
+                <p>초기에는 지수 개체군 성장모델과 유사한 형태를 지니지만 점차 성장이 느려지며 K에 도달하면 개체군의 성장이 멈춘다.</p>
             </div>
             <div class="gui_wrap">
                 <div class="canvas_wrap">
@@ -119,14 +114,6 @@
             boardY: 100,
             wrapperClassNams: '.canvas_container'
         });
-        board.exponentialPopulationGrowth = true;
-
-        const checkTimer = setInterval(() => {
-            if (board.getObjCount('bug') >= 1500) {
-                board.stop();
-                clearInterval(checkTimer);
-            }
-        }, 1000);
 
         board.generateEnvironment();
 
@@ -137,15 +124,15 @@
             title: '개체 수',
             id: 'myChart',
             datasets: [
-                ['🐛', '#6ac569', 'bug']
+                ['🌱', '#555555', 'food'],
+                ['🐛', '#6ac569', 'bug'],
             ],
             renderPeriod: 1000
         })
-
+        
         board.chart.init(board, 'object-count');
         board.chart.chart.options.scales.y = {
-            suggestedMin: 0,
-            suggestedMax: 1600,
+            suggestedMax: 250,
         };
         board.chart.chart.update();
 

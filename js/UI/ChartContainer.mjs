@@ -76,7 +76,7 @@ export class ChartContainer {
                     },
                 };
 
-                setInterval(() => {
+                this.timer = setInterval(() => {
                     if (this.chart.data.labels.length > 1000) {
                         this.chart.data.labels.shift();
                         this.chart.datasets.forEach((dataset) => {
@@ -86,7 +86,9 @@ export class ChartContainer {
 
                     this.chart.data.labels.push(this.chartLength);
                     this.datasets.forEach((dataset, index) => {
-                        if(dataset[2] === 'food'){
+                        if(dataset[2] === 'K'){
+                            this.chart.data.datasets[index].data.push(180);
+                        }else if(dataset[2] === 'food'){
                             this.chart.data.datasets[index].data.push(this.map.getObjCount(dataset[2])/3);
                         }else{
                             this.chart.data.datasets[index].data.push(this.map.getObjCount(dataset[2]));
@@ -114,7 +116,7 @@ export class ChartContainer {
                 this.chart.options.pointStyle = 'circle';
                 this.chart.data.datasets.forEach((dataset) => (dataset.backgroundColor = dataset.borderColor));
 
-                setInterval(() => {
+                this.timer = setInterval(() => {
                     const fields = [];
 
                     for (let x = 0; x < 25; x++) {
@@ -179,7 +181,7 @@ export class ChartContainer {
                     });
                 }
 
-                setInterval(() => {
+                this.timer = setInterval(() => {
                     // 초기화
                     this.chart.data.datasets.forEach((dataset) => dataset.data = dataset.data.map((data) => 0));
 
@@ -206,5 +208,9 @@ export class ChartContainer {
             this.chart.data.datasets[index].data = [];
         });
         this.chart.update();
+    }
+
+    stop() {
+        clearInterval(this.timer);
     }
 }

@@ -18,6 +18,7 @@ class Board {
         this.boardY = config.boardY;
         this.isObstacle = config.isObstacle;
         this.el = document.querySelector(config.wrapperClassNams);
+        this.exponentialPopulationGrowth = config.exponentialPopulationGrowth || false;
         this.tiles = [];
         this.bug = 0;
         this.hunter = 0;
@@ -44,7 +45,6 @@ class Board {
 
         this.init();
         this.create();
-        this.generateEnvironment();
     }
 
     init() {
@@ -788,6 +788,16 @@ class Board {
 
         this.create();
         this.generateEnvironment();
+    }
+
+    stop(){
+        this.tiles.forEach((row) => {
+            row.forEach((tile) => {
+                tile?.content?.stop();
+            });
+        });
+        this.chart?.stop();
+        this.chart2?.stop();
     }
 }
 

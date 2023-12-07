@@ -282,4 +282,9 @@ export class Objects {
         tile.content = null;
         tile.el.innerHTML = '';
     }
+
+    stop() {
+        clearInterval(this.life);
+        clearTimeout(this.moveCycle);
+    }
 }

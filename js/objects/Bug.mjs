@@ -19,7 +19,7 @@ export class Bug extends Objects {
         this.hungerFood = 0.8;
         this.needFood = this.defaultEnergy * this.hungerFood;
 
-        this.reproductiveCycle = 50;
+        this.reproductiveCycle = this.map.exponentialPopulationGrowth ? 25 : 50;
         this.procreationEnergy = 25;
         this.postpartumcCare = 25;
 
@@ -32,7 +32,7 @@ export class Bug extends Objects {
 
         this.sightRange = 8;
         this.territoryRange = 12;
-        this.allowSameSpecies = 6;
+        this.allowSameSpecies =  this.map.exponentialPopulationGrowth ? 64 : 6;
         this.preylimit = 0;
 
         this.eatTarget = 'food';
