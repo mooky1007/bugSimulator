@@ -10,8 +10,8 @@ export class Bug extends Objects {
         this.defaultSize = 8;
         this.maxSize = 16;
 
-        this.energy = 60;
-        this.defaultEnergy = 60;
+        this.energy = 50;
+        this.defaultEnergy = 50;
         this.lifeSpan = 300;
         this.defaultLifeSpan = 300;
         this.energyEfficiency = 1;
@@ -19,9 +19,9 @@ export class Bug extends Objects {
         this.hungerFood = 0.8;
         this.needFood = this.defaultEnergy * this.hungerFood;
 
-        this.reproductiveCycle = 10;
-        this.procreationEnergy = 10;
-        this.postpartumcCare = 10;
+        this.reproductiveCycle = 50;
+        this.procreationEnergy = 25;
+        this.postpartumcCare = 25;
 
         this.growLevel_1 = 90;
         this.growLevel_2 = 80;
