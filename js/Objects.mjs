@@ -129,12 +129,10 @@ export class Objects {
         const { x, y } = this.position;
         let sightTiles = [];
 
-        const transform = (i, j) => this.map.getTile(x + i, y + j);
-
         for (let i = -sight; i <= sight; i++) {
             for (let j = -sight; j <= sight; j++) {
-                const distance = Math.sqrt(i * i + j * j);
-                if (distance <= sight) sightTiles.push(transform(i, j));
+                const distance = Math.sqrt(i**2 + j**2);
+                if (distance < sight) sightTiles.push(this.map.getTile(x + i, y + j));
             }
         }
         sightTiles = sightTiles.filter((tile) => tile?.content !== this);
@@ -151,7 +149,7 @@ export class Objects {
 
         this.foodTile = this.sightTiles.filter((tile) => tile?.content?.type === this.eatTarget && tile?.content?.size < this.size);
         this.predator = this.sightTiles.filter((tile) => tile?.content?.eatTarget === this.type && tile?.content?.energy < tile?.content?.needFood);
-        this.territory = this.territoryTiles.filter((tile) => tile?.content?.type === this.type && tile?.content?.size >= this.size);
+        this.territory = this.territoryTiles.filter((tile) => tile?.content !== 'food' && tile?.content?.size >= this.size);
 
         this.priority.forEach((action) => this.actions[action]());
     }
@@ -240,11 +238,11 @@ export class Objects {
                     break;
             }
 
+            newBug.icon = this.icon;
+            newBug.type = this.type;
             newBug.energy = this.procreationEnergy + 10;
             newBug.priority = this.priority;
             if (Math.random() > 0.01) newBug.priority = [...this.priority].sort(() => Math.random() - 0.5);
-
-            this.map.object[newBug.type][newBug.priority[0]]++;
 
             this.postpartumcCare = this.reproductiveCycle;
             this.energy -= this.procreationEnergy;

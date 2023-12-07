@@ -30,14 +30,14 @@ export class HunterBug extends Objects {
         this.addActionPeriod = 0;
         this.hungryMoveSpeed = 50;
 
-        this.sightRange = 12;
-        this.territoryRange = 16;
+        this.sightRange = 16;
+        this.territoryRange = 20;
         this.allowSameSpecies = 1;
         this.preylimit = 0;
 
         this.eatTarget = 'bug';
 
-        this.priority = ['food', 'species', 'evasion'];
+        this.priority = ['species', 'food', 'evasion'];
         this.init();
     }
 }

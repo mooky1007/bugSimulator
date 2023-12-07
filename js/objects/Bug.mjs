@@ -3,25 +3,25 @@ import { Objects } from "../Objects.mjs";
 export class Bug extends Objects {
     constructor(config) {
         super(config);
-        this.icon = '🐛';
+        this.icon = config.icon || '🐛';
         this.name = config.name;
-        this.type = 'bug';
+        this.type = config.type || 'bug';
         this.size = 8;
         this.defaultSize = 8;
         this.maxSize = 16;
 
-        this.energy = 50;
-        this.defaultEnergy = 50;
-        this.lifeSpan = 100;
-        this.defaultLifeSpan = 100;
-        this.energyEfficiency = 0.5;
+        this.energy = 25;
+        this.defaultEnergy = 25;
+        this.lifeSpan = 200;
+        this.defaultLifeSpan = 200;
+        this.energyEfficiency = 2;
         this.moveSpendEnergy = 0.5;
         this.hungerFood = 0.9;
         this.needFood = this.defaultEnergy * this.hungerFood;
 
-        this.reproductiveCycle = 25;
-        this.procreationEnergy = 25;
-        this.postpartumcCare = 25;
+        this.reproductiveCycle = 10;
+        this.procreationEnergy = 10;
+        this.postpartumcCare = 10;
 
         this.growLevel_1 = 90;
         this.growLevel_2 = 80;
