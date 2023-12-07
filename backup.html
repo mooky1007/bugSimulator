@@ -1,485 +1,117 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" type="text/css"
-        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/toss/tossface/dist/tossface.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.3/gsap.min.js"></script>
+    <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Bug Simulator</title>
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Bug Simulator">
+    <meta property="og:description" content="간소화된 생태계 시뮬레이션">
+    <meta property="og:image" content="./images/thumbnail.png">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 
-<style>
-    * {
-        user-select: none;
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'TossFace', 'Pretendard', sans-serif;
-        line-height: 1.2;
-    }
-
-    html {
-        width: 100%;
-        height: 100vh;
-        overflow: hidden;
-    }
-
-    body {
-        height: 100vh;
-        background: #333;
-        color: #fff;
-        display: flex;
-        overflow: hidden;
-    }
-
-    aside {
-        padding: 20px 0;
-        width: 230px;
-        height: 100%;
-        overflow: auto;
-        border-right: 1px solid #444;
-        background: #333;
-        z-index: 9999;
-    }
-
-    aside h1 {
-        margin-bottom: 15px;
-        padding-left: 15px;
-        font-size: 18px;
-    }
-
-    aside p {
-        font-size: 12px;
-        word-break: keep-all;
-        color: #ddd;
-        border-bottom: 1px solid #444;
-        padding-bottom: 20px;
-        margin: 0 15px 20px;
-    }
-
-    aside ul {
-        display: flex;
-        flex-direction: column;
-    }
-
-    aside li button {
-        display: block;
-        width: 100%;
-        text-align: left;
-        font-size: 14px;
-        border: none;
-        background: none;
-        padding: 0 15px;
-        height: 56px;
-        color: inherit;
-        line-height: 1.6;
-    }
-
-    aside li.active button {
-        background: #1c5934;
-        cursor: pointer;
-    }
-
-    aside li.disabled button {
-        color: #666;
-    }
-
-    aside li:not(.active, .disabled) button:hover {
-        background: #222;
-    }
-
-    aside li button span {
-        display: block;
-        font-size: 12px;
-        opacity: 0.75;
-    }
-
-    ::-webkit-scrollbar {
-        width: 10px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: #444;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: #222;
-    }
-
-    main {
-        flex: 1;
-        padding: 20px;
-        overflow: auto;
-        display: flex;
-        flex-direction: column;
-    }
-
-    main .title_wrap {
-        padding-bottom: 20px;
-        border-bottom: 1px solid #444;
-        height: auto;
-    }
-
-    main .title_wrap h2 {
-        font-size: 24px;
-        font-weight: 500;
-        margin-bottom: 10px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #444;
-        word-break: keep-all;
-    }
-
-    main .title_wrap p {
-        font-size: 14px;
-        color: #eee;
-        font-weight: 300;
-        line-height: 1.3;
-    }
-
-    main .content_wrap {
-        padding: 20px 0;
-        display: flex;
-        flex: 1;
-        gap: 20px;
-    }
-
-    .gui_wrap {
-        flex: 0.4;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        gap: 0;
-    }
-
-    .canvas_wrap {
-        position: relative;
-        height: 0;
-        padding-bottom: 100%;
-        border: 1px solid #666;
-        margin-bottom: 10px;
-    }
-
-    .button_wrap {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 5px;
-    }
-
-    .button_wrap button {
-        background: none;
-        border: 1px solid #666;
-        padding: 5px;
-        color: #eee;
-        cursor: pointer;
-    }
-
-    .button_wrap button:hover {
-        background: #222;
-    }
-
-    .canvas_container {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-
-        display: grid;
-        grid-template-rows: repeat(100, 1fr);
-    }
-
-    .canvas_container .row {
-        display: grid;
-        grid-template-columns: repeat(100, 1fr);
-    }
-
-    .canvas_container .row:first-child {
-        border-top: 1px solid #2a2a2a;
-    }
-
-    .canvas_container .row .tile:first-child {
-        border-left: 1px solid #2a2a2a;
-    }
-
-    .tile {
-        position: relative;
-        border-right: 1px solid #2a2a2a;
-        border-bottom: 1px solid #2a2a2a;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: #222;
-    }
-
-    .tile span {
-        font-size: 8px;
-        line-height: 1;
-        position: absolute;
-        bottom: 5%;
-        left: 50%;
-        transform: translateX(-50%);
-        color: #fff;
-        z-index: 5;
-        text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;
-    }
-
-    .water {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: -1;
-        background: rgb(39, 42, 77)
-    }
-
-    .tree-area {
-        background: rgb(29, 52, 29);
-    }
-
-    .chart_wrap {
-        flex: 0.6;
-        height: 100%;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: repeat(2, 1fr);
-    }
-
-    .chart_container {
-        padding: 10px;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-    }
-
-    .chart_title_wrap p {
-        font-size: 14px;
-    }
-
-    .chart_screen_wrap {
-        flex: 1;
-        display: flex;
-    }
-
-    .chart_screen {
-        flex: 1;
-    }
-
-    header {
-        display: none;
-    }
-
-    @media screen and (max-width: 768px) {
-        aside {
-            position: fixed;
-            top: 0;
-            width: 80%;
-            left: -100%;
-            transition: left 0.3s ease;
-        }
-
-        main {
-            padding-top: 70px;
-        }
-
-        main .content_wrap {
-            flex-direction: column;
-        }
-
-        .gui_wrap {
-            flex: 1;
-        }
-
-        .chart_wrap {
-            flex: 1;
-            grid-template-columns: repeat(1, 1fr);
-        }
-
-        .chart_screen_wrap {
-            position: relative;
-            height: 0;
-            padding-bottom: 100%;
-        }
-
-        .chart_screen {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            background: #222;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 10;
-        }
-
-        header p {
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        header button {
-            width: 20px;
-            height: 12px;
-            border: none;
-            background: none;
-            cursor: pointer;
-            position: relative;
-            z-index: 10;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        header button span {
-            display: block;
-            width: 100%;
-            height: 2px;
-            background: #fff;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            transition: transform 0.3s ease;
-            transform-origin: center;
-        }
-
-        header button span:nth-child(1) {
-            top: 0;
-        }
-
-        header button span:nth-child(3) {
-            top: 100%;
-        }
-
-        body.open-menu header button span:nth-child(1) {
-            top: 50%;
-            transform: translate(-50%, -50%) rotate(45deg);
-        }
-
-        body.open-menu header button span:nth-child(2) {
-            opacity: 0;
-        }
-
-        body.open-menu header button span:nth-child(3) {
-            top: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg);
-        }
-
-        body.open-menu aside {
-            left: 0;
-        }
-    }
-
-    .tag {
-        font-size: 11px;
-        color: #fff;
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        padding: 3px 10px;
-        border-radius: 100px;
-        background: #1c5934;
-        font-family: 'Pretendard', sans-serif;
-    }
-
-    .tag_wrap {
-        margin-top: 20px;
-    }
-</style>
-
 <body>
-    <header>
-        <p>🌱 Basic Ecology</p>
-        <button>
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-    </header>
-    <aside>
-        <h1>🌱 기초 생태학</h1>
-        <p>누구나 쉽게 생태학의 <br>기본적인 이론을 시각적으로 학습 <br>할 수 있는 사이트입니다.</p>
-        <ul>
-            <li class="active">
-                <button type="button">군집 내 개체군의 상호 작용: <br><span>경쟁</span></button>
-            </li>
-            <li class="disabled">
-                <button type="button">[준비중] 포식과 피식</button>
-            </li>
-        </ul>
-    </aside>
-    <main>
-        <div class="title_wrap">
-            <h2>군집 내 개체군의 상호 작용: 생태학적 상호작용의 이해</h2>
-            <p>
-                동일한 생태적 지위에 있는 두 종이 공유하는 서식지에서 발생하는 경쟁과 서식지 생성에 대해 살펴봅시다.<br>
-                이 시뮬레이션에서는 외형을 제외하고 동일한 두 종이 무작위로 생성됩니다.<br><br>
-                두 종이 공유하는 먹이는 특정 위치에서 생성되며, 이로 인해 두 종은 서서히 먹이가 생성되는 위치로 모이게 되고, 두 종 간에는 치열한 경쟁이 벌어집니다.<br>
-                하나의 종이 멸종하면, 해당 서식지는 나머지 종이 점령하게 됩니다.
-            </p>
-            <div class="tag_wrap">
-                <span class="tag">#경쟁</span>
-                <span class="tag">#생태적 지위 분화</span>
+    <div class="screen">
+        <div class="board"></div>
+        <div class="infor_wrap">
+            <table>
+                <caption>개체정보</caption>
+                <colgroup>
+                    <col style="width: 10%;">
+                    <col style="width: 18%;">
+                    <col style="width: 18%;">
+                    <col style="width: 18%;">
+                    <col style="width: 18%;">
+                    <col style="width: 18%;">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>개체</th>
+                        <th>밀도(개)</th>
+                        <th>상대밀도</th>
+                        <th>빈도(개)</th>
+                        <th>상대빈도</th>
+                        <th>중요도</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><i
+                                style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🌱</i>
+                        </td>
+                        <td class="food-density"></td>
+                        <td class="food-relative-density"></td>
+                        <td class="food-frequency"></td>
+                        <td class="food-relative-frequency"></td>
+                        <td class="food-importance"></td>
+                    </tr>
+                    <tr>
+                        <td><i
+                            style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🐛</i>
+                        </td>
+                        <td class="bug-density"></td>
+                        <td class="bug-relative-density"></td>
+                        <td class="bug-frequency"></td>
+                        <td class="bug-relative-frequency"></td>
+                        <td class="bug-importance"></td>
+                    </tr>
+                    <tr>
+                        <td><i
+                            style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🦗</i>
+                        </td>
+                        <td class="hunter-density"></td>
+                        <td class="hunter-relative-density"></td>
+                        <td class="hunter-frequency"></td>
+                        <td class="hunter-relative-frequency"></td>
+                        <td class="hunter-importance"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div>
+                <a href="https://github.com/mooky1007/bugSimulator" target="_blank">상세 문서 보러가기 ></a>
+            </div>
+            <!-- <div><i
+                    style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🌱</i>
+                먹이개체: <span class="food-count"></span></div>
+            <div><i
+                    style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🐛</i>
+                피식개체: <span class="bug-count"></span></div>
+            <div><i
+                    style="font-family: TossFace; font-style: normal; text-shadow: -1px 0px #000, 0px 1px #000, 1px 0px #000, 0px -1px #000;">🦗</i>
+                포식개체: <span class="hunter-count"></span></div> -->
+        </div>
+    </div>
+    <div class="chart_wrap">
+        <div class="chart_item">
+            <canvas id="myChart"></canvas>
+        </div>
+        <div class="chart_item row">
+            <div class="chart_content">
+                <canvas id="myChart2"></canvas>
+            </div>
+            <div class="chart_content type2">
+                <canvas id="myChart3"></canvas>
             </div>
         </div>
-        <div class="content_wrap">
-            <div class="gui_wrap">
-                <div class="canvas_wrap">
-                    <div class="canvas_container">
+        <!-- <div class="button_wrap">
+            <button id="save_data">현재 데이터 저장</button>
+            <button id="load_data">데이터 불러오기</button>
+        </div> -->
+    </div>
 
-                    </div>
-                </div>
-                <!-- <div class="button_wrap">
-                    <button role="reset">리셋</button>
-                </div> -->
-            </div>
-            <div class="chart_wrap">
-                <div class="chart_container">
-                    <div class="chart_title_wrap">
-                        <p></p>
-                    </div>
-                    <div class="chart_screen_wrap">
-                        <div class="chart_screen">
-                            <canvas id="myChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <div class="chart_container">
-                    <div class="chart_title_wrap">
-                        <p></p>
-                    </div>
-                    <div class="chart_screen_wrap">
-                        <div class="chart_screen">
-                            <canvas id="myChart2"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
     <script type="module">
         import Board from './js/Board.mjs';
 
         const board = new Board({
             boardX: 100,
             boardY: 100,
-            wrapperClassNams: '.canvas_container'
+            wrapperClassNams: '.board'
         });
-
-        document.querySelector('header button').addEventListener('click', () => {
-            document.body.classList.toggle('open-menu');
-        });
+        
+        board.generateEnvironment();
     </script>
 </body>
 
