@@ -144,4 +144,12 @@ export class ChartContainer {
         }
         return this.chart;
     }
+
+    reset() {
+        this.chartLength = 0;
+        this.chart.data.labels = [];
+        this.datasets.forEach((dataset, index) => {
+            this.chart.data.datasets[index].data = [];
+        });
+        this.chart.update();
 }

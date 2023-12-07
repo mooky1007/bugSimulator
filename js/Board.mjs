@@ -66,7 +66,9 @@ class Board {
                 ['🐛', '#6ac569', 'bug'],
                 ['🐞', '#e75656', 'bug2']
             ],
-        }).init(this, 'object-count');
+        })
+        
+        this.chart.init(this, 'object-count');
 
         this.chart2 = new ChartContainer({
             title: '분포도',
@@ -76,7 +78,9 @@ class Board {
                 ['🐛', '#6ac569', 'bug'],
                 ['🐞', '#e75656', 'bug2']
             ],
-        }).init(this, 'object-area');
+        })
+        
+        this.chart2.init(this, 'object-area');
     }
 
     create() {
@@ -806,7 +810,16 @@ class Board {
             }
         }
 
+        this.chart.reset();
+
+        this.chart2.reset();
+
         this.create();
+        this.generateEnvironment();
+
+        this.generateObject('food', 12);
+        this.generateObject('bug', 72);
+        this.generateObject('bug2', 72);
     }
 }
 

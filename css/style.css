@@ -126,6 +126,10 @@ main .title_wrap p {
     word-break: keep-all;
 }
 
+main .title_wrap p + p {
+    margin-top: 15px;
+}
+
 main .content_wrap {
     padding: 20px 0;
     display: flex;
