@@ -30,9 +30,9 @@ export class Bug extends Objects {
         this.addActionPeriod = 0;
         this.hungryMoveSpeed = 10;
 
-        this.sightRange = 4;
-        this.territoryRange = 8;
-        this.allowSameSpecies = 8;
+        this.sightRange = 8;
+        this.territoryRange = 12;
+        this.allowSameSpecies = 12;
         this.preylimit = 0;
 
         this.eatTarget = 'food';

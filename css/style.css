@@ -220,7 +220,7 @@ main .content_wrap {
     top: 0;
     left: 0;
     z-index: -1;
-    background: rgb(39, 42, 77)
+    background: rgb(39, 42, 77);
 }
 
 .tree-area {
@@ -257,126 +257,6 @@ main .content_wrap {
 
 header {
     display: none;
-}
-
-@media screen and (max-width: 768px) {
-
-    html,body {
-        height: 100%;
-    }
-
-    aside {
-        position: fixed;
-        top: 0;
-        width: 80%;
-        left: 0;
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-    }
-
-    main {
-        padding: 20px 5%;
-        padding-top: 70px;
-    }
-
-    .chart_container {
-        padding: 0;
-    }
-
-    main .content_wrap {
-        flex-direction: column;
-        padding-bottom: 40px;
-    }
-
-    .gui_wrap {
-        flex: 1;
-    }
-
-    .chart_wrap {
-        flex: 1;
-        gap: 20px;
-        grid-template-columns: repeat(1, 1fr);
-    }
-
-    .chart_screen_wrap {
-        position: relative;
-        height: 0;
-        padding-bottom: 100%;
-    }
-
-    .chart_screen {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-    }
-
-    header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 20px;
-        background: #222;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 10;
-    }
-
-    header p {
-        font-size: 14px;
-        font-weight: 500;
-    }
-
-    header button {
-        width: 20px;
-        height: 12px;
-        border: none;
-        background: none;
-        cursor: pointer;
-        position: relative;
-        z-index: 10;
-        -webkit-tap-highlight-color: transparent;
-    }
-
-    header button span {
-        display: block;
-        width: 100%;
-        height: 2px;
-        background: #fff;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        transition: transform 0.3s ease;
-        transform-origin: center;
-    }
-
-    header button span:nth-child(1) {
-        top: 0;
-    }
-
-    header button span:nth-child(3) {
-        top: 100%;
-    }
-
-    body.open-menu header button span:nth-child(1) {
-        top: 50%;
-        transform: translate(-50%, -50%) rotate(45deg);
-    }
-
-    body.open-menu header button span:nth-child(2) {
-        opacity: 0;
-    }
-
-    body.open-menu header button span:nth-child(3) {
-        top: 50%;
-        transform: translate(-50%, -50%) rotate(-45deg);
-    }
-
-    body.open-menu aside {
-        transform: translateX(0);
-    }
 }
 
 .tag {
