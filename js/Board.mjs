@@ -45,10 +45,6 @@ class Board {
         this.init();
         this.create();
         this.generateEnvironment();
-
-        this.generateObject('food', 12);
-        this.generateObject('bug', 72);
-        this.generateObject('bug2', 72);
     }
 
     init() {
@@ -58,29 +54,6 @@ class Board {
                 this.tiles[x][y] = new Tile(x, y);
             }
         }
-
-        this.chart = new ChartContainer({
-            title: '개체 수',
-            id: 'myChart',
-            datasets: [
-                ['🐛', '#6ac569', 'bug'],
-                ['🐞', '#e75656', 'bug2']
-            ],
-        })
-        
-        this.chart.init(this, 'object-count');
-
-        this.chart2 = new ChartContainer({
-            title: '분포도',
-            id: 'myChart2',
-            type: 'bubble',
-            datasets: [
-                ['🐛', '#6ac569', 'bug'],
-                ['🐞', '#e75656', 'bug2']
-            ],
-        })
-        
-        this.chart2.init(this, 'object-area');
     }
 
     create() {
@@ -810,16 +783,11 @@ class Board {
             }
         }
 
-        this.chart.reset();
-
-        this.chart2.reset();
+        this.chart?.reset();
+        this.chart2?.reset();
 
         this.create();
         this.generateEnvironment();
-
-        this.generateObject('food', 12);
-        this.generateObject('bug', 72);
-        this.generateObject('bug2', 72);
     }
 }
 

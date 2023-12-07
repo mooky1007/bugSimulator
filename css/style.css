@@ -52,6 +52,7 @@ aside ul {
 }
 
 aside li button {
+    cursor: pointer;
     display: block;
     width: 100%;
     text-align: left;
@@ -66,11 +67,11 @@ aside li button {
 
 aside li.active button {
     background: #1c5934;
-    cursor: pointer;
 }
 
 aside li.disabled button {
     color: #666;
+    cursor: default;
 }
 
 aside li:not(.active, .disabled) button:hover {

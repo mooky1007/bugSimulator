@@ -7,8 +7,10 @@ export class ChartContainer {
         this.chartLength = 0;
         this.renderPeriod = config.renderPeriod || 1000;
         
-        this.title = config.title;
-        this.titleEl = document.getElementById(config.id).closest('.chart_container').querySelector('.chart_title_wrap p');
+        if(document.getElementById(config.id)){
+            this.title = config.title;
+            this.titleEl = document.getElementById(config.id).closest('.chart_container').querySelector('.chart_title_wrap p');
+        }
 
         this.options = {
             animation: {
@@ -42,6 +44,7 @@ export class ChartContainer {
     }
 
     init(map, type) {
+        if(!document.getElementById(this.id)) return;
         this.map = map;
 
         this.titleEl.innerText = this.title;
