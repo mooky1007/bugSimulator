@@ -14,7 +14,7 @@ export class Bug extends Objects {
         this.defaultEnergy = 40;
         this.lifeSpan = 300;
         this.defaultLifeSpan = 300;
-        this.energyEfficiency = 2;
+        this.energyEfficiency = 1;
         this.moveSpendEnergy = 0.5;
         this.hungerFood = 0.8;
         this.needFood = this.defaultEnergy * this.hungerFood;
