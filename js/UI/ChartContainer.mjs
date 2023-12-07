@@ -86,7 +86,12 @@ export class ChartContainer {
 
                     this.chart.data.labels.push(this.chartLength);
                     this.datasets.forEach((dataset, index) => {
-                        this.chart.data.datasets[index].data.push(this.map.getObjCount(dataset[2]));
+                        if(dataset[2] === 'food'){
+                            this.chart.data.datasets[index].data.push(this.map.getObjCount(dataset[2])/3);
+                        }else{
+                            this.chart.data.datasets[index].data.push(this.map.getObjCount(dataset[2]));
+                        }
+                        
                     });
                     this.chartLength += 1;
                     this.chart.update();
