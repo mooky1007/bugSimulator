@@ -80,26 +80,6 @@ export class ChartContainer {
                     },
                 };
 
-                if (this.chart.data.labels.length > 1000) {
-                    this.chart.data.labels.shift();
-                    this.chart.datasets.forEach((dataset) => {
-                        dataset.data.shift();
-                    });
-                }
-
-                this.chart.data.labels.push(this.chartLength);
-                this.datasets.forEach((dataset, index) => {
-                    if (dataset[2] === 'K') {
-                        this.chart.data.datasets[index].data.push(180);
-                    } else if (dataset[2] === 'food') {
-                        this.chart.data.datasets[index].data.push(this.map.getObjCount(dataset[2]) / 3);
-                    } else {
-                        this.chart.data.datasets[index].data.push(this.map.getObjCount(dataset[2]));
-                    }
-                });
-                this.chartLength += 1;
-                this.chart.update();
-
                 this.timer = setInterval(() => {
                     if (this.chart.data.labels.length > 1000) {
                         this.chart.data.labels.shift();
@@ -124,57 +104,34 @@ export class ChartContainer {
                 break;
             case 'birth-rate':
                 this.chart.options.scales = {
-                    x: {
-                        suggestedMin: 0, // X축 최소값
-                        suggestedMax: 25, // X축 최대값
-                    },
                     y: {
-                        reverse: true,
-                        suggestedMin: 0, // Y축 최소값
-                        suggestedMax: 25, // Y축 최대값
+                        suggestedMin: 0,
                     },
                 };
 
-                this.chart.options.pointStyle = 'circle';
-                this.chart.data.datasets.forEach((dataset) => (dataset.backgroundColor = dataset.borderColor));
+                this.datasets.forEach((dataset, index) => {
+                    this.map.birth[dataset[2]] = 0;
+                });
 
                 this.timer = setInterval(() => {
-                    const fields = [];
-
-                    for (let x = 0; x < 25; x++) {
-                        fields[x] = [];
-                        for (let y = 0; y < 25; y++) {
-                            this.datasets.forEach((dataset) => {
-                                fields[x][y] = fields[x][y] || {};
-                                fields[x][y][dataset[2]] = 0;
-                            });
-                        }
+                    if (this.chart.data.labels.length > 1000) {
+                        this.chart.data.labels.shift();
+                        this.chart.datasets.forEach((dataset) => {
+                            dataset.data.shift();
+                        });
                     }
 
-                    for (let x = 0; x < 100; x++) {
-                        for (let y = 0; y < 100; y++) {
-                            this.datasets.forEach((dataset) => {
-                                fields[Math.floor(x / 4)][Math.floor(y / 4)][dataset[2]] += (
-                                    this.map.tiles[x][y].content?.type === dataset[2]
-                                    && this.map.tiles[x][y].content?.birth
-                                ) ? 1 : 0;
-                            });
-                        }
-                    }
-
-                    this.chart.data.labels = [];
+                    this.chart.data.labels.push(this.chartLength);
                     this.datasets.forEach((dataset, index) => {
-                        this.chart.data.datasets[index].data = [];
-                    });
-
-                    for (let x = 0; x < 25; x++) {
-                        for (let y = 0; y < 25; y++) {
-                            this.datasets.forEach((dataset, index) => {
-                                this.chart.data.datasets[index].data.push({ x: x, y: y, r: fields[x][y][dataset[2]] * 1.5 });
-                            });
+                        if(dataset[3] === 'new') {
+                            const birthCount = this.map.birth[dataset[2]];
+                            this.chart.data.datasets[index].data.push(birthCount * 5);
+                            this.map.birth[dataset[2]] -= birthCount;
+                        }else{
+                            this.chart.data.datasets[index].data.push(this.map.getObjCount(dataset[2]));
                         }
-                    }
-
+                    });
+                    this.chartLength += 1;
                     this.chart.update();
                 }, this.renderPeriod / this.map.speed);
                 break;

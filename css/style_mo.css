@@ -24,6 +24,7 @@
 
     main .content_wrap {
         flex-direction: column;
+        flex-wrap: nowrap;
         padding-bottom: 40px;
     }
 

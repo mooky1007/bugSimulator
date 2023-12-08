@@ -139,27 +139,15 @@
         board.generateObject('bug', 24);
 
         board.chart = new ChartContainer({
-            title: '개체 분포',
+            title: '개체 수 & 출생 개체 수 ',
             id: 'myChart',
-            type: 'bubble',
-            datasets: [
-                ['🐛', '#6ac569', 'bug'],
-            ],
-            renderPeriod: 1000
-        })
-        
-        board.chart.init(board, 'object-area');
-
-        board.chart2 = new ChartContainer({
-            title: '출생 분포 ',
-            id: 'myChart2',
-            type: 'bubble',
             datasets: [
                 ['🐛', '#77ffad', 'bug'],
+                ['🐛 출생(누적)', '#777', 'bug', 'new'],
             ],
             renderPeriod: 1000
         })
-        board.chart2.init(board, 'birth-rate');
+        board.chart.init(board, 'birth-rate');
 
         document.querySelector('button[role="reset"]').addEventListener('click', () => {
             board.reset();
