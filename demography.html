@@ -16,7 +16,6 @@
     <link rel="stylesheet" href="./css/style_mo.css?v=1.0.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.3/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-trendline"></script>
 </head>
 
 <body>
@@ -32,65 +31,21 @@
         <h1>🌱 기초 생태학</h1>
         <p>누구나 쉽게 기본적인 생태학 이론을 <br>학습 할 수 있는 사이트입니다.</p>
         <ul>
-            <li class="title">
-                <p>
-                    개체군 <span>Population</span>
-                </p>
-            </li>
-            <li>
-                <a href="./">개체군 생태학<br><span>Population Ecology</span></a>
-            </li>
-            <li>
-                <a href="./populationGrowth.html">개체군 성장 모델 - 지수 개체군 성장모델<br><span>Exponential Population
-                        Growth</span></a>
-            </li>
-            <li>
-                <a href="./populationGrowth2.html">개체군 성장 모델 - 로지스틱 개체군 모델<br><span>Logistic Population
-                        Growth</span></a>
-            </li>
-            <li>
-                <a href="./densityDependentFactor.html">개체군 성장의 조절 - 밀도의존적 인자<br><span>Density Dependent
-                        Factor</span></a>
-            </li>
-            <li class="title" style="opacity: 0.2;">
-                <p>
-                    군집 <span>Community</span>
-                </p>
-            </li>
-            <li style="opacity: 0.2;">
-                <a href="#">생태군집<br><span>Ecological Community</span></a>
-            </li>
         </ul>
     </aside>
     <main>
         <div class="title_wrap">
-            <h2>개체군 성장의 조절: Density Factor</h2>
+            <h2>인구통계학: Demography</h2>
             <p>
-                한정된 자원에 대해 같은 종의 개체끼리의 경쟁, 즉 종내경쟁(intraspecific competition)의 결과<br>
-                개체군의 크기가 증가할수록 같은 종 내의 개체들 간의 경쟁이 심해지고, 이에 따라 개체군 성장률이 감소한다.
+                출생(가입), 사망(치사) 그리고 집단 성장률에 영향을 주는 과정을 연구하는 학문
             </p>
-            <ul>
-                <li>밀도의존적 인자(density dependent factor): 개체군의 밀도가 증가와 함께 영향력이 강해지는 개체군 성장 제한인자</li>
-                <li>밀도비의존적 인자(density-independent factor): 개체군 밀도와 무관한 개체군 제한인자</li>
-            </ul>
             <div class="tag_wrap">
-                <span class="tag">#제한인자</span>
-                <span class="tag">#환경수용력</span>
+                <span class="tag">#개체군</span>
+                <span class="tag">#개체군 생태학</span>
+                <span class="tag">#생존곡선</span>
             </div>
         </div>
         <div class="content_wrap">
-            <div class="sub_title">
-                <h3>개체군 성장의 밀도의존적 조절</h3>
-                <ul style="margin-bottom: 10px;">
-                    <li>
-                        먹이공급의 제한, 한정된 영역
-                    </li>
-                    <li>
-                        경쟁(competition), 포식(predation): 생물학적 환경
-                    </li>
-                </ul>
-                <p>개체군의 크기가 증가해 밀도가 높아질 수록 출생수가 줄어드는걸 확인할 수 있습니다.</p>
-            </div>
             <div class="gui_wrap">
                 <div class="canvas_wrap">
                     <div class="canvas_container">
@@ -104,11 +59,66 @@
             <div class="chart_wrap">
                 <div class="chart_container">
                     <div class="chart_title_wrap">
-                        <p></p>
+                        <p>생명표</p>
                     </div>
                     <div class="chart_screen_wrap">
                         <div class="chart_screen">
-                            <canvas id="myChart"></canvas>
+                            <table>
+                                <tr>
+                                    <td>연령대</td>
+                                    <td>N</td>
+                                    <td>D</td>
+                                    <td>1 - (N/D)</td>
+                                </tr>
+                                <tr>
+                                    <td>0 ~ 10</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>10 ~ 20</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>20 ~ 30</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>30 ~ 40</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>40 ~ 50</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>50 ~ 60</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>70 ~ 80</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>90+</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -118,7 +128,7 @@
                     </div>
                     <div class="chart_screen_wrap">
                         <div class="chart_screen">
-                            <canvas id="myChart2"></canvas>
+                            <canvas id="myChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -138,23 +148,22 @@
         board.generateEnvironment();
 
         board.generateObject('food', 12);
-        board.generateObject('bug', 6);
+        board.generateObject('bug', 72);
 
         board.chart = new ChartContainer({
-            title: '개체 수 & 출생 개체 수 ',
+            title: '생존 곡선',
             id: 'myChart',
+            type: 'line',
             datasets: [
-                ['🐛', '#77ffad', 'bug'],
-                ['🐛 출생x5', '#fff', 'bug', 'new'],
+                ['🐛', '#6ac569', 'bug'],
             ],
-            renderPeriod: 1000
         })
-        board.chart.init(board, 'birth-rate');
+        board.chart.init(board, 'object-age');
 
         document.querySelector('button[role="reset"]').addEventListener('click', () => {
             board.reset();
             board.generateObject('food', 12);
-            board.generateObject('bug', 6);
+            board.generateObject('bug', 32);
         });
 
         document.querySelector('header button').addEventListener('click', () => {

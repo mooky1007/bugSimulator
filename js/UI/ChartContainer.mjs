@@ -55,6 +55,7 @@ export class ChartContainer {
         this.titleEl.innerText = this.title;
         if (this.desc) this.titleEl.innerHTML += `<span>${this.desc}</span>`;
 
+
         const ctx = document.getElementById(this.id);
         this.chart = new Chart(ctx, {
             type: this.type,
@@ -110,7 +111,18 @@ export class ChartContainer {
                 };
 
                 this.datasets.forEach((dataset, index) => {
-                    this.map.birth[dataset[2]] = 0;
+                    if(dataset[3] === 'new'){
+                        this.map.birth[dataset[2]] = 0;
+                        this.chart.data.datasets[index].type = 'scatter';
+                        this.chart.data.datasets[index].pointStyle = 'circle';
+                        this.chart.data.datasets[index].radius = 1;
+                        this.chart.data.datasets[index].backgroundColor = dataset[1];
+                        this.chart.data.datasets[index].trendlineLinear = {
+                            style: "rgb(43 ,66 ,255, 0.3)",
+                            lineStyle: "dotted|solid",
+                            width: 2
+                        }
+                    }
                 });
 
                 this.timer = setInterval(() => {
@@ -124,8 +136,10 @@ export class ChartContainer {
                     this.chart.data.labels.push(this.chartLength);
                     this.datasets.forEach((dataset, index) => {
                         if(dataset[3] === 'new') {
+                            if(this.chartLength % 5 !== 0) return;
                             const birthCount = this.map.birth[dataset[2]];
-                            this.chart.data.datasets[index].data.push(birthCount * 5);
+                            if(birthCount < 1) return;
+                            this.chart.data.datasets[index].data.push({x: this.chartLength, y: birthCount * 5});
                             this.map.birth[dataset[2]] -= birthCount;
                         }else{
                             this.chart.data.datasets[index].data.push(this.map.getObjCount(dataset[2]));
@@ -135,7 +149,6 @@ export class ChartContainer {
                     this.chart.update();
                 }, this.renderPeriod / this.map.speed);
                 break;
-
             case 'object-area':
                 this.chart.options.scales = {
                     x: {
@@ -189,7 +202,6 @@ export class ChartContainer {
                     this.chart.update();
                 }, this.renderPeriod / this.map.speed);
                 break;
-
             case 'object-age':
                 this.chart.options.scales = {
                     x: {

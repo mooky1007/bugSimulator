@@ -16,7 +16,6 @@
     <link rel="stylesheet" href="./css/style_mo.css?v=1.0.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.3/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-trendline"></script>
 </head>
 
 <body>
@@ -32,65 +31,30 @@
         <h1>🌱 기초 생태학</h1>
         <p>누구나 쉽게 기본적인 생태학 이론을 <br>학습 할 수 있는 사이트입니다.</p>
         <ul>
-            <li class="title">
-                <p>
-                    개체군 <span>Population</span>
-                </p>
-            </li>
-            <li>
-                <a href="./">개체군 생태학<br><span>Population Ecology</span></a>
-            </li>
-            <li>
-                <a href="./populationGrowth.html">개체군 성장 모델 - 지수 개체군 성장모델<br><span>Exponential Population
-                        Growth</span></a>
-            </li>
-            <li>
-                <a href="./populationGrowth2.html">개체군 성장 모델 - 로지스틱 개체군 모델<br><span>Logistic Population
-                        Growth</span></a>
-            </li>
-            <li>
-                <a href="./densityDependentFactor.html">개체군 성장의 조절 - 밀도의존적 인자<br><span>Density Dependent
-                        Factor</span></a>
-            </li>
-            <li class="title" style="opacity: 0.2;">
-                <p>
-                    군집 <span>Community</span>
-                </p>
-            </li>
-            <li style="opacity: 0.2;">
-                <a href="#">생태군집<br><span>Ecological Community</span></a>
-            </li>
         </ul>
     </aside>
     <main>
         <div class="title_wrap">
-            <h2>개체군 성장의 조절: Density Factor</h2>
+            <h2>개체군(Population)과 개체군 생태학(Population Ecology)</h2>
             <p>
-                한정된 자원에 대해 같은 종의 개체끼리의 경쟁, 즉 종내경쟁(intraspecific competition)의 결과<br>
-                개체군의 크기가 증가할수록 같은 종 내의 개체들 간의 경쟁이 심해지고, 이에 따라 개체군 성장률이 감소한다.
+                개체군(population): 특정한 영역에 서식하고 있는 동일
+                한 생물 종 개체들의 무리로서 서로 상호작용하고 교배가능한 집단을 의미합니다.
+            </p>
+            <p>
+                개체군 생태학(Population Ecology): 개체군의 밀도(density), 크기(size), 성장률(growth rate)에 영향을 주는 요인을 이해하는 학문
             </p>
             <ul>
-                <li>밀도의존적 인자(density dependent factor): 개체군의 밀도가 증가와 함께 영향력이 강해지는 개체군 성장 제한인자</li>
-                <li>밀도비의존적 인자(density-independent factor): 개체군 밀도와 무관한 개체군 제한인자</li>
+                <li>밀도 <span>population density</span> : 단위면적당 개체 수</li>
+                <li>크기 <span>population size</span> : 개체 수(수도, abundance)</li>
+                <li>나이 구조 <span>age structure</span> : 나이에 따른 상대적 개체수</li>
+                <li>성장률 <span>population growth rate</span> : 개체군 크기의 변화율</li>
             </ul>
             <div class="tag_wrap">
-                <span class="tag">#제한인자</span>
-                <span class="tag">#환경수용력</span>
+                <span class="tag">#개체군</span>
+                <span class="tag">#개체군 생태학</span>
             </div>
         </div>
         <div class="content_wrap">
-            <div class="sub_title">
-                <h3>개체군 성장의 밀도의존적 조절</h3>
-                <ul style="margin-bottom: 10px;">
-                    <li>
-                        먹이공급의 제한, 한정된 영역
-                    </li>
-                    <li>
-                        경쟁(competition), 포식(predation): 생물학적 환경
-                    </li>
-                </ul>
-                <p>개체군의 크기가 증가해 밀도가 높아질 수록 출생수가 줄어드는걸 확인할 수 있습니다.</p>
-            </div>
             <div class="gui_wrap">
                 <div class="canvas_wrap">
                     <div class="canvas_container">
@@ -101,7 +65,7 @@
                     <button role="reset">리셋</button>
                 </div>
             </div>
-            <div class="chart_wrap">
+            <div class="chart_wrap grid-3">
                 <div class="chart_container">
                     <div class="chart_title_wrap">
                         <p></p>
@@ -122,6 +86,16 @@
                         </div>
                     </div>
                 </div>
+                <div class="chart_container">
+                    <div class="chart_title_wrap">
+                        <p></p>
+                    </div>
+                    <div class="chart_screen_wrap">
+                        <div class="chart_screen">
+                            <canvas id="myChart3"></canvas>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -138,23 +112,50 @@
         board.generateEnvironment();
 
         board.generateObject('food', 12);
-        board.generateObject('bug', 6);
+        board.generateObject('bug', 72);
+        board.generateObject('bug2', 72);
 
         board.chart = new ChartContainer({
-            title: '개체 수 & 출생 개체 수 ',
+            title: '개체군의 크기, 성장률',
+            desc: '시뮬레이터에 존재하는 모든 개체의 수를 <br>시각적으로 표현한 차트입니다.',
             id: 'myChart',
             datasets: [
-                ['🐛', '#77ffad', 'bug'],
-                ['🐛 출생x5', '#fff', 'bug', 'new'],
+                ['🌱/3', '#666666', 'food'],
+                ['🐛', '#6ac569', 'bug'],
+                ['🐞', '#e75656', 'bug2'],
             ],
-            renderPeriod: 1000
         })
-        board.chart.init(board, 'birth-rate');
+        board.chart.init(board, 'object-count');
+
+        board.chart2 = new ChartContainer({
+            title: '개체군의 밀도',
+            desc: '시뮬레이터를 4x4사이즈로 나눈 영역별 개체 수를 <br>시각적으로 표현한 차트입니다.',
+            id: 'myChart2',
+            type: 'bubble',
+            datasets: [
+                ['🐛', '#6ac569', 'bug'],
+                ['🐞', '#e75656', 'bug2'],
+            ],
+        })
+        board.chart2.init(board, 'object-area');
+
+        board.chart3 = new ChartContainer({
+            title: '개체군의 나이 구조',
+            desc: '시뮬레이터 내의 살아있는 개체들의 나이를 <br>시각적으로 표현한 차트입니다.',
+            id: 'myChart3',
+            type: 'line',
+            datasets: [
+                ['🐛', '#6ac569', 'bug'],
+                ['🐞', '#e75656', 'bug2'],
+            ],
+        })
+        board.chart3.init(board, 'object-age');
 
         document.querySelector('button[role="reset"]').addEventListener('click', () => {
             board.reset();
             board.generateObject('food', 12);
-            board.generateObject('bug', 6);
+            board.generateObject('bug', 72);
+            board.generateObject('bug2', 72);
         });
 
         document.querySelector('header button').addEventListener('click', () => {

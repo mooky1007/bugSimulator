@@ -347,6 +347,32 @@ main .content_wrap .sub_title li {
     height: 100%;
 }
 
+.chart_screen table {
+    width: 100%;
+    margin-top: 5px;
+    font-size: 12px;
+    border-collapse: collapse;
+    border: 1px solid #666;
+}
+
+.chart_screen table tr {
+    border-bottom: 1px solid #666;
+}
+
+.chart_screen table tr:last-child {
+    border-bottom: none;
+}
+
+.chart_screen table td {
+    border-right: 1px solid #666;
+    border-left: 1px solid #666;
+    padding: 5px;
+    text-align: center;
+}
+
+.chart_screen table td:first-child {
+    border-left: none;
+}
 
 header {
     display: none;
